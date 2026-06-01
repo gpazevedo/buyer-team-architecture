@@ -4,6 +4,8 @@ Architectural decisions for the [buyer-team.com](https://buyer-team.com) agentic
 
 Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.com/in/gpazevedo](https://linkedin.com/in/gpazevedo)
 
+![ADR Diagram](diagram.svg)
+
 ## How to read an ADR
 
 See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
