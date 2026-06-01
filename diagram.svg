@@ -1,0 +1,241 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800"
+     font-family="'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif">
+
+  <defs>
+    <filter id="shadow" x="-4%" y="-8%" width="108%" height="124%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#00000018"/>
+    </filter>
+  </defs>
+
+  <!-- Canvas -->
+  <rect width="1200" height="800" fill="#f1f5f9"/>
+
+  <!-- ══════════════════════════════
+       TITLE BAR
+       ══════════════════════════════ -->
+  <rect width="1200" height="82" fill="#0f172a"/>
+  <text x="24" y="36" fill="white" font-size="22" font-weight="700" letter-spacing="-0.4">Buyer Team · Architecture Decision Records</text>
+  <text x="24" y="62" fill="#94a3b8" font-size="13">90 decisions across 14 concern areas · Agentic Procurement SaaS · buyer-team.com</text>
+  <!-- KPI badge -->
+  <rect x="1094" y="10" width="90" height="62" rx="8" fill="rgba(255,255,255,0.07)"/>
+  <text x="1139" y="42" text-anchor="middle" fill="white" font-size="28" font-weight="800">90</text>
+  <text x="1139" y="60" text-anchor="middle" fill="#64748b" font-size="10" font-weight="600" letter-spacing="0.5">DECISIONS</text>
+
+  <!-- ══════════════════════════════
+       LAYER 1 — DOMAIN
+       band: y=92, h=116
+       cards: y=116, h=72
+       ══════════════════════════════ -->
+  <rect x="0" y="92" width="1200" height="116" fill="#fffbeb"/>
+  <rect x="0" y="92" width="4" height="116" fill="#d97706"/>
+  <text x="16" y="110" fill="#92400e" font-size="10" font-weight="700" letter-spacing="1.8">DOMAIN</text>
+
+  <!-- 12 · Procurement Domain Logic -->
+  <g filter="url(#shadow)">
+    <rect x="16" y="116" width="1168" height="72" rx="6" fill="white"/>
+    <rect x="16" y="116" width="1168" height="28" rx="6" fill="#d97706"/>
+    <rect x="16" y="138" width="1168" height="6" fill="#d97706"/>
+  </g>
+  <text x="28" y="134" fill="white" font-size="12" font-weight="700">12 · Procurement Domain Logic</text>
+  <rect x="1148" y="121" width="24" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="1160" y="133" fill="white" font-size="9" font-weight="800" text-anchor="middle">3</text>
+  <text x="28" y="156" fill="#374151" font-size="11" font-weight="600">3 Decisions</text>
+  <text x="28" y="174" fill="#6b7280" font-size="11">Kraljic 2×2 routing matrix · PR→PO splitting (one PO per awarded supplier) · hard supplier delivery gate before invitation</text>
+
+  <!-- ══════════════════════════════
+       LAYER 2 — APPLICATION
+       band: y=218, h=116
+       cards: y=242, h=72
+       ══════════════════════════════ -->
+  <rect x="0" y="218" width="1200" height="116" fill="#eff6ff"/>
+  <rect x="0" y="218" width="4" height="116" fill="#2563eb"/>
+  <text x="16" y="236" fill="#1e40af" font-size="10" font-weight="700" letter-spacing="1.8">APPLICATION</text>
+
+  <!-- 01 · Orchestration & State Recovery -->
+  <g filter="url(#shadow)">
+    <rect x="16" y="242" width="286" height="72" rx="6" fill="white"/>
+    <rect x="16" y="242" width="286" height="28" rx="6" fill="#2563eb"/>
+    <rect x="16" y="264" width="286" height="6" fill="#2563eb"/>
+  </g>
+  <text x="28" y="259" fill="white" font-size="11" font-weight="700">01 · Orchestration &amp; State</text>
+  <rect x="270" y="247" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="281" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">10</text>
+  <text x="28" y="282" fill="#374151" font-size="11" font-weight="600">10 Decisions</text>
+  <text x="28" y="298" fill="#6b7280" font-size="10">7-node DAG · recovery · idempotency</text>
+
+  <!-- 02 · Agent Architecture -->
+  <g filter="url(#shadow)">
+    <rect x="310" y="242" width="286" height="72" rx="6" fill="white"/>
+    <rect x="310" y="242" width="286" height="28" rx="6" fill="#2563eb"/>
+    <rect x="310" y="264" width="286" height="6" fill="#2563eb"/>
+  </g>
+  <text x="322" y="259" fill="white" font-size="11" font-weight="700">02 · Agent Architecture</text>
+  <rect x="564" y="247" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="575" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">6</text>
+  <text x="322" y="282" fill="#374151" font-size="11" font-weight="600">6 Decisions</text>
+  <text x="322" y="298" fill="#6b7280" font-size="10">A2A · steering hooks · tools</text>
+
+  <!-- 03 · Dynamic Configuration -->
+  <g filter="url(#shadow)">
+    <rect x="604" y="242" width="286" height="72" rx="6" fill="white"/>
+    <rect x="604" y="242" width="286" height="28" rx="6" fill="#2563eb"/>
+    <rect x="604" y="264" width="286" height="6" fill="#2563eb"/>
+  </g>
+  <text x="616" y="259" fill="white" font-size="11" font-weight="700">03 · Dynamic Configuration</text>
+  <rect x="858" y="247" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="869" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">8</text>
+  <text x="616" y="282" fill="#374151" font-size="11" font-weight="600">8 Decisions</text>
+  <text x="616" y="298" fill="#6b7280" font-size="10">AgentFactory · feature flags</text>
+
+  <!-- 11 · Integration & Transports -->
+  <g filter="url(#shadow)">
+    <rect x="898" y="242" width="286" height="72" rx="6" fill="white"/>
+    <rect x="898" y="242" width="286" height="28" rx="6" fill="#2563eb"/>
+    <rect x="898" y="264" width="286" height="6" fill="#2563eb"/>
+  </g>
+  <text x="910" y="259" fill="white" font-size="11" font-weight="700">11 · Integration &amp; Transports</text>
+  <rect x="1152" y="247" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="1163" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">5</text>
+  <text x="910" y="282" fill="#374151" font-size="11" font-weight="600">5 Decisions</text>
+  <text x="910" y="298" fill="#6b7280" font-size="10">4 transports · skills · plugins</text>
+
+  <!-- ══════════════════════════════
+       LAYER 3 — PLATFORM
+       band: y=344, h=196
+       row1: y=368, row2: y=448, h=72
+       ══════════════════════════════ -->
+  <rect x="0" y="344" width="1200" height="196" fill="#f5f3ff"/>
+  <rect x="0" y="344" width="4" height="196" fill="#7c3aed"/>
+  <text x="16" y="362" fill="#4c1d95" font-size="10" font-weight="700" letter-spacing="1.8">PLATFORM</text>
+
+  <!-- Row 1: 04, 05, 06 -->
+
+  <!-- 04 · Multi-Tenancy & Isolation -->
+  <g filter="url(#shadow)">
+    <rect x="16" y="368" width="384" height="72" rx="6" fill="white"/>
+    <rect x="16" y="368" width="384" height="28" rx="6" fill="#7c3aed"/>
+    <rect x="16" y="390" width="384" height="6" fill="#7c3aed"/>
+  </g>
+  <text x="28" y="385" fill="white" font-size="11" font-weight="700">04 · Multi-Tenancy &amp; Isolation</text>
+  <rect x="368" y="373" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="379" y="385" fill="white" font-size="9" font-weight="800" text-anchor="middle">6</text>
+  <text x="28" y="408" fill="#374151" font-size="11" font-weight="600">6 Decisions</text>
+  <text x="28" y="424" fill="#6b7280" font-size="10">partition keys · ABAC credentials · Cognito · Mem0 scoping</text>
+
+  <!-- 05 · Security & Governance -->
+  <g filter="url(#shadow)">
+    <rect x="408" y="368" width="384" height="72" rx="6" fill="white"/>
+    <rect x="408" y="368" width="384" height="28" rx="6" fill="#7c3aed"/>
+    <rect x="408" y="390" width="384" height="6" fill="#7c3aed"/>
+  </g>
+  <text x="420" y="385" fill="white" font-size="11" font-weight="700">05 · Security &amp; Governance</text>
+  <rect x="760" y="373" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="771" y="385" fill="white" font-size="9" font-weight="800" text-anchor="middle">7</text>
+  <text x="420" y="408" fill="#374151" font-size="11" font-weight="600">7 Decisions</text>
+  <text x="420" y="424" fill="#6b7280" font-size="10">Cedar policies · Bedrock guardrails · 6-layer defense-in-depth</text>
+
+  <!-- 06 · Reliability & Resilience -->
+  <g filter="url(#shadow)">
+    <rect x="800" y="368" width="384" height="72" rx="6" fill="white"/>
+    <rect x="800" y="368" width="384" height="28" rx="6" fill="#7c3aed"/>
+    <rect x="800" y="390" width="384" height="6" fill="#7c3aed"/>
+  </g>
+  <text x="812" y="385" fill="white" font-size="11" font-weight="700">06 · Reliability &amp; Resilience</text>
+  <rect x="1152" y="373" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="1163" y="385" fill="white" font-size="9" font-weight="800" text-anchor="middle">8</text>
+  <text x="812" y="408" fill="#374151" font-size="11" font-weight="600">8 Decisions</text>
+  <text x="812" y="424" fill="#6b7280" font-size="10">degradation tiers · bulkheads · two-tier memory resilience</text>
+
+  <!-- Row 2: 08, 10 -->
+
+  <!-- 08 · Cost Architecture & Optimization -->
+  <g filter="url(#shadow)">
+    <rect x="16" y="448" width="580" height="72" rx="6" fill="white"/>
+    <rect x="16" y="448" width="580" height="28" rx="6" fill="#7c3aed"/>
+    <rect x="16" y="470" width="580" height="6" fill="#7c3aed"/>
+  </g>
+  <text x="28" y="465" fill="white" font-size="11" font-weight="700">08 · Cost Architecture &amp; Optimization</text>
+  <rect x="564" y="453" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="575" y="465" fill="white" font-size="9" font-weight="800" text-anchor="middle">6</text>
+  <text x="28" y="488" fill="#374151" font-size="11" font-weight="600">6 Decisions</text>
+  <text x="28" y="504" fill="#6b7280" font-size="10">model tiering by cognitive demand · prompt caching (all 7 agents) · semantic cache · batch inference · per-tenant attribution</text>
+
+  <!-- 10 · Capacity, Admission Control & Tenant Lifecycle -->
+  <g filter="url(#shadow)">
+    <rect x="604" y="448" width="580" height="72" rx="6" fill="white"/>
+    <rect x="604" y="448" width="580" height="28" rx="6" fill="#7c3aed"/>
+    <rect x="604" y="470" width="580" height="6" fill="#7c3aed"/>
+  </g>
+  <text x="616" y="465" fill="white" font-size="11" font-weight="700">10 · Capacity, Admission Control &amp; Tenant Lifecycle</text>
+  <rect x="1152" y="453" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="1163" y="465" fill="white" font-size="9" font-weight="800" text-anchor="middle">9</text>
+  <text x="616" y="488" fill="#374151" font-size="11" font-weight="600">9 Decisions</text>
+  <text x="616" y="504" fill="#6b7280" font-size="10">reserved+max+weight model · 3 admission regions · atomic TransactWriteItems · two kill-switches · 6-state lifecycle</text>
+
+  <!-- ══════════════════════════════
+       LAYER 4 — INFRASTRUCTURE
+       band: y=554, h=116
+       cards: y=578, h=72
+       ══════════════════════════════ -->
+  <rect x="0" y="554" width="1200" height="116" fill="#ecfdf5"/>
+  <rect x="0" y="554" width="4" height="116" fill="#059669"/>
+  <text x="16" y="572" fill="#065f46" font-size="10" font-weight="700" letter-spacing="1.8">INFRASTRUCTURE</text>
+
+  <!-- 07 · Observability & Evaluation -->
+  <g filter="url(#shadow)">
+    <rect x="16" y="578" width="580" height="72" rx="6" fill="white"/>
+    <rect x="16" y="578" width="580" height="28" rx="6" fill="#059669"/>
+    <rect x="16" y="600" width="580" height="6" fill="#059669"/>
+  </g>
+  <text x="28" y="595" fill="white" font-size="11" font-weight="700">07 · Observability &amp; Evaluation</text>
+  <rect x="564" y="583" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="575" y="595" fill="white" font-size="9" font-weight="800" text-anchor="middle">7</text>
+  <text x="28" y="618" fill="#374151" font-size="11" font-weight="600">7 Decisions</text>
+  <text x="28" y="634" fill="#6b7280" font-size="10">3-layer observability · W3C traceparent · AgentCore evaluations (primary) · ATLAS evaluators on schedule</text>
+
+  <!-- 09 · Infrastructure & Deployment Stack -->
+  <g filter="url(#shadow)">
+    <rect x="604" y="578" width="580" height="72" rx="6" fill="white"/>
+    <rect x="604" y="578" width="580" height="28" rx="6" fill="#059669"/>
+    <rect x="604" y="600" width="580" height="6" fill="#059669"/>
+  </g>
+  <text x="616" y="595" fill="white" font-size="11" font-weight="700">09 · Infrastructure &amp; Deployment Stack</text>
+  <rect x="1152" y="583" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="1163" y="595" fill="white" font-size="9" font-weight="800" text-anchor="middle">8</text>
+  <text x="616" y="618" fill="#374151" font-size="11" font-weight="600">8 Decisions</text>
+  <text x="616" y="634" fill="#6b7280" font-size="10">Python/Strands/AgentCore/Terraform stack · modular IaC · GitOps build-once-promote · 5-environment model · canary</text>
+
+  <!-- ══════════════════════════════
+       LAYER 5 — QUALITY
+       band: y=680, h=116
+       cards: y=704, h=72
+       ══════════════════════════════ -->
+  <rect x="0" y="680" width="1200" height="116" fill="#fff1f2"/>
+  <rect x="0" y="680" width="4" height="116" fill="#be185d"/>
+  <text x="16" y="698" fill="#9d174d" font-size="10" font-weight="700" letter-spacing="1.8">QUALITY</text>
+
+  <!-- 13 · Test Tenant Platform Data -->
+  <g filter="url(#shadow)">
+    <rect x="16" y="704" width="580" height="72" rx="6" fill="white"/>
+    <rect x="16" y="704" width="580" height="28" rx="6" fill="#be185d"/>
+    <rect x="16" y="726" width="580" height="6" fill="#be185d"/>
+  </g>
+  <text x="28" y="721" fill="white" font-size="11" font-weight="700">13 · Test Tenant Platform Data</text>
+  <rect x="564" y="709" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="575" y="721" fill="white" font-size="9" font-weight="800" text-anchor="middle">4</text>
+  <text x="28" y="744" fill="#374151" font-size="11" font-weight="600">4 Decisions</text>
+  <text x="28" y="760" fill="#6b7280" font-size="10">3 public dataset sources · deterministic uuid5 identity · 2 MCP servers + DynamoDB Streams · GSI cursor pagination</text>
+
+  <!-- 14 · Test Strategy & Quality Gates -->
+  <g filter="url(#shadow)">
+    <rect x="604" y="704" width="580" height="72" rx="6" fill="white"/>
+    <rect x="604" y="704" width="580" height="28" rx="6" fill="#be185d"/>
+    <rect x="604" y="726" width="580" height="6" fill="#be185d"/>
+  </g>
+  <text x="616" y="721" fill="white" font-size="11" font-weight="700">14 · Test Strategy &amp; Quality Gates</text>
+  <rect x="1152" y="709" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
+  <text x="1163" y="721" fill="white" font-size="9" font-weight="800" text-anchor="middle">3</text>
+  <text x="616" y="744" fill="#374151" font-size="11" font-weight="600">3 Decisions</text>
+  <text x="616" y="760" fill="#6b7280" font-size="10">5-layer test pyramid with distinct gates · LocalStack for integration, real Bedrock for E2E · Strands evals on every PR</text>
+
+</svg>
