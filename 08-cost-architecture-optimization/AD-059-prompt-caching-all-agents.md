@@ -1,0 +1,35 @@
+# AD-059 — Prompt Caching for All 7 Agents
+
+**Theme:** Cost Architecture & Optimization
+**Catalog:** AD-59 · **Source PRD:** PRD-009 · **Status:** Accepted · **Related:** AD-28, AD-58, AD-65, AD-57
+
+## Context
+
+Each agent's system prompt and tool schemas are large (hundreds to thousands of tokens) and byte-identical across invocations for the same agent configuration. Re-sending them at full input-token price on every call is the dominant per-invocation input cost. Bedrock prompt caching stores the request prefix — system prompt and tool schemas — so repeat invocations that present a byte-identical prefix pay only ~10% of the standard input rate on the cached portion. Without this decision, prompt caching must be explicitly enabled per agent and the invariant that makes it effective (prefix must remain byte-identical across calls) must be informally enforced. A realized ~90% input-token saving is the primary mechanism by which the worked example drops from ~$0.095 to ~$0.061 and the system-wide target of <$0.10/negotiation (PRD-001 §2.2 KR3.2) is met.
+
+## Decision
+
+Enable Bedrock prompt caching for all 7 agents, caching the invocation-invariant request prefix (system prompt + tool schemas) at the maximum TTL supported by the configured model: 1 hour for the Claude 4.5 family (Scenario A, AD-58), 5 minutes for Nova (Scenario B). A cache write carries a premium over standard input (~1.25× at the 5-minute TTL, ~2.0× at the 1-hour TTL on Claude), so an agent that never lands a second read before its prefix expires can cost marginally more than uncached. The prefix invariant — every per-invocation input falls after the cache checkpoint — is owned and tested by `DynamicAgentFactory` (AD-65, PRD-010 §3.4 / REQ-C004; agent-side: AD-28, PRD-003 §3.4 / REQ-A707).
+
+## Alternatives Considered
+
+- **Selective caching (only high-cadence agents).** Rejected: misses the saving on lower-cadence agents that still benefit, and creates inconsistent assembly logic in `DynamicAgentFactory`; the write-premium risk on sparse agents is monitored and acceptable.
+- **No prompt caching.** Rejected: without the ~90% input-token saving the <$0.10/negotiation target is not achievable at the token volumes driven by the deployed agent set; prompt caching is the primary cost lever.
+- **Manual per-agent cache configuration (not factory-owned).** Rejected: the byte-identical-prefix invariant cannot be reliably enforced without a single assembly owner; cache hits are silently foregone when any caller assembles a request differently.
+
+## Trade-offs
+
+| Gained | Given up |
+| --- | --- |
+| ~90% off input tokens on a cache read — the primary cost lever; transparent to application code above the factory | Cache writes carry a ~2× premium at the 1-hour TTL; an agent whose prefix expires before any second read costs marginally more than uncached |
+| The saving is a tested property (REQ-C004 prefix-purity test), not an accident of convention | The realized saving is entirely contingent on a byte-identical prefix, which constrains how requests may be assembled; per-invocation data must never precede the cache checkpoint |
+| Hit rates are monitored (`bedrock_prompt.cache_hit_rate`, <50%/15min alarm) to distinguish sparsity from churn | Under Scenario B's 5-minute TTL (AD-58), sparsely-invoked agents (Bid Evaluation, quadrant agents) have materially lower hit rates; TTL choice is a hard dependency |
+
+Estimated hit rates by agent (Scenario A, 1-hour TTL): Spot Bidding 95%+, Award & Comms 90%+, Leverage/Bottleneck/Strategic/Kraljic 80%+, Bid Evaluation 70%+. Sub-target agents are limited by invocation cadence against the TTL, not by prefix churn — prefix stability removes churn as a cause. A model-config change (`model_id`, `temperature`, `max_tokens`, `prompt_caching_enabled`) defines a new cache context by design; the first post-change invocation is necessarily a cache write and hit rate dips transiently until the new prefix re-warms.
+
+## Results
+
+Prompt caching is enabled for all agents via system-config `features.prompt_caching_enabled` (PRD-010 §2.3). The cache-prefix invariant is enforced in `DynamicAgentFactory` (AD-65) and tested by REQ-C004 / REQ-A707. Monitored via `bedrock_prompt.cache_hit_rate` in `procurement/operations`; per-agent `token.cache_write_count` / `token.cache_read_count` (dimensioned by `agent_name`) distinguish sparsity (sustained high write:read ratio) from churn (writes correlated with config changes). The <$0.10/negotiation target (PRD-009 §2.3) depends on this saving being realized. AD-58 determines the TTL and therefore the hit-rate profile for sparse agents.
+
+---
+*Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
