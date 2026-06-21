@@ -1,6 +1,6 @@
-# AD-024 — Steering Hook Failure Semantics (8 Hooks, No Retry-Wrap, Fail-Closed)
+# AD-024 — Steering Hook Failure Semantics (7 PRE-CALL GUIDE Hooks + 1 Declarative, No Retry-Wrap, Fail-Closed)
 
-**Theme:** Agent Architecture & Behavioral Control  **Catalog:** AD-24 · **Source PRD:** PRD-003 · **Status:** Accepted · **Related:** AD-22, AD-23, AD-16
+**Theme:** Agent Architecture & Behavioral Control  **Catalog:** AD-24 · **Source PRD:** PRD-003 · **Status:** Accepted (mechanism revised at PRD-003 v1.1.3 — Strands 1.43 reconciliation) · **Related:** AD-22, AD-23, AD-16
 
 ## Context
 
@@ -8,7 +8,11 @@ Given that guardrails are hooks (AD-23), two failure questions must be answered.
 
 ## Decision
 
-Eight hooks total — seven PRE-CALL and one POST-CALL (`BudgetCeilingGuard` on `check_bid_responses`). Hooks are not wrapped in retry decorators (REQ-A009): a policy rejection propagates immediately so the agent can retry with corrected parameters. A hook crash suppresses the target tool — the tool does not execute, and the exception propagates as a tool error into the standard agent-level retry flow (REQ-A009b). This guarantees fail-closed behavior: a security hook crash never results in a tool running with unredacted or non-compliant inputs. `WinnerDisclosureGuard` was moved POST-CALL → PRE-CALL in v1.0.5 to enforce this guarantee at the point of redaction.
+Eight guards total — seven PRE-CALL steering hooks plus `BudgetCeilingGuard`. As reconciled to the shipped Strands API (`strands-agents>=1.43`, PRD-003 §1.3 v1.1.3), the `strands.vended_plugins.steering` interface exposes only a PRE-CALL `steer_before_tool` handler returning `Proceed` / `Guide` / `Interrupt`; it cannot mutate tool input or results and has no after-tool hook. Consequently the seven steering hooks all operate in **GUIDE** mode (cancel the call + feed corrective guidance so the model recomposes) — the originally-specified PRE-CALL MODIFY and REJECT modes both collapse to GUIDE — and `BudgetCeilingGuard` (the former lone POST-CALL MODIFY on `check_bid_responses`) is realized **declaratively** via response fields (`SpotBidResponse.BidResult.budget_flag` / `budget_excess`) + prompt, not as a hook, because the shipped API cannot mutate a tool result.
+
+Hooks are not wrapped in retry decorators (REQ-A009): a GUIDE cancellation propagates immediately so the agent can retry with corrected parameters. A hook crash suppresses the target tool — the tool does not execute, and the exception propagates as a tool error into the standard agent-level retry flow (REQ-A009b). This preserves fail-closed behavior: a security hook crash never results in a tool running with non-compliant inputs. `steering.action` is emitted as `PROCEED` / `GUIDE` / `INTERRUPT`. The PRD-001 §4.3 Layer-5 guard count is unchanged at 8 (7 steering hooks + 1 declarative).
+
+**Superseded mechanism (v1.0.5 → v1.1.3).** The original design — eight *hooks* with PRE-CALL MODIFY/REJECT modes and a POST-CALL MODIFY `BudgetCeilingGuard`, plus a `WinnerDisclosureGuard` that redacted free text and was moved POST-CALL → PRE-CALL in v1.0.5 to redact before any auto-send — was superseded at PRD-003 v1.1.3 when the model was reconciled to the shipped Strands 1.43 API. `WinnerDisclosureGuard` is now a PRE-CALL GUIDE that asserts a bounded template-render map (rejection notifications are deterministic template renders per AD-93 / PRD-003 §2.7; winner fields are not template parameters), so disclosure is impossible by construction and the redaction-timing concern that drove the POST→PRE move is moot.
 
 ## Alternatives Considered
 
@@ -26,7 +30,7 @@ Eight hooks total — seven PRE-CALL and one POST-CALL (`BudgetCeilingGuard` on 
 
 ## Results
 
-The fail-closed guarantee is the headline result and the reason `WinnerDisclosureGuard` was moved POST-CALL → PRE-CALL during the failure audit (v1.0.5) — redaction now provably happens before any potential auto-send. The accepted cost is that availability yields to safety: when TCO or risk assessment is persistently unavailable, the `TCOEnforcementGuard`/`RiskAssessmentEnforcement` rejection loop is the expected escalation path, not a bug, and it parks the negotiation in REQUIRES_ATTENTION (AD-16) for an operator rather than guessing. The `steering.hook.rejection_count` metric and the >3-in-30s alarm (REQ-A951) are direct outputs of this decision.
+The fail-closed guarantee is the headline result. It originally rested on moving `WinnerDisclosureGuard` POST-CALL → PRE-CALL (v1.0.5); after the v1.1.3 Strands-1.43 reconciliation it rests instead on disclosure being impossible by construction (deterministic template render, winner fields not parameters) plus GUIDE/INTERRUPT cancellation of side-effecting calls before they fire. The accepted cost is that availability yields to safety: when TCO or risk assessment is persistently unavailable, the `TCOEnforcementGuard`/`RiskAssessmentEnforcement` GUIDE loop is the expected escalation path, not a bug, and it parks the negotiation in REQUIRES_ATTENTION (AD-16) for an operator rather than guessing. The `steering.hook.rejection_count` metric and the >3-in-30s alarm (REQ-A951) are direct outputs of this decision. Realization was verified live (PRD-003 v1.1.3) on `BidConfidentialityGuard` / `EvaluationCompletenessGuard` / `WinnerDisclosureGuard` / `AuctionIntegrityGuard`.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

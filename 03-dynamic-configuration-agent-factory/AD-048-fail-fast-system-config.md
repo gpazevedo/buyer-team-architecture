@@ -1,6 +1,6 @@
 # AD-048 — Fail-Fast on System-Config Unavailability
 
-**Theme:** Dynamic Configuration & the Agent Factory  **Catalog:** AD-48 · **Source PRD:** PRD-006 · **Status:** Accepted · **Related:** AD-25, AD-45, AD-46, AD-49, AD-63
+**Theme:** Dynamic Configuration & the Agent Factory  **Catalog:** AD-48 · **Source PRD:** PRD-006 · **Status:** Accepted · **Related:** AD-25, AD-45, AD-46, AD-49, AD-63, AD-95
 
 ## Context
 
@@ -24,11 +24,11 @@ If `{env}-system-config` is unreachable at agent instantiation after SDK-level r
 | Config-plane failures are loud and surfaced immediately (DLQ → `REQUIRES_ATTENTION`) rather than silently corrupting decision quality | The config plane is now an explicit hard dependency for every agent instantiation |
 | Correctness of behaviour is tied to correctness of config — the two cannot diverge silently | A transient DynamoDB blip that outlasts SDK retries will fail negotiations in flight |
 
-This posture is a deliberate contrast to AD-46: for quality-enhancers (memory, Mem0) the system prefers availability; for the config plane, correctness beats availability. The one named exception is AD-49.
+This posture is a deliberate contrast to AD-46: for quality-enhancers (memory, Mem0) the system prefers availability; for the config plane, correctness beats availability. The rule has **two bounded, named exceptions**: AD-49 (feature flags fall back to seed-matching safe defaults, the two security-critical flags primary) and AD-95 (standalone A2A agent runtimes fall back for model-tier resolution only on their own init path). Both are scoped narrowly — flags and model-tier respectively — and neither relaxes the fail-fast rule for governance thresholds, temperatures, or model config on the canonical `DynamicAgentFactory` path.
 
 ## Results
 
-REQ-R405 and the degradation table (PRD-006 §3.1) mark `DynamoDB system-config` as "fail fast / await recovery." The decision is realized in `DynamicAgentFactory` (AD-25, AD-63) where the fail-fast path surfaces as a construction-time exception. The sole carve-out is AD-49, which allows two security-critical flags to hard-default to `false` when config is unreachable — the only case where a default is provably safer than a failure.
+REQ-R405 and the degradation table (PRD-006 §3.1) mark `DynamoDB system-config` as "fail fast / await recovery." The decision is realized in `DynamicAgentFactory` (AD-25, AD-63) where the fail-fast path surfaces as a construction-time exception. Two carve-outs apply: AD-49 (feature-flag safe defaults — a default is provably safer than a failure for the security-critical flags) and AD-95 (A2A agent model-tier fallback — the standalone A2A runtimes resolve their model at init off the factory path, where a transient config read must not block a cold start). Both are recorded as bounded exceptions in PRD-010 §3.2 / REQ-C003; the canonical factory path remains fail-fast for all value config.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

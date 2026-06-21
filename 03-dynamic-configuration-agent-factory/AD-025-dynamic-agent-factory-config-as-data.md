@@ -26,7 +26,15 @@ Every agent is instantiated via `DynamicAgentFactory`, which sources all paramet
 
 ## Results
 
-`DynamicAgentFactory` is implemented in PRD-003 §3.1 and PRD-010 §3; the fail-fast recovery contract is REQ-C003. A failed construction surfaces through the standard agent invocation-failure path (DLQ → `REQUIRES_ATTENTION`) rather than silently degrading decision quality. The decision enables AD-65 (factory as single cache-checkpoint owner) and is guarded by AD-48 (fail-fast rule for the config plane) with one deliberate exception: the two security-critical flags (`galileo_protect_enabled`, `kraljic_classification_override_enabled`) hard-default to `false` when config is unreachable, because a disabled flag means more enforcement, not less (AD-49).
+`DynamicAgentFactory` is implemented in PRD-003 §3.1 and PRD-010 §3; the fail-fast recovery contract is REQ-C003. A failed construction surfaces through the standard agent invocation-failure path (DLQ → `REQUIRES_ATTENTION`) rather than silently degrading decision quality. The decision enables AD-65 (factory as single cache-checkpoint owner) and is guarded by AD-48 (fail-fast rule for the config plane) with one deliberate exception: all `features`-group flags fall back to seed-matching safe defaults when config is unreachable (AD-49), with `galileo_protect_enabled` and `kraljic_classification_override_enabled` → `false` as the primary load-bearing case — a disabled flag means more enforcement, not less.
+
+### Results — as built (2026-06-21)
+
+The factory shipped **scoped to model-ladder + cache-prefix**, not "all parameters". This is a deliberate narrowing of the original decision, settled once governance resolution had already moved into the orchestrator:
+
+- **`DynamicAgentFactory` (in `impl/packages/buyer_agent_core/`, delivered via the `agent-base` image) owns exactly two things:** model-id resolution from the tier ladder (AD-95) and the cache-prefix invariant (AD-65/AD-28). It does **not** read thresholds or feature flags — agents receive governance as a per-request A2A payload and read **no** system-config beyond the model ladder. The earlier spec implying the factory owns thresholds/flags is superseded.
+- **The agent boot path is therefore never fail-fast.** The only config read at construction is the model ladder, which is *never-raise* by contract (live `tiers` → `BEDROCK_MODEL_ID` → in-image seed mirror; AD-95). A placement guard test (`test_factory_cache.py::test_boot_path_never_fails_on_unreachable_config`) keeps it that way. The AD-48 fail-fast contract and the two-stage resolution (AD-64) now apply to the **orchestrator's** governance reads (`graph_common.load_governance_config`, `Unreachable` vs `Missing` split), not to agent construction — which is where the recurring "governance blocks dropped from `default`" failure actually needs to fail fast → DLQ → `REQUIRES_ATTENTION`.
+- The 7 per-agent `config.py` + `observability.py` duplicates are removed; each agent is now a thin `agent_spec.py` (declares tier/prompt/tools/plugins/schema/card) + `agent.py` (≈30 lines) over the shared package, byte-identical model resolution and cache prefix across all of them.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

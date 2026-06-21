@@ -8,7 +8,7 @@ Model IDs, governance thresholds, feature flags, and external-service rates must
 
 ## Decision
 
-All dynamic configuration lives in a single `{env}-system-config` DynamoDB table with four config groups: `governance`, `model`, `features`, and `external-service-rates`. The table is read once per agent instantiation — no polling, no sidecar, no mid-session change. A value changed in DynamoDB takes effect on the next instantiation.
+All dynamic configuration lives in a single `{env}-system-config` DynamoDB table with four config groups: `governance`, `model`, `features`, and `external-rates`. The table is read once per agent instantiation — no polling, no sidecar, no mid-session change. A value changed in DynamoDB takes effect on the next instantiation.
 
 ## Alternatives Considered
 
@@ -22,13 +22,13 @@ All dynamic configuration lives in a single `{env}-system-config` DynamoDB table
 | --- | --- |
 | Simplicity — one table, no sidecar, no polling loop; config is plain data, queryable and IAM-protectable | AppConfig's gradual-rollout and auto-rollback machinery; config changes are all-or-nothing on next read with no built-in canary for config itself |
 | A value changed in DynamoDB takes effect on the next instantiation, with no redeploy | Read-once means an in-session agent never sees a mid-flight config change; urgent changes wait for the next instantiation (intentional — stable behaviour per negotiation) |
-| Config changes are auditable via CloudTrail data events and `system_config.change` alarms | The `external-service-rates` group is read only by the monthly cost report, not the agent path — its freshness matters differently |
+| Config changes are auditable via CloudTrail data events and `system_config.change` alarms | The `external-rates` group is read only by the monthly cost report, not the agent path — its freshness matters differently |
 
 The absence of a built-in gradual-rollout mechanism for config changes is mitigated by the feature-flag lifecycle (AD-66) for behavioral changes and by the override-table hardening (PRD-010 §5.1 / AD-44) for threshold changes.
 
 ## Results
 
-`DynamicAgentFactory` reads this table at instantiation (AD-65, PRD-010 §3). The fail-fast rule (AD-48) applies if the table is unreachable, with the two security-critical flag exceptions (AD-49). Two-stage threshold resolution (AD-64) cascades from per-tenant overrides through the profile SK to system defaults. Feature flags are evaluated at instantiation per the five-phase lifecycle (AD-66). The `external-service-rates` group is consumed only by the monthly per-tenant cost report (PRD-009 REQ-CST012), not by the agent runtime path.
+`DynamicAgentFactory` reads this table at instantiation (AD-65, PRD-010 §3). The fail-fast rule (AD-48) applies if the table is unreachable, with the two security-critical flag exceptions (AD-49). Two-stage threshold resolution (AD-64) cascades from per-tenant overrides through the profile SK to system defaults. Feature flags are evaluated at instantiation per the five-phase lifecycle (AD-66). The `external-rates` group is consumed only by the monthly per-tenant cost report (PRD-009 REQ-CST012), not by the agent runtime path.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
