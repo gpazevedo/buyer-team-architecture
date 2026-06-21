@@ -1,6 +1,6 @@
 # AD-042 — Cognito Pre-Token-Generation V3 Normalizes tenantId
 
-**Theme:** Multi-Tenancy & Isolation  **Catalog:** AD-42 · **Source PRD:** PRD-005 · **Status:** Accepted · **Related:** AD-37, AD-41
+**Theme:** Security, Governance & Trust Boundaries  **Catalog:** AD-42 · **Source PRD:** PRD-005 · **Status:** Accepted · **Related:** AD-37, AD-41, AD-94
 
 ## Context
 

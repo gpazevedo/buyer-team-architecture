@@ -1,6 +1,6 @@
 # AD-073 — Mem0 Scoping Maps to the Domain Model
 
-**Theme:** Multi-Tenancy & Isolation  **Catalog:** AD-73 · **Source PRD:** PRD-014 · **Status:** Accepted · **Related:** AD-38, AD-72
+**Theme:** Reliability, Resilience & Graceful Degradation  **Catalog:** AD-73 · **Source PRD:** PRD-014 · **Status:** Accepted · **Related:** AD-38, AD-72
 
 ## Context
 

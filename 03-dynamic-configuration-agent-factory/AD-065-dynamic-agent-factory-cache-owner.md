@@ -1,6 +1,6 @@
 # AD-065 — DynamicAgentFactory Is the Single Request-Assembly + Cache-Checkpoint Owner
 
-**Theme:** Dynamic Configuration & the Agent Factory  **Catalog:** AD-65 · **Source PRD:** PRD-010 · **Status:** Accepted · **Related:** AD-28, AD-59, AD-63, AD-25, AD-22, AD-23
+**Theme:** Dynamic Configuration & the Agent Factory  **Catalog:** AD-65 · **Source PRD:** PRD-010 · **Status:** Accepted · **Related:** AD-28, AD-59, AD-63, AD-25, AD-22, AD-23, AD-95
 
 ## Context
 
