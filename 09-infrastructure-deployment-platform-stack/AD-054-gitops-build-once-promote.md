@@ -1,6 +1,6 @@
 # AD-054 — GitOps: Build-Once-Promote, Rollback as Forward Deploy
 
-**Theme:** Infrastructure, Deployment & Platform Stack  **Catalog:** AD-54 · **Source PRD:** PRD-007 · **Status:** Accepted · **Related:** AD-56, AD-55
+**Theme:** Infrastructure, Deployment & Platform Stack  **Catalog:** AD-54 · **Source PRD:** PRD-007 · **Status:** Accepted · **Related:** AD-56, AD-55, AD-111
 
 ## Context
 
@@ -24,7 +24,7 @@ Git is the single source of truth. Container images are built once on merge to `
 
 ## Results
 
-Every deployment is traceable via `deployment.git_sha` (REQ-I100); images are built once and promoted (REQ-I101); production releases carry semver tags (REQ-I102); roll-forward completes within 5 minutes (REQ-I104). This decision feeds directly into the canary deployment strategy (AD-56), which reuses the same already-built images for both canary and rollback paths. The five-environment model (AD-55) defines where each promotion stage lands.
+Every deployment is traceable via `deployment.git_sha` (REQ-I100); images are built once and promoted (REQ-I101); production releases carry semver tags (REQ-I102); roll-forward completes within 5 minutes (REQ-I104). This decision feeds directly into the canary deployment strategy (AD-56), which reuses the same already-built images for both canary and rollback paths. The five-environment model (AD-55) defines where each promotion stage lands. AD-111 refines this model to per-component granularity within dev, using the same roll-forward-with-already-built-image principle for single-component rollback.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
