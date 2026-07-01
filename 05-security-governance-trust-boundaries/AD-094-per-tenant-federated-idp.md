@@ -1,7 +1,7 @@
 # AD-094 — Per-Tenant Federated IdP for Non-Spoofable Human Tenant Binding
 
 **Theme:** Security, Governance & Trust Boundaries
-**Catalog:** AD-94 · **Source PRD:** PRD-005 · **Status:** Accepted · **Related:** AD-42, AD-37, AD-41, AD-6, AD-86
+**Catalog:** AD-94 · **Source PRD:** PRD-005 · **Status:** Accepted · **Related:** AD-42, AD-37, AD-41, AD-6, AD-86, AD-108
 
 ## Context
 
@@ -19,7 +19,7 @@ The base/control-plane App Client remains Cognito-native (no federation), preser
 
 ## Alternatives Considered
 
-- **Single shared Cognito-native pool; set `custom:tenantId` administratively per user.** Rejected: the tenant binding would rest on provisioning correctness rather than the authentication path itself — a confused-deputy / identity-forgery surface, and the same single-mechanism dependence AD-6 exists to avoid.
+- **Single shared Cognito-native pool; set `custom:tenantId` administratively per user.** Rejected: the tenant binding would rest on provisioning correctness rather than the authentication path itself — a confused-deputy / identity-forgery surface, and the same single-mechanism dependence AD-6 exists to avoid. (This rejected shape is deliberately adopted, scoped to the demo tenant only, by AD-108 — see the scope note in Results.)
 - **One Cognito user pool per tenant (full silo).** Rejected: multiplies pool management, the V3 trigger, and Gateway-authorizer wiring per tenant; the shared-pool + per-tenant-IdP shape keeps one normalization path (AD-42) while still giving a per-tenant trust root.
 - **No human federation; M2M / API-key access only.** Rejected: forecloses interactive buyer sign-in and leaves role/group `ClaimRequirement`s permanently unsatisfiable for human approvers (PRD-005 §5.5 entity plane, AD-19).
 
@@ -36,6 +36,8 @@ The binding is only as strong as the per-tenant IdP registration being correct a
 ## Results
 
 Realized in PRD-005 §4.1 / §5.5.2 and REQ-S709–S711, provisioned by the onboarding flow (PRD-017 §4.2a, PRD-011-impl §8). It completes AD-42: the V3 Pre-Token-Generation Lambda normalizes the claim shape, and this decision supplies the non-spoofable *source* of `custom:tenantId` / `custom:userRole` / `custom:groups` for human principals — the federated counterpart to the M2M App-Client binding. Downstream it makes the entity-access-control plane (AD-19) role/group requirements satisfiable, and the Gateway Interceptor (AD-41) and per-request ABAC (AD-37) consume the normalized `tenantId` regardless of issuance path. Onboarding dry-run check #7 (PRD-017 §4.9) asserts every referenced `claim` resolves to a configured issuance path before a tenant goes `ACTIVE`, so an IdP/mapping mismatch fails at onboarding rather than at first approval.
+
+**Scope note (AD-108).** The demo SPA's interactive login (AD-108) deliberately uses the shared-native-pool + administratively-provisioned-`custom:tenantId` shape rejected above, because per-tenant federation is over-built for a single demo tenant with no external IdP. This does not weaken this decision: production human tenancy remains the per-tenant federated IdP, and AD-108 keeps AD-6's rule that the browser can never self-assign its tenant. The two coexist because they serve different scopes — federated binding for real tenants, native-pool fallback for the demo.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

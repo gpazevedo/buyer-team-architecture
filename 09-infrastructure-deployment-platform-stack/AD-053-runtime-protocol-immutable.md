@@ -1,6 +1,8 @@
 # AD-053 — AgentCore Runtime Protocol Is Immutable and Validated at Plan Time
 
-**Theme:** Infrastructure, Deployment & Platform Stack  **Catalog:** AD-53 · **Source PRD:** PRD-007 · **Status:** Accepted · **Related:** AD-4, AD-52
+**Theme:** Infrastructure, Deployment & Platform Stack  **Catalog:** AD-53 · **Source PRD:** PRD-007 · **Status:** Accepted — mechanism corrected by AD-103 · **Related:** AD-4, AD-52, AD-103
+
+> **Correction (2026-06-28, AD-103):** the "immutable / destroy-and-recreate" and "caught at plan time" claims below are **factually wrong as-built.** `update_agent_runtime` is full-replace, so `serverProtocol` is **mutable in place** (it was flipped MCP→A2A→MCP on the same skill runtime id, no recreate), and the skill runtime is updated **out-of-band via boto3** — a path the plan-time TF check never sees. The intent (agents=A2A, skills=MCP) still holds; the *protection mechanism* is superseded by the guarded re-assertion path in **AD-103**.
 
 ## Context
 

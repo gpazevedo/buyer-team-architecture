@@ -1,6 +1,6 @@
 # AD-101 — Agent Base Image + Shared Package Delivery via Immutable `agent-base`
 
-**Theme:** Dynamic Configuration & the Agent Factory  **Catalog:** AD-101 · **Source PRD:** PRD-003/PRD-010 · **Status:** Accepted · **Related:** AD-25, AD-65, AD-95, AD-57, AD-54
+**Theme:** Dynamic Configuration & the Agent Factory  **Catalog:** AD-101 · **Source PRD:** PRD-003/PRD-010 · **Status:** Accepted · **Related:** AD-25, AD-65, AD-95, AD-57, AD-54, AD-104
 
 ## Context
 
@@ -26,9 +26,12 @@ Ship a single immutable `agent-base` Docker image and a shared `buyer_agent_core
 - `observability.py` — `setup_telemetry`, `log_usage`, `log_tool_call`
 
 **Base image (`impl/docker/agent-base/Dockerfile`):**
-- `FROM python:3.13-slim`
-- Installs uv, then `strands-agents[a2a,otel]`, `a2a-sdk[http-server]`, OTEL distro, `boto3`, `uvicorn`
-- Installs `buyer_agent_core` system-wide (so `import buyer_agent_core` resolves in every per-agent image)
+- Multi-stage build: `builder` stage installs dependencies via uv, `runtime` stage copies only installed packages and entry-points (drops uv binary from final image)
+- `FROM python:3.14-slim` both stages; non-root `agentuser` in runtime
+- Pre-compiles bytecode at build time (`UV_COMPILE_BYTECODE=1`), uses `UV_LINK_MODE=copy` for clean multi-stage transfers
+- `RUN --mount=type=cache,target=/root/.cache/uv` for cached package downloads across rebuilds
+- Installs `strands-agents[a2a,otel]`, `a2a-sdk[http-server]`, OTEL distro, `boto3`, `uvicorn` in the builder
+- Installs `buyer_agent_core` system-wide in the builder (so `import buyer_agent_core` resolves in every per-agent image)
 - Sets OTEL env vars (distro, configurator, OTLP endpoint, semconv opt-in)
 - `EXPOSE 9000`
 
@@ -81,7 +84,9 @@ spec = AgentSpec(
 
 Implemented in PR #42 (`feat/dynamic-agent-factory`): `impl/packages/buyer_agent_core/` (shared package), `impl/docker/agent-base/Dockerfile` (base image), `scripts/bootstrap_ecr_images.sh` (build orchestration). All 7 agent `Dockerfile`s thinned to the pattern above. `impl/agents/kraljic_classifier_llm/agent_spec.py` + `agent.py` serve as the reference thin-agent example. Placement-guard test verifies no agent imports from outside `buyer_agent_core`; drift-guard CI validates that the base tag is the current SHA.
 
-Cross-referenced in AD-25 (factory scope narrowed, delivered via `agent-base`), AD-65 (model-ladder + cache-prefix only, shared via this mechanism), and AD-95 (the boot-safe model ladder in `model_resolver.py` is the single init path, carried in the base image).
+Base image optimized in PR #75 (`perf/improve-dockerfiles`): multi-stage build, bytecode pre-compilation, non-root user, and BuildKit cache mounts (see AD-104 for rationale). `skill_runtime/Dockerfile` converted to the same multi-stage pattern.
+
+Cross-referenced in AD-25 (factory scope narrowed, delivered via `agent-base`), AD-65 (model-ladder + cache-prefix only, shared via this mechanism), AD-95 (the boot-safe model ladder in `model_resolver.py` is the single init path, carried in the base image), and AD-104 (Docker image optimization strategy).
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

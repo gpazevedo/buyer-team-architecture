@@ -74,6 +74,8 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-037](04-multi-tenancy-isolation/AD-037-per-request-tenant-abac-credentials.md) | Per-Request Tenant ABAC Credentials |
 | [AD-038](04-multi-tenancy-isolation/AD-038-defense-in-depth-not-replacement.md) | Defense in Depth, Not Replacement |
 | [AD-041](04-multi-tenancy-isolation/AD-041-gateway-request-interceptor.md) | Gateway Request Interceptor Rewrites tenant_id, Fails Closed |
+| [AD-102](04-multi-tenancy-isolation/AD-102-interceptor-http-target-contract.md) | Gateway Interceptor Built to the HTTP-Target Contract (event["http"] + base64) |
+| [AD-107](04-multi-tenancy-isolation/AD-107-fastmcp-agentcore-context-middleware.md) | AgentCore Context Middleware for FastMCP — Bridge Runtime Headers into `BedrockAgentCoreContext` |
 
 ### 05 · Security & Governance / Trust Boundaries
 
@@ -89,6 +91,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-044](05-security-governance-trust-boundaries/AD-044-tenant-evaluation-config-hardened.md) | Tenant-Evaluation-Config Table Hardened |
 | [AD-094](05-security-governance-trust-boundaries/AD-094-per-tenant-federated-idp.md) | Per-Tenant Federated IdP for Non-Spoofable Human Tenant Binding |
 | [AD-100](05-security-governance-trust-boundaries/AD-100-governance-fail-fast-split.md) | Governance Fail-Fast Split — ConfigUnreachable vs GovernanceKeyMissing |
+| [AD-108](05-security-governance-trust-boundaries/AD-108-demo-spa-hosted-ui-login.md) | Demo SPA Interactive Login via Cognito Hosted UI (Native PKCE Public Client) |
 
 ### 06 · Reliability, Resilience & Graceful Degradation
 
@@ -128,6 +131,8 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-062](08-cost-architecture-optimization/AD-062-batch-inference-nightly.md) | Batch Inference for Nightly Supplier KPI Recalculation |
 | [AD-092](08-cost-architecture-optimization/AD-092-cross-family-eval-llm-tier.md) | Cross-Family LLM-as-Judge Tier (EvalLLM) |
 | [AD-093](08-cost-architecture-optimization/AD-093-communication-templating-o1.md) | Communication Generation Is O(1) in Supplier Count |
+| [AD-105](08-cost-architecture-optimization/AD-105-warmup-sentinel-early-exit.md) | Warm-Up Sentinel Early Exit — No LLM Cost for Keep-Alive Pings |
+| [AD-106](08-cost-architecture-optimization/AD-106-tool-output-compaction.md) | Tool-Output Compaction via AfterToolCallEvent Hook |
 
 ### 09 · Infrastructure, Deployment & Platform Stack
 
@@ -141,6 +146,8 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-054](09-infrastructure-deployment-platform-stack/AD-054-gitops-build-once-promote.md) | GitOps: Build-Once-Promote, Rollback as Forward Deploy |
 | [AD-055](09-infrastructure-deployment-platform-stack/AD-055-five-environment-model.md) | Five-Environment Model with Per-Environment Cedar, PITR, and Retention Settings |
 | [AD-056](09-infrastructure-deployment-platform-stack/AD-056-canary-deployment.md) | Canary as Monitoring-Only Observation Window → Per-Quadrant Smoke → 100% with Roll-Forward on Failure |
+| [AD-103](09-infrastructure-deployment-platform-stack/AD-103-skill-runtime-update-full-replace-guarded.md) | Skill-Runtime Updates Are Full-Replace; Protocol & Env Re-Asserted via a Guarded Path (corrects AD-53) |
+| [AD-104](09-infrastructure-deployment-platform-stack/AD-104-docker-image-optimization-strategy.md) | Docker Image Optimization Strategy: Multi-Stage, Bytecode, Non-Root, Cache Mounts, .dockerignore |
 
 ### 10 · Capacity, Admission Control & Tenant Lifecycle
 
@@ -176,6 +183,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-009](12-procurement-domain-logic/AD-009-pr-po-splitting.md) | PR→PO Splitting: One PO per Supplier with ≥1 Awarded Item |
 | [AD-010](12-procurement-domain-logic/AD-010-hard-supplier-delivery-gate.md) | Hard Supplier Delivery Gate Before Invitation |
 | [AD-096](12-procurement-domain-logic/AD-096-node2-kraljic-live-schema-hybrid-shortcircuit.md) | Node 2 Kraljic Live-Schema Hybrid Short-Circuit |
+| [AD-109](12-procurement-domain-logic/AD-109-po-receiving-lifecycle.md) | PO Receiving Lifecycle: RECEIVED Terminal State + Typed Ack/Reject + Trace Chain |
 
 ### 13 · Test Tenant Platform Data
 
