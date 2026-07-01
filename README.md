@@ -149,6 +149,8 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-103](09-infrastructure-deployment-platform-stack/AD-103-skill-runtime-update-full-replace-guarded.md) | Skill-Runtime Updates Are Full-Replace; Protocol & Env Re-Asserted via a Guarded Path (corrects AD-53) |
 | [AD-104](09-infrastructure-deployment-platform-stack/AD-104-docker-image-optimization-strategy.md) | Docker Image Optimization Strategy: Multi-Stage, Bytecode, Non-Root, Cache Mounts, .dockerignore |
 | [AD-110](09-infrastructure-deployment-platform-stack/AD-110-cognito-custom-attributes-out-of-band.md) | Cognito Pool Custom Attributes Are Added Out-of-Band via AddCustomAttributes, Not Terraform |
+| [AD-111](09-infrastructure-deployment-platform-stack/AD-111-decoupled-per-component-dev-deploy.md) | Decoupled Per-Component Dev Deploy via Committed Tag Map |
+| [AD-112](09-infrastructure-deployment-platform-stack/AD-112-prevent-destroy-stateful-guardrail.md) | `prevent_destroy` as the Guardrail for Dev's Automated Apply |
 
 ### 10 · Capacity, Admission Control & Tenant Lifecycle
 
