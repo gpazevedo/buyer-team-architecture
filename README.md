@@ -148,6 +148,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-056](09-infrastructure-deployment-platform-stack/AD-056-canary-deployment.md) | Canary as Monitoring-Only Observation Window → Per-Quadrant Smoke → 100% with Roll-Forward on Failure |
 | [AD-103](09-infrastructure-deployment-platform-stack/AD-103-skill-runtime-update-full-replace-guarded.md) | Skill-Runtime Updates Are Full-Replace; Protocol & Env Re-Asserted via a Guarded Path (corrects AD-53) |
 | [AD-104](09-infrastructure-deployment-platform-stack/AD-104-docker-image-optimization-strategy.md) | Docker Image Optimization Strategy: Multi-Stage, Bytecode, Non-Root, Cache Mounts, .dockerignore |
+| [AD-110](09-infrastructure-deployment-platform-stack/AD-110-cognito-custom-attributes-out-of-band.md) | Cognito Pool Custom Attributes Are Added Out-of-Band via AddCustomAttributes, Not Terraform |
 
 ### 10 · Capacity, Admission Control & Tenant Lifecycle
 
