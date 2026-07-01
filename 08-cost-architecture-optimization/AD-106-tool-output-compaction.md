@@ -11,7 +11,7 @@ The per-session cost ceiling (`max_session_input_tokens`, AD-048) caps total ses
 
 ## Decision
 
-A Strands `AfterToolCallEvent` hook (`compact_tool_output`) truncates tool results in-place when their serialized JSON exceeds `MAX_TOOL_OUTPUT_CHARS` (default 4000). String values longer than 500 characters are truncated with a `"..."` suffix; the result structure (keys, list lengths) is preserved. A `_compacted` flag and `_original_size` are set on dict results so downstream code can detect truncation.
+A Strands `AfterToolCallEvent` hook (`compact_tool_output`) truncates tool results in-place when their serialized JSON exceeds `MAX_TOOL_OUTPUT_CHARS` (default 4000). String values longer than 500 characters are truncated **head + tail** within that budget (head 2/3, tail 1/3, joined by a `…[N chars elided]…` marker); the result structure (keys, list lengths) is preserved. Keeping the tail matters because a tool output's answer — running total, final status — often sits at the end of a long field, which head-only truncation would drop. A `_compacted` flag and `_original_size` are set on dict results so downstream code can detect truncation.
 
 The hook is registered in `AgentBlueprint.new_agent()` alongside `log_tool_call` in the shared `buyer_agent_core` package (AD-101), so all 7 agents inherit it uniformly. Controlled via environment variable; set `MAX_TOOL_OUTPUT_CHARS=0` to disable.
 
@@ -26,7 +26,7 @@ The hook is registered in `AgentBlueprint.new_agent()` alongside `log_tool_call`
 
 | Gained | Given up |
 | --- | --- |
-| Bounded per-call input-token growth across multi-round tool loops — large tool results truncated before they inflate every subsequent call | Truncated tool results may omit detail the agent needs in later reasoning rounds |
+| Bounded per-call input-token growth across multi-round tool loops — large tool results truncated before they inflate every subsequent call | Truncated tool results may omit the *middle* detail of a long field; head + tail preserves the start and end (totals/status) but the elided span is still lost to later reasoning rounds |
 | Zero-token, deterministic, runs inline on every tool call | The `_compacted` / `_original_size` keys are reserved; a tool result schema must not use them |
 | Single point of enforcement in the shared factory — no per-agent duplication | The 500-char string limit and 4000-char output threshold are fixed defaults; per-agent tuning requires env-var or code changes |
 
