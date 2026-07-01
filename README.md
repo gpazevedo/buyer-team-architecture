@@ -36,7 +36,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-012](01-orchestration-state-recovery/AD-012-single-governed-cycle-back.md) | Single Governed Cycle-Back (Node 6 → Node 4x, Max 1) |
 | [AD-014](01-orchestration-state-recovery/AD-014-idempotent-nodes-checkpoint.md) | Idempotent Nodes with Explicit Dedup Keys + Checkpoint After Every Node |
 | [AD-015](01-orchestration-state-recovery/AD-015-concurrent-recovery-lock.md) | Concurrent Recovery Lock Scoped to (tenant_id, negotiation_id), 600s TTL |
-| [AD-016](01-orchestration-state-recovery/AD-016-requires-attention-typed-triggers.md) | REQUIRES_ATTENTION with Seventeen Typed Triggers |
+| [AD-016](01-orchestration-state-recovery/AD-016-requires-attention-typed-triggers.md) | REQUIRES_ATTENTION with Eighteen Typed Triggers |
 | [AD-017](01-orchestration-state-recovery/AD-017-dynamodb-status-authoritative.md) | DynamoDB Status Write Is Authoritative; DLQ Best-Effort + S3 Archive |
 | [AD-026](01-orchestration-state-recovery/AD-026-tool-level-idempotency.md) | Tool-Level Idempotency via Dedup Keys / Session Cache |
 

@@ -1,4 +1,4 @@
-# AD-016 — REQUIRES_ATTENTION with Seventeen Typed Triggers
+# AD-016 — REQUIRES_ATTENTION with Eighteen Typed Triggers
 
 **Theme:** Orchestration, State & Recovery
 **Catalog:** AD-16 · **Source PRD:** PRD-002 · **Status:** Accepted · **Related:** AD-17, AD-12
@@ -9,7 +9,7 @@ Many distinct conditions warrant pulling a negotiation out of automated flow —
 
 ## Decision
 
-Use one `REQUIRES_ATTENTION` status reachable from *any* status, carrying a machine-readable `entry_trigger` code plus a human-readable `entry_reason`. Maintain a numbered trigger table (currently 17) where each trigger has a condition, escalation path, and SLA. Sub-codes (e.g. `superseded_marking_failure`) are emitted as the literal `entry_trigger` value so dashboards can filter at sub-code granularity, while the column-3 code remains the canonical taxonomy mapping. Ops always resolves to either ACTIVE or CANCELLED.
+Use one `REQUIRES_ATTENTION` status reachable from *any* status, carrying a machine-readable `entry_trigger` code plus a human-readable `entry_reason`. Maintain a numbered trigger table (currently 18) where each trigger has a condition, escalation path, and SLA. Sub-codes (e.g. `superseded_marking_failure`) are emitted as the literal `entry_trigger` value so dashboards can filter at sub-code granularity, while the column-3 code remains the canonical taxonomy mapping. Ops always resolves to either ACTIVE or CANCELLED.
 
 ## Alternatives Considered
 
@@ -20,7 +20,7 @@ Use one `REQUIRES_ATTENTION` status reachable from *any* status, carrying a mach
 
 | Gained | Given up |
 | --- | --- |
-| Ops dashboards filter at sub-code granularity with per-condition SLAs | The trigger table is a living maintenance surface — it has grown 9 → 13 → 14 → 16 → 17 across revisions |
+| Ops dashboards filter at sub-code granularity with per-condition SLAs | The trigger table is a living maintenance surface — it has grown 9 → 13 → 14 → 16 → 17 → 18 across revisions |
 | Core state machine stays small (one status, not one per failure type) | Each new failure mode discovered in audit must be slotted in with a code, SLA, and escalation path |
 
 Keeping the state-machine diagram and cross-PRD trigger-count references in sync is recurring coherence work.
