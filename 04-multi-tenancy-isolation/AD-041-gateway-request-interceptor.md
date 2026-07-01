@@ -1,6 +1,6 @@
 # AD-041 — Gateway Request Interceptor Rewrites tenant_id, Fails Closed
 
-**Theme:** Multi-Tenancy & Isolation  **Catalog:** AD-41 · **Source PRD:** PRD-005 · **Status:** Accepted · **Related:** AD-37, AD-38, AD-39, AD-42
+**Theme:** Multi-Tenancy & Isolation  **Catalog:** AD-41 · **Source PRD:** PRD-005 · **Status:** Accepted · **Related:** AD-37, AD-38, AD-39, AD-42, AD-102
 
 ## Context
 
@@ -8,7 +8,7 @@ Cedar decides whether an agent→tool binding is permitted, but the `tenant_id` 
 
 ## Decision
 
-A Lambda interceptor on every Gateway decodes the Layer-2-validated JWT, extracts the normalized `tenantId` claim (produced by AD-42), and overwrites `params.arguments.tenant_id` in the request body before Cedar evaluates it. A missing or empty claim returns 403; any interceptor failure returns 500 and the target Lambda never executes (fail closed).
+A Lambda interceptor on every Gateway decodes the Layer-2-validated JWT, extracts the normalized `tenantId` claim (produced by AD-42), and overwrites `params.arguments.tenant_id` in the request body before Cedar evaluates it. A missing or empty claim returns 403; any interceptor failure returns 500 and the target Lambda never executes (fail closed). The concrete body-handling differs by Gateway target type — for the Runtime-backed ingest Gateway the body arrives base64-encoded under `event["http"]`, not as a parsed MCP object; see AD-102 for that contract.
 
 ## Alternatives Considered
 

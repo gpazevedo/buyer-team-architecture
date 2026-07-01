@@ -34,5 +34,7 @@ This mirrors AD-17's posture one layer out: the DynamoDB write is the authoritat
 
 Realized in `orchestrator/node_award_comms.py` (`_export_purchase_order`), invoked downstream of the durable `{env}-orders` write and the COMPLETED transition. The `export_status=PENDING` + `export_target`/`export_format` attributes on the order row form the outbox; the `po.export_internal` / `po.export_requested` / `po.export_error` decision records make every branch observable. The drainer — the Skill-side `export_purchase_order` transport (PRD-011 §3.2) — is the remaining Phase-3 work; until it ships, real-tenant POs accumulate as `PENDING` and the test tenant's internal PO Receiving is unaffected. Pairs with AD-9 (one PO per supplier is the unit of export) and AD-17 (durable authoritative write, best-effort downstream delivery).
 
+The authoritative `{env}-orders` write and the outbox stamp are made atomic by the transactional-outbox `commit_with_event` (PRD-006 §2.6), a single `TransactWriteItems` dual-write, so a PO can never be authoritative without its export intent recorded (or vice-versa). PR #91 fixed the missing `dynamodb:TransactWriteItems` grant on the `step_invoker` role that Node 7 (`node_award_comms._commit_award_and_export`) needs for this commit — without it the atomic write failed `AccessDenied`.
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

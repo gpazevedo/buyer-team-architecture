@@ -1,6 +1,6 @@
 # AD-042 — Cognito Pre-Token-Generation V3 Normalizes tenantId
 
-**Theme:** Security, Governance & Trust Boundaries  **Catalog:** AD-42 · **Source PRD:** PRD-005 · **Status:** Accepted · **Related:** AD-37, AD-41, AD-94
+**Theme:** Security, Governance & Trust Boundaries  **Catalog:** AD-42 · **Source PRD:** PRD-005 · **Status:** Accepted · **Related:** AD-37, AD-41, AD-94, AD-102, AD-108
 
 ## Context
 
@@ -25,6 +25,8 @@ A shared Pre-Token-Generation V3 Lambda normalizes tenant identity to a top-leve
 ## Results
 
 The onboarding dry-run (PRD-017 §4.9, check #1) asserts that an M2M token actually carries a top-level `tenantId` claim, catching regressions at the onboarding stage before a tenant goes live. This decision is a prerequisite for AD-41: the interceptor's correctness depends on every JWT carrying a single, non-spoofable `tenantId` regardless of how it was issued.
+
+A third issuance path was added later for the demo SPA (AD-108): an interactive human login through a **Cognito-native PKCE public App Client** (Hosted UI). It reuses this normalization unchanged — a demo user with `custom:tenantId` is normalized like any native user, and one without falls back to the M2M `by-app-client` binding. Wiring it up surfaced a latent defect this Lambda depends on: the pool's custom attribute had been declared `name = "custom:tenantId"`, but the AWS provider prepends `custom:`, so it was physically stored as `custom:custom:tenantId` — the attribute this Lambda reads (`custom:tenantId`) never existed, silently routing every Hosted-UI user to the M2M fallback branch. Corrected additively in AD-108 (Cognito custom attributes are immutable and cannot be renamed in place).
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
