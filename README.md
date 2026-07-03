@@ -118,6 +118,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-033](07-observability-evaluation/AD-033-online-eval-100pct-except-tone.md) | Online Evaluation on 100% of Traces, Except Communication Tone (Tiered Sampling) |
 | [AD-034](07-observability-evaluation/AD-034-evaluation-thresholds-drive-automated-actions.md) | Evaluation Score Thresholds Drive Automated Actions (Closed Loop) |
 | [AD-035](07-observability-evaluation/AD-035-atlas-evaluators-on-schedule.md) | ATLAS-Specific Evaluators Run on a Schedule |
+| [AD-113](07-observability-evaluation/AD-113-phase-0-eval-stub-scope.md) | Phase 0 Eval Scope: Ship What's Buildable, Stub the Judge, Gate the Rest |
 
 ### 08 · Cost Architecture & Optimization
 
@@ -151,6 +152,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-110](09-infrastructure-deployment-platform-stack/AD-110-cognito-custom-attributes-out-of-band.md) | Cognito Pool Custom Attributes Are Added Out-of-Band via AddCustomAttributes, Not Terraform |
 | [AD-111](09-infrastructure-deployment-platform-stack/AD-111-decoupled-per-component-dev-deploy.md) | Decoupled Per-Component Dev Deploy via Committed Tag Map |
 | [AD-112](09-infrastructure-deployment-platform-stack/AD-112-prevent-destroy-stateful-guardrail.md) | `prevent_destroy` as the Guardrail for Dev's Automated Apply |
+| [AD-114](09-infrastructure-deployment-platform-stack/AD-114-adot-layer-arn-defaults-on.md) | ADOT Layer ARN Defaults On at the Root, Not via Workflow `-var` |
 
 ### 10 · Capacity, Admission Control & Tenant Lifecycle
 
