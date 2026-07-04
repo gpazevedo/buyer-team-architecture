@@ -47,5 +47,7 @@ Also same day: the per-prompt agent fan-out in `run_adversarial_suite` was paral
 
 Dev's NAT Gateway / Elastic IP / interface VPC endpoints were released (`infra/release_vpc.sh`) after the 30% run to pause the dev networking bill; restore with `infra/restore_vpc.sh` before any further live agent-runtime testing (the agents can't reach Bedrock/DynamoDB without it).
 
+**Update 2026-07-04 — async-invoke failure destination added.** Both Lambdas are invoked asynchronously by EventBridge with no on-failure destination — a failed run (e.g. an agent endpoint down for the full 900s timeout) was silently dropped after Lambda's default async retries, with no record it ever happened. Fixed (`buyer-team-impl` PR #132): a dedicated `atlas_evaluator_dlq` SQS queue, kept separate from AD-17's resilience `buyer_team_dlq` since that queue's redrive consumer expects a different message shape, wired as both Lambdas' on-failure destination (`aws_lambda_function_event_invoke_config`) plus the `sqs:SendMessage` grant their execution role needs to deliver to it. This makes evaluator failures observable in the DLQ but does not itself close the "still not built" gap noted above — no alarm/SNS consumes it yet.
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
