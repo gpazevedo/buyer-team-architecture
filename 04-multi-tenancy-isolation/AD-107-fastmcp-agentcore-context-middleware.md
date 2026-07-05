@@ -1,6 +1,6 @@
 # AD-107 — AgentCore Context Middleware for FastMCP
 
-**Theme:** Multi-Tenancy & Isolation  **Catalog:** AD-107 · **Source PRD:** PRD-005 · **Status:** Accepted · **Related:** AD-6, AD-37, AD-77, AD-99
+**Theme:** Multi-Tenancy & Isolation  **Catalog:** AD-107 · **Source PRD:** PRD-005 · **Status:** Accepted · **Related:** AD-6, AD-37, AD-77, AD-99, AD-116
 
 ## Context
 

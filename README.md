@@ -119,6 +119,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-034](07-observability-evaluation/AD-034-evaluation-thresholds-drive-automated-actions.md) | Evaluation Score Thresholds Drive Automated Actions (Closed Loop) |
 | [AD-035](07-observability-evaluation/AD-035-atlas-evaluators-on-schedule.md) | ATLAS-Specific Evaluators Run on a Schedule |
 | [AD-113](07-observability-evaluation/AD-113-phase-0-eval-stub-scope.md) | Phase 0 Eval Scope: Ship What's Buildable, Stub the Judge, Gate the Rest |
+| [AD-115](07-observability-evaluation/AD-115-emit-metric-meta-alerting-fallback-datapoint.md) | `emit_metric` Meta-Alerting: Non-Recursive Fallback Datapoint on Publish Failure |
 
 ### 08 · Cost Architecture & Optimization
 
@@ -179,6 +180,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-070](11-integration-skills-plugins-transports/AD-070-tenant-predicate-rewriting.md) | Tenant Predicate Rewriting + User-Action Claim Propagation |
 | [AD-071](11-integration-skills-plugins-transports/AD-071-tenant-default-claims-ceiling.md) | `tenant_default_claims` Are the Ceiling for Per-PR Overrides |
 | [AD-097](11-integration-skills-plugins-transports/AD-097-po-export-outbox-handoff.md) | PO Export Decoupled from Award via a Durable Outbox |
+| [AD-116](11-integration-skills-plugins-transports/AD-116-fastmcp-typed-schema-decoupled-from-validation.md) | FastMCP Tool Params Stay `dict`; `WithJsonSchema` Carries the Real Schema |
 
 ### 12 · Procurement Domain Logic
 
