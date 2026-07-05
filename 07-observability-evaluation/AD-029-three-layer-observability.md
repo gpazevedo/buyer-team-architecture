@@ -1,6 +1,6 @@
 # AD-029 — Three-Layer Observability (Platform / Application / Domain)
 
-**Theme:** Observability & Evaluation  **Catalog:** AD-29 · **Source PRD:** PRD-004 · **Status:** Accepted · **Related:** AD-30, AD-31, AD-13
+**Theme:** Observability & Evaluation  **Catalog:** AD-29 · **Source PRD:** PRD-004 · **Status:** Accepted · **Related:** AD-30, AD-31, AD-13, AD-115
 
 ## Context
 
@@ -10,7 +10,7 @@ Agentic systems resist conventional monitoring for four reasons: non-determinism
 
 Observability is split into three independent layers, each with its own ownership and CloudWatch namespace:
 
-- **Layer 1 — Platform:** AgentCore built-in metrics (session count, invocation latency p50/p90/p99, error count/rate, throttle count, token usage) under `AWS/BedrockAgentCore`, emitted with no code instrumentation required.
+- **Layer 1 — Platform:** AgentCore built-in metrics (session count, invocation latency, error count/rate, throttle count, token usage) under `AWS/BedrockAgentCore`, emitted with no code instrumentation required.
 - **Layer 2 — Application:** ADOT/OTEL spans carrying procurement-specific and security attributes (`procurement.tenant_id`, `procurement.negotiation_id`, `security.steering.*`, etc.) via custom instrumentation.
 - **Layer 3 — Domain:** Custom OTEL business metrics published as EMF to `procurement/business`, `procurement/kpi`, `procurement/cost`, `procurement/resilience`, `procurement/security`, and `procurement/tenant`.
 
@@ -30,6 +30,10 @@ Observability is split into three independent layers, each with its own ownershi
 ## Results
 
 Three role-aligned dashboards fall out naturally: Operations (SRE), Business (procurement), Cost (FinOps). Each layer can change without disturbing the others; new domain metrics were added over successive PRD-004 revisions purely at Layer 3. AD-31 (W3C `traceparent` propagation) provides the cross-layer correlation substrate; AD-30 (CloudWatch Transaction Search) is the prerequisite for evaluators to read Layer 2 traces. The accepted liability is CloudWatch cardinality and cost management on the domain layer, particularly for the unbounded-cardinality `negotiation_id` dimension.
+
+**Update 2026-07-04/05 — Layer 1 real namespace corrected; Layer 1 alarms and new Layer 3 metrics shipped.** The Layer 1 namespace is `AWS/Bedrock-AgentCore` (hyphenated) with real metric names `Errors` and `Latency` (also `SystemErrors`/`UserErrors`/`Duration`/`Sessions`/`Invocations`), confirmed against live dev CloudWatch data via `list_metrics` — not the unhyphenated `AWS/BedrockAgentCore` name this ADR originally stated and PRD-004 §3.3 guessed. `infra/agent_runtime_alarms.tf` (PR #139) adds 16 `aws_cloudwatch_metric_alarm` resources (Errors + Latency, `for_each` over the 7 agent runtimes + the skill runtime) on this corrected namespace, routed to the same `evaluation_alerts` SNS topic AD-34's alarms use — Layer 1 was previously "no code instrumentation required" but also **no alarms**; an agent up-but-erroring or slow was invisible until it caused a node Lambda failure. The Latency threshold (60s) is a first-pass guess, not a tuned SLO — there is no fixed per-invocation timeout for agent runtimes the way Lambda has one.
+
+New Layer 3 domain metrics shipped in the same pass (PR #140): `tokens.input`/`tokens.output` under `procurement/cost` (dimensioned by `agent_name` + `model_tier`, emitted from `buyer_agent_core.observability.log_usage()`), `kraljic.classification_source` under `procurement/business` (one `emit_metric` call at the single `_response()` choke point all 5 Kraljic classification paths return through), and `governance.violation_count` under `procurement/business` (emitted from each of the 6 agents' `steering.py` guards at their block/intervention point, dimensioned by `violation_type`). A role-aligned Business dashboard (`infra/modules/observability/dashboard.tf`, PR #137/138) now visualizes negotiation lifecycle, bid/governance/approval, savings, and the new token-usage widgets — none of these three new metrics has an alarm yet; thresholds need real dev data first. `emit_metric` itself gained a self-observing failure mode (AD-115) as part of this same body of work.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
