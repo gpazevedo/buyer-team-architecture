@@ -50,6 +50,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-023](02-agent-architecture-behavioral-control/AD-023-steering-over-prompting.md) | Steering over Prompting |
 | [AD-024](02-agent-architecture-behavioral-control/AD-024-steering-hook-failure-semantics.md) | Steering Hook Failure Semantics (7 PRE-CALL GUIDE Hooks + 1 Declarative, No Retry-Wrap, Fail-Closed) |
 | [AD-027](02-agent-architecture-behavioral-control/AD-027-agents-communicate-through-shared-state.md) | Agents Communicate Only Through Step Functions Shared State |
+| [AD-117](02-agent-architecture-behavioral-control/AD-117-bid-evaluation-inline-scoring-replaces-llm.md) | Bid-Evaluation AgentCore Runtime Removed; Inline Deterministic Scoring Replaces the LLM Agent |
 
 ### 03 · Dynamic Configuration & Agent Factory
 
@@ -76,6 +77,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-041](04-multi-tenancy-isolation/AD-041-gateway-request-interceptor.md) | Gateway Request Interceptor Rewrites tenant_id, Fails Closed |
 | [AD-102](04-multi-tenancy-isolation/AD-102-interceptor-http-target-contract.md) | Gateway Interceptor Built to the HTTP-Target Contract (event["http"] + base64) |
 | [AD-107](04-multi-tenancy-isolation/AD-107-fastmcp-agentcore-context-middleware.md) | AgentCore Context Middleware for FastMCP — Bridge Runtime Headers into `BedrockAgentCoreContext` |
+| [AD-119](04-multi-tenancy-isolation/AD-119-per-tenant-cognito-m2m-client.md) | Per-Tenant Cognito M2M App Client for PR Event Router |
 
 ### 05 · Security & Governance / Trust Boundaries
 
@@ -191,6 +193,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-010](12-procurement-domain-logic/AD-010-hard-supplier-delivery-gate.md) | Hard Supplier Delivery Gate Before Invitation |
 | [AD-096](12-procurement-domain-logic/AD-096-node2-kraljic-live-schema-hybrid-shortcircuit.md) | Node 2 Kraljic Live-Schema Hybrid Short-Circuit |
 | [AD-109](12-procurement-domain-logic/AD-109-po-receiving-lifecycle.md) | PO Receiving Lifecycle: RECEIVED Terminal State + Typed Ack/Reject + Trace Chain |
+| [AD-118](12-procurement-domain-logic/AD-118-walk-away-price-ceiling-enforcement.md) | Walk-Away Price Ceiling: Orchestrator Enforces Budget on Agent-Returned Prices |
 
 ### 13 · Test Tenant Platform Data
 
