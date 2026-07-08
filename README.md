@@ -121,7 +121,8 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-034](07-observability-evaluation/AD-034-evaluation-thresholds-drive-automated-actions.md) | Evaluation Score Thresholds Drive Automated Actions (Closed Loop) |
 | [AD-035](07-observability-evaluation/AD-035-atlas-evaluators-on-schedule.md) | ATLAS-Specific Evaluators Run on a Schedule |
 | [AD-113](07-observability-evaluation/AD-113-phase-0-eval-stub-scope.md) | Phase 0 Eval Scope: Ship What's Buildable, Stub the Judge, Gate the Rest |
-| [AD-115](07-observability-evaluation/AD-115-emit-metric-meta-alerting-fallback-datapoint.md) | `emit_metric` Meta-Alerting: Non-Recursive Fallback Datapoint on Publish Failure |
+| [AD-115](07-observability-evaluation/AD-115-emit-metric-meta-alerting-fallback-datapoint.md) | `emit_metric` Meta-Alerting: Non-Recursive Fallback Datapoint on Publish Failure (superseded, see correction) |
+| [AD-120](07-observability-evaluation/AD-120-correlation-id-bridges-non-call-trace-gaps.md) | Correlation ID Persisted as Row Data to Bridge Trace Discontinuities Beyond A2A Calls |
 
 ### 08 · Cost Architecture & Optimization
 
