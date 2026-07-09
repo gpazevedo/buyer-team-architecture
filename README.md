@@ -108,6 +108,8 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-072](06-reliability-resilience-graceful-degradation/AD-072-two-tier-memory-independently-degrading.md) | Two-Tier Memory: AgentCore Memory + Mem0, Independently Degrading |
 | [AD-073](06-reliability-resilience-graceful-degradation/AD-073-mem0-scoping-maps-to-domain.md) | Mem0 Scoping Maps to the Domain Model |
 | [AD-074](06-reliability-resilience-graceful-degradation/AD-074-four-mem0-integration-points.md) | Four Mem0 Integration Points, All Degrade Gracefully |
+| [AD-123](06-reliability-resilience-graceful-degradation/AD-123-readiness-draining-fail-open-window.md) | Readiness Gate + SIGTERM Draining Close the Fail-Open Window at Both Ends of a Replica's Life |
+| [AD-124](06-reliability-resilience-graceful-degradation/AD-124-inbound-admission-control-replaces-outbound-bulkhead.md) | Inbound Concurrency-Cap Shedding Is the Live Backpressure AD-50's Removed Bulkhead Was Meant to Provide |
 
 ### 07 · Observability & Evaluation
 
