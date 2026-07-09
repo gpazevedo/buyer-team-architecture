@@ -1,7 +1,9 @@
 # AD-108 — Demo SPA Interactive Login via Cognito Hosted UI (Native PKCE Public Client)
 
 **Theme:** Security, Governance & Trust Boundaries
-**Catalog:** AD-108 · **Source PRD:** PRD-013 · **Status:** Accepted · **Related:** AD-42, AD-94, AD-6, AD-37, AD-41
+**Catalog:** AD-108 · **Source PRD:** PRD-013 · **Status:** Accepted · **Related:** AD-42, AD-94, AD-6, AD-37, AD-41, AD-122
+
+> **Correction (2026-07-09, PR #183):** the Results section below lists the `test_tenant_app` frontend and `run_demo.sh` alongside `infra/` and `scripts/` as if realized in one repository. As of PR #183 (see **AD-122**), `test_tenant_app` and `demo-harness-project` are also actively developed in a separate repository (`buyer-team-demo`), extracted via `git subtree` with full history preserved. `infra/modules/security/main.tf`, `scripts/seed_test_tenant.py`, and `scripts/create_tenant_user.py` remain in this (platform) repository. As of this writing the platform repository's own copy of `test_tenant_app` has not been removed, so the two repositories temporarily carry parallel copies — see AD-122's Results. The authentication decision itself — Hosted-UI PKCE, two-tier non-spoofable tenant binding — is unaffected; this is a repository-location correction only.
 
 ## Context
 
