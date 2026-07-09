@@ -125,6 +125,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-113](07-observability-evaluation/AD-113-phase-0-eval-stub-scope.md) | Phase 0 Eval Scope: Ship What's Buildable, Stub the Judge, Gate the Rest |
 | [AD-115](07-observability-evaluation/AD-115-emit-metric-meta-alerting-fallback-datapoint.md) | `emit_metric` Meta-Alerting: Non-Recursive Fallback Datapoint on Publish Failure (superseded, see correction) |
 | [AD-120](07-observability-evaluation/AD-120-correlation-id-bridges-non-call-trace-gaps.md) | Correlation ID Persisted as Row Data to Bridge Trace Discontinuities Beyond A2A Calls |
+| [AD-121](07-observability-evaluation/AD-121-meta-observability-heartbeat-dead-mans-switch.md) | Meta-Observability Heartbeat Dead-Man's-Switch |
 
 ### 08 · Cost Architecture & Optimization
 
@@ -159,6 +160,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-111](09-infrastructure-deployment-platform-stack/AD-111-decoupled-per-component-dev-deploy.md) | Decoupled Per-Component Dev Deploy via Committed Tag Map |
 | [AD-112](09-infrastructure-deployment-platform-stack/AD-112-prevent-destroy-stateful-guardrail.md) | `prevent_destroy` as the Guardrail for Dev's Automated Apply |
 | [AD-114](09-infrastructure-deployment-platform-stack/AD-114-adot-layer-arn-defaults-on.md) | ADOT Layer ARN Defaults On at the Root, Not via Workflow `-var` |
+| [AD-122](09-infrastructure-deployment-platform-stack/AD-122-demo-harness-extracted-to-own-repository.md) | Demo Harness and Test-Tenant App Extracted to Their Own Repository |
 
 ### 10 · Capacity, Admission Control & Tenant Lifecycle
 
