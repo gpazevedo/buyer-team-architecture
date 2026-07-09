@@ -3,6 +3,8 @@
 **Theme:** Cost Architecture & Optimization
 **Catalog:** AD-58 · **Source PRD:** PRD-009 · **Status:** Accepted · **Related:** AD-57, AD-59, AD-25, AD-65
 
+> **Correction (2026-07-08):** this decision was never realized. There is no `{env}-system-config` scenario switch and no code path that resolves to a Claude model — `packages/buyer_agent_core/buyer_agent_core/seed_mirror.py`'s `SEED_TIERS` hardcodes a single Amazon Nova (+ unused Llama `EvalLLM`) mapping, and `model_resolver.py` has no concept of a "scenario." "Scenario A" (Claude) was a planning-time option that was written up as if deployed but was in fact never built. The body below is preserved as the original (aspirational) decision record; treat every "Scenario A" and "operators can choose" statement as never having been true in any deployed environment. See PRD-009 v2.0.0 §2 for the real, single tier mapping.
+
 ## Context
 
 The SimpleLLM / DefaultLLM tier labels introduced by AD-57 must resolve to concrete Bedrock model IDs. The choice of model family is not free: a steeper per-token discount (Nova) comes with a shorter prompt-cache TTL (5 minutes vs 1 hour for Claude 4.5), which changes the caching economics for sparsely-invoked agents (Bid Evaluation, quadrant agents) whose prefixes may expire between calls. Two credible mappings exist, each surfacing a different trade-off between per-token price and cache persistence. Hiding the choice as an undocumented constant would leave operators unable to reason about the cost impact of switching families.
@@ -29,6 +31,8 @@ The $0.061/negotiation figure in PRD-009 §2.2 uses Scenario A rates. Authoritat
 ## Results
 
 Both scenarios are specified in PRD-009 §2.0 with per-token rates, TTL, and cache cap. The scenario is selected via the `{env}-system-config` model-config group resolved by `DynamicAgentFactory` (AD-65). The TTL choice here is load-bearing for the prompt-cache hit-rate forecasts in AD-59 (sparsely-invoked agents under Scenario B's 5-minute TTL have materially lower hit rates). The CUR-authoritative cost pipeline (AD-61) captures the realized blended rate regardless of which scenario is active.
+
+**None of the above "Results" happened.** There is no scenario-selection config group, and AD-61's CUR/Athena pipeline was never built (see its own correction note). What's real: one Nova+Llama tier mapping (`seed_mirror.py`), one 5-minute cache TTL (AD-59), and per-negotiation estimated cost from `resilience/pricing.py` accumulated into `negotiation.total_cost_usd` (PRD-009 v2.0.0 §6.1). Nothing distinguishes "which scenario is active" because there was only ever one.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

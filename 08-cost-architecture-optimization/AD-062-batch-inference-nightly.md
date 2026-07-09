@@ -3,6 +3,8 @@
 **Theme:** Cost Architecture & Optimization
 **Catalog:** AD-62 · **Source PRD:** PRD-009 · **Status:** Accepted · **Related:** AD-57, AD-59, AD-46
 
+> **Correction (2026-07-08):** none of this was built. There is no Bedrock Batch job, no `batch_supplier_evaluation_enabled` flag, no `batch.invocations_saved` metric, and no nightly 02:00 UTC schedule anywhere in `buyer-team-impl`. The only supplier-KPI-adjacent code found is `skills/test_tenant/test_tenant_skill/load_procurement_kpi.py`, a test-tenant data-seeding script with no LLM or batch-inference involvement at all — it isn't a recalculation workload in the sense this ADR means. Supplier KPIs used by negotiation agents today are read as static/seeded data, not recomputed by any inference job, on-demand or batch. The body below is preserved as the original (unbuilt) decision record.
+
 ## Context
 
 Supplier KPI recalculation is a large, periodic, read-only workload: it processes all supplier performance records to update scoring inputs used by negotiation agents. It has no latency requirement — KPIs used in a negotiation starting at 09:00 UTC can tolerate being based on data computed at 02:00 UTC. Running this workload through on-demand Bedrock inference pays the full synchronous invocation price for a workload that does not need synchronous latency. Bedrock Batch offers a 50% discount over on-demand rates, with the trade-off that batch jobs have their own scheduling and failure characteristics and results are not available immediately.
