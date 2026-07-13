@@ -15,10 +15,10 @@
        ══════════════════════════════ -->
   <rect width="1200" height="82" fill="#0f172a"/>
   <text x="24" y="36" fill="white" font-size="22" font-weight="700" letter-spacing="-0.4">Buyer Team · Architecture Decision Records</text>
-  <text x="24" y="62" fill="#94a3b8" font-size="13">120 decisions across 14 concern areas · Agentic Procurement SaaS · buyer-team.com</text>
+  <text x="24" y="62" fill="#94a3b8" font-size="13">126 decisions across 14 concern areas · Agentic Procurement SaaS · buyer-team.com</text>
   <!-- KPI badge -->
   <rect x="1094" y="10" width="90" height="62" rx="8" fill="rgba(255,255,255,0.07)"/>
-  <text x="1139" y="42" text-anchor="middle" fill="white" font-size="28" font-weight="800">120</text>
+  <text x="1139" y="42" text-anchor="middle" fill="white" font-size="28" font-weight="800">126</text>
   <text x="1139" y="60" text-anchor="middle" fill="#64748b" font-size="10" font-weight="600" letter-spacing="0.5">DECISIONS</text>
 
   <!-- ══════════════════════════════
@@ -71,9 +71,9 @@
   </g>
   <text x="322" y="259" fill="white" font-size="11" font-weight="700">02 · Agent Architecture</text>
   <rect x="564" y="247" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="575" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">7</text>
-  <text x="322" y="282" fill="#374151" font-size="11" font-weight="600">7 Decisions</text>
-  <text x="322" y="298" fill="#6b7280" font-size="10">A2A · steering hooks · bid-eval now inline (no LLM)</text>
+  <text x="575" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">8</text>
+  <text x="322" y="282" fill="#374151" font-size="11" font-weight="600">8 Decisions</text>
+  <text x="322" y="298" fill="#6b7280" font-size="10">A2A · bid-eval inline · response_builder (no 2nd call)</text>
 
   <!-- 03 · Dynamic Configuration -->
   <g filter="url(#shadow)">
@@ -85,7 +85,7 @@
   <rect x="858" y="247" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
   <text x="869" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">11</text>
   <text x="616" y="282" fill="#374151" font-size="11" font-weight="600">11 Decisions</text>
-  <text x="616" y="298" fill="#6b7280" font-size="10">AgentFactory · flags · model-tier fallback · agent-base image</text>
+  <text x="616" y="298" fill="#6b7280" font-size="10">AgentFactory · flags · model-tier fallback</text>
 
   <!-- 11 · Integration & Transports -->
   <g filter="url(#shadow)">
@@ -97,7 +97,7 @@
   <rect x="1152" y="247" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
   <text x="1163" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">8</text>
   <text x="910" y="282" fill="#374151" font-size="11" font-weight="600">8 Decisions</text>
-  <text x="910" y="298" fill="#6b7280" font-size="10">4 transports · outbox · progressive disclosure · typed schema</text>
+  <text x="910" y="298" fill="#6b7280" font-size="10">4 transports · Kafka/SDK bypass · outbox handoff</text>
 
   <!-- ══════════════════════════════
        LAYER 3 — PLATFORM
@@ -142,9 +142,9 @@
   </g>
   <text x="812" y="385" fill="white" font-size="11" font-weight="700">06 · Reliability &amp; Resilience</text>
   <rect x="1152" y="373" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="1163" y="385" fill="white" font-size="9" font-weight="800" text-anchor="middle">9</text>
-  <text x="812" y="408" fill="#374151" font-size="11" font-weight="600">9 Decisions</text>
-  <text x="812" y="424" fill="#6b7280" font-size="10">degradation tiers · bulkheads · four Mem0 integration points</text>
+  <text x="1163" y="385" fill="white" font-size="9" font-weight="800" text-anchor="middle">11</text>
+  <text x="812" y="408" fill="#374151" font-size="11" font-weight="600">11 Decisions</text>
+  <text x="812" y="424" fill="#6b7280" font-size="10">degradation tiers · bulkheads · Mem0 · draining · admission control</text>
 
   <!-- Row 2: 08, 10 -->
 
@@ -156,10 +156,10 @@
   </g>
   <text x="28" y="465" fill="white" font-size="11" font-weight="700">08 · Cost Architecture &amp; Optimization</text>
   <rect x="564" y="453" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="575" y="465" fill="white" font-size="9" font-weight="800" text-anchor="middle">10</text>
-  <text x="28" y="488" fill="#374151" font-size="11" font-weight="600">10 Decisions</text>
+  <text x="575" y="465" fill="white" font-size="9" font-weight="800" text-anchor="middle">11</text>
+  <text x="28" y="488" fill="#374151" font-size="11" font-weight="600">11 Decisions</text>
   <text x="28" y="502" fill="#6b7280" font-size="10">model tiering · prompt caching · semantic cache · batch inference · per-tenant attribution</text>
-  <text x="28" y="515" fill="#6b7280" font-size="10">cross-family eval-LLM · O(1) comms · warm-up sentinel · tool-output compaction</text>
+  <text x="28" y="515" fill="#6b7280" font-size="10">cross-family eval-LLM · O(1) comms · warm-up sentinel · tool-output compaction · Cost Explorer poller</text>
 
   <!-- 10 · Capacity, Admission Control & Tenant Lifecycle -->
   <g filter="url(#shadow)">
@@ -191,10 +191,10 @@
   </g>
   <text x="28" y="595" fill="white" font-size="11" font-weight="700">07 · Observability &amp; Evaluation</text>
   <rect x="564" y="583" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="575" y="595" fill="white" font-size="9" font-weight="800" text-anchor="middle">10</text>
-  <text x="28" y="618" fill="#374151" font-size="11" font-weight="600">10 Decisions</text>
+  <text x="575" y="595" fill="white" font-size="9" font-weight="800" text-anchor="middle">11</text>
+  <text x="28" y="618" fill="#374151" font-size="11" font-weight="600">11 Decisions</text>
   <text x="28" y="632" fill="#6b7280" font-size="10">3-layer observability (EMF metrics) · W3C traceparent · CloudWatch Transaction Search</text>
-  <text x="28" y="645" fill="#6b7280" font-size="10">AgentCore evals (Galileo optional) · ATLAS on schedule · correlation ID bridges approval pause</text>
+  <text x="28" y="645" fill="#6b7280" font-size="10">AgentCore evals (Galileo optional) · ATLAS on schedule · correlation ID bridge · heartbeat dead-man's-switch</text>
 
   <!-- 09 · Infrastructure & Deployment Stack -->
   <g filter="url(#shadow)">
@@ -204,10 +204,10 @@
   </g>
   <text x="616" y="595" fill="white" font-size="11" font-weight="700">09 · Infrastructure &amp; Deployment Stack</text>
   <rect x="1152" y="583" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="1163" y="595" fill="white" font-size="9" font-weight="800" text-anchor="middle">14</text>
-  <text x="616" y="618" fill="#374151" font-size="11" font-weight="600">14 Decisions</text>
+  <text x="1163" y="595" fill="white" font-size="9" font-weight="800" text-anchor="middle">15</text>
+  <text x="616" y="618" fill="#374151" font-size="11" font-weight="600">15 Decisions</text>
   <text x="616" y="632" fill="#6b7280" font-size="10">Python/Strands/AgentCore/Terraform · modular IaC · GitOps build-once-promote · decoupled deploy</text>
-  <text x="616" y="645" fill="#6b7280" font-size="10">5-env model · canary · guarded full-replace · image optimization · prevent_destroy guardrail</text>
+  <text x="616" y="645" fill="#6b7280" font-size="10">5-env model · canary · guarded full-replace · image optimization · prevent_destroy · demo harness split out</text>
 
   <!-- ══════════════════════════════
        LAYER 5 — QUALITY

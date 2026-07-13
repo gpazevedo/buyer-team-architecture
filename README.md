@@ -51,6 +51,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-024](02-agent-architecture-behavioral-control/AD-024-steering-hook-failure-semantics.md) | Steering Hook Failure Semantics (7 PRE-CALL GUIDE Hooks + 1 Declarative, No Retry-Wrap, Fail-Closed) |
 | [AD-027](02-agent-architecture-behavioral-control/AD-027-agents-communicate-through-shared-state.md) | Agents Communicate Only Through Step Functions Shared State |
 | [AD-117](02-agent-architecture-behavioral-control/AD-117-bid-evaluation-inline-scoring-replaces-llm.md) | Bid-Evaluation AgentCore Runtime Removed; Inline Deterministic Scoring Replaces the LLM Agent |
+| [AD-125](02-agent-architecture-behavioral-control/AD-125-response-builder-replaces-structured-output.md) | `response_builder` Replaces the Deprecated `structured_output()` Second Bedrock Call |
 
 ### 03 · Dynamic Configuration & Agent Factory
 
@@ -141,6 +142,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-093](08-cost-architecture-optimization/AD-093-communication-templating-o1.md) | Communication Generation Is O(1) in Supplier Count |
 | [AD-105](08-cost-architecture-optimization/AD-105-warmup-sentinel-early-exit.md) | Warm-Up Sentinel Early Exit — No LLM Cost for Keep-Alive Pings |
 | [AD-106](08-cost-architecture-optimization/AD-106-tool-output-compaction.md) | Tool-Output Compaction via AfterToolCallEvent Hook |
+| [AD-126](08-cost-architecture-optimization/AD-126-cost-explorer-daily-poller.md) | Daily Cost Explorer Poller Republishes Real AWS-Billed Cost to CloudWatch |
 
 ### 09 · Infrastructure, Deployment & Platform Stack
 
