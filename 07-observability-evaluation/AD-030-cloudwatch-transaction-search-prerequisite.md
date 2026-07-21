@@ -25,7 +25,7 @@ Treat CloudWatch Transaction Search as a documented hard prerequisite of the obs
 
 ## Results
 
-Once enabled, evaluations and full platform metrics function without further wiring. The architecture gains a single, well-identified preflight check that must be validated at environment provisioning. If skipped, quality monitoring degrades invisibly — the sharpest downside of this decision. AD-32 (evaluation types and Galileo) and AD-34 (closed-loop automated actions) both depend on this prerequisite being satisfied; neither can function correctly if Transaction Search is absent.
+Once enabled, evaluations and full platform metrics function without further wiring. The architecture gains a single, well-identified preflight check that must be validated at environment provisioning. If skipped, quality monitoring degrades invisibly — the sharpest downside of this decision. AD-32 (evaluation types) and AD-34 (closed-loop automated actions) both depend on this prerequisite being satisfied; neither can function correctly if Transaction Search is absent.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

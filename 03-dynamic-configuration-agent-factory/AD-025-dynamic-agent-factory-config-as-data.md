@@ -26,7 +26,7 @@ Every agent is instantiated via `DynamicAgentFactory`, which sources all paramet
 
 ## Results
 
-`DynamicAgentFactory` is implemented in PRD-003 §3.1 and PRD-010 §3; the fail-fast recovery contract is REQ-C003. A failed construction surfaces through the standard agent invocation-failure path (DLQ → `REQUIRES_ATTENTION`) rather than silently degrading decision quality. The decision enables AD-65 (factory as single cache-checkpoint owner) and is guarded by AD-48 (fail-fast rule for the config plane) with one deliberate exception: all `features`-group flags fall back to seed-matching safe defaults when config is unreachable (AD-49), with `galileo_protect_enabled` and `kraljic_classification_override_enabled` → `false` as the primary load-bearing case — a disabled flag means more enforcement, not less.
+`DynamicAgentFactory` is implemented in PRD-003 §3.1 and PRD-010 §3; the fail-fast recovery contract is REQ-C003. A failed construction surfaces through the standard agent invocation-failure path (DLQ → `REQUIRES_ATTENTION`) rather than silently degrading decision quality. The decision enables AD-65 (factory as single cache-checkpoint owner) and is guarded by AD-48 (fail-fast rule for the config plane) with one deliberate exception: all `features`-group flags fall back to seed-matching safe defaults when config is unreachable (AD-49), with `kraljic_classification_override_enabled` → `false` as the load-bearing case — a disabled flag means more enforcement, not less.
 
 ### Results — as built (2026-06-21)
 

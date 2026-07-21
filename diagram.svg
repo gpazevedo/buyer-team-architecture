@@ -194,7 +194,7 @@
   <text x="575" y="595" fill="white" font-size="9" font-weight="800" text-anchor="middle">11</text>
   <text x="28" y="618" fill="#374151" font-size="11" font-weight="600">11 Decisions</text>
   <text x="28" y="632" fill="#6b7280" font-size="10">3-layer observability (EMF metrics) · W3C traceparent · CloudWatch Transaction Search</text>
-  <text x="28" y="645" fill="#6b7280" font-size="10">AgentCore evals (Galileo optional) · ATLAS on schedule · correlation ID bridge · heartbeat dead-man's-switch</text>
+  <text x="28" y="645" fill="#6b7280" font-size="10">AgentCore evals · ATLAS on schedule · correlation ID bridge · heartbeat dead-man's-switch</text>
 
   <!-- 09 · Infrastructure & Deployment Stack -->
   <g filter="url(#shadow)">

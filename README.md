@@ -95,6 +95,8 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-094](05-security-governance-trust-boundaries/AD-094-per-tenant-federated-idp.md) | Per-Tenant Federated IdP for Non-Spoofable Human Tenant Binding |
 | [AD-100](05-security-governance-trust-boundaries/AD-100-governance-fail-fast-split.md) | Governance Fail-Fast Split — ConfigUnreachable vs GovernanceKeyMissing |
 | [AD-108](05-security-governance-trust-boundaries/AD-108-demo-spa-hosted-ui-login.md) | Demo SPA Interactive Login via Cognito Hosted UI (Native PKCE Public Client) |
+| [AD-127](05-security-governance-trust-boundaries/AD-127-token-exchange-broker-delegation-chain.md) | Self-Sufficient RFC 8693 Token-Exchange Broker for the Delegation Chain |
+| [AD-128](05-security-governance-trust-boundaries/AD-128-guardrail-false-positive-context-and-masking.md) | Precomputed Context After the Cache Point; Anonymize-Only Interventions Are Not Blocks |
 
 ### 06 · Reliability, Resilience & Graceful Degradation
 
@@ -116,10 +118,10 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 
 | ADR | Decision |
 | ----- | ---------- |
-| [AD-029](07-observability-evaluation/AD-029-three-layer-observability.md) | Three-Layer Observability (Platform / Application / Domain) |
+| [AD-029](07-observability-evaluation/AD-029-four-layer-observability.md) | Four-Layer Observability (Platform / Application / Domain / FinOps) |
 | [AD-030](07-observability-evaluation/AD-030-cloudwatch-transaction-search-prerequisite.md) | CloudWatch Transaction Search as a Hard Prerequisite for Evaluations |
 | [AD-031](07-observability-evaluation/AD-031-w3c-traceparent-propagation.md) | W3C `traceparent` Propagation Across All A2A Calls |
-| [AD-032](07-observability-evaluation/AD-032-agentcore-evaluations-primary-galileo-optional.md) | AgentCore Evaluations Primary, Galileo Optional, Three Evaluator Types |
+| [AD-032](07-observability-evaluation/AD-032-agentcore-evaluations-primary-three-evaluator-types.md) | AgentCore Evaluations Primary, Three Evaluator Types |
 | [AD-033](07-observability-evaluation/AD-033-online-eval-100pct-except-tone.md) | Online Evaluation on 100% of Traces, Except Communication Tone (Tiered Sampling) |
 | [AD-034](07-observability-evaluation/AD-034-evaluation-thresholds-drive-automated-actions.md) | Evaluation Score Thresholds Drive Automated Actions (Closed Loop) |
 | [AD-035](07-observability-evaluation/AD-035-atlas-evaluators-on-schedule.md) | ATLAS-Specific Evaluators Run on a Schedule |
@@ -134,7 +136,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | ----- | ---------- |
 | [AD-057](08-cost-architecture-optimization/AD-057-model-tiering-by-cognitive-demand.md) | Model Tiering by Cognitive Demand |
 | [AD-058](08-cost-architecture-optimization/AD-058-two-tier-scenarios.md) | Two Supported Tier Scenarios (A: Claude, B: Nova) |
-| [AD-059](08-cost-architecture-optimization/AD-059-prompt-caching-all-agents.md) | Prompt Caching for All 7 Agents |
+| [AD-059](08-cost-architecture-optimization/AD-059-prompt-caching-all-agents.md) | Prompt Caching for All 6 Agents |
 | [AD-060](08-cost-architecture-optimization/AD-060-semantic-cache-kraljic.md) | Semantic Cache for Kraljic Results |
 | [AD-061](08-cost-architecture-optimization/AD-061-per-tenant-cost-attribution.md) | Per-Tenant Cost Attribution via CUR-Joined Table |
 | [AD-062](08-cost-architecture-optimization/AD-062-batch-inference-nightly.md) | Batch Inference for Nightly Supplier KPI Recalculation |
