@@ -26,7 +26,7 @@ Define a five-phase flag lifecycle: Introduction (flag added to `{env}-system-co
 
 ## Results
 
-Flags are stored in the `features` group of `{env}-system-config` (AD-63) and evaluated at instantiation only; they do not change mid-session. The lifecycle is documented in PRD-010 §4. Security-critical flags (`galileo_protect_enabled`, `kraljic_classification_override_enabled`) carry the additional fail-safe default from AD-49 and are exempt from the standard removal contract — they remain as permanent safety controls. The lifecycle provides the controlled-rollout mechanism that AD-63 does not include natively (AppConfig's gradual-rollout machinery was not replicated when AppConfig was retired).
+Flags are stored in the `features` group of `{env}-system-config` (AD-63) and evaluated at instantiation only; they do not change mid-session. The lifecycle is documented in PRD-010 §4. The security-critical flag (`kraljic_classification_override_enabled`) carries the additional fail-safe default from AD-49 and is exempt from the standard removal contract — it remains a permanent safety control. The lifecycle provides the controlled-rollout mechanism that AD-63 does not include natively (AppConfig's gradual-rollout machinery was not replicated when AppConfig was retired).
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
