@@ -4,7 +4,7 @@
 
 ## Context
 
-Dev has 9 independently deployable components (7 agents + skill-runtime + agent-base). Rebuilding and redeploying all 9 on every merge to `main` wastes CI minutes and, more importantly, couples an unrelated component's redeploy to any single change — an operator fixing one agent has no way to ship or roll back that agent alone without touching the other 8 (REQ-I109, REQ-I110). AD-54 established build-once-promote and roll-forward rollback, but at whole-system granularity; it does not address per-component independence within a single environment's auto-deploy pipeline.
+Dev has 8 independently deployable components (6 agents + skill-runtime + agent-base). Rebuilding and redeploying all 9 on every merge to `main` wastes CI minutes and, more importantly, couples an unrelated component's redeploy to any single change — an operator fixing one agent has no way to ship or roll back that agent alone without touching the other 7 (REQ-I109, REQ-I110). AD-54 established build-once-promote and roll-forward rollback, but at whole-system granularity; it does not address per-component independence within a single environment's auto-deploy pipeline.
 
 ## Decision
 
@@ -27,6 +27,8 @@ A git-committed tag map (`infra/image_tags.auto.tfvars.json`) is the sole source
 ## Results
 
 Realized in `dev-deploy.yml` (self-healing auto path, direct push `6109678`) and `deploy-agent.yml` (manual ship/rollback, PR #106). Live-verified against real dev AWS 2026-07-01: PR #106 merge triggered a correct full build+apply; a subsequent no-op push correctly skipped all 3 build jobs; a manual `spot-bidding` ship and rollback each completed in under 6 minutes touching only that component's Terraform diff. This refines AD-54's build-once-promote model to per-component granularity within a single environment, and depends on the ECR keep-last-10 retention policy (AD-54) to guarantee a rollback target still exists.
+
+The "extra committed artifact must stay in sync with reality" risk named in the Trade-offs table above materialized in practice: the deploy job's final "commit map back" push (`git push origin HEAD:main`) is a plain fast-forward push, and a long build+apply window gives `main` room to advance underneath it (another merge, another deploy). A rejected push previously just failed silently — the tags Terraform had actually applied never landed in the git-committed map, so the *next* run's self-healing diff started from a stale source of truth. PR #233 (2026-07-20) closed this: `actions/checkout@v7` now uses `fetch-depth: 0` so a rebase has a merge base, and the push step rebases the single map commit onto `origin/main` and retries up to 5 times before failing the job. This doesn't change deploy behavior on the happy path — it makes the one write path to the map resilient to the exact race this ADR's own design invites by keeping deploys decoupled and concurrent.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
