@@ -113,6 +113,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-074](06-reliability-resilience-graceful-degradation/AD-074-four-mem0-integration-points.md) | Four Mem0 Integration Points, All Degrade Gracefully |
 | [AD-123](06-reliability-resilience-graceful-degradation/AD-123-readiness-draining-fail-open-window.md) | Readiness Gate + SIGTERM Draining Close the Fail-Open Window at Both Ends of a Replica's Life |
 | [AD-124](06-reliability-resilience-graceful-degradation/AD-124-inbound-admission-control-replaces-outbound-bulkhead.md) | Inbound Concurrency-Cap Shedding Is the Live Backpressure AD-50's Removed Bulkhead Was Meant to Provide |
+| [AD-129](06-reliability-resilience-graceful-degradation/AD-129-dynamodb-substitute-for-mem0-ip1.md) | DynamoDB-Only Substitute for Mem0 IP-1, Isolated from the Agent-Failure Path |
 
 ### 07 · Observability & Evaluation
 

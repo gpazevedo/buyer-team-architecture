@@ -1,7 +1,7 @@
 # AD-074 — Four Mem0 Integration Points, All Degrade Gracefully
 
 **Theme:** Reliability, Resilience & Graceful Degradation
-**Catalog:** AD-74 · **Source PRD:** PRD-014 · **Status:** Accepted · **Related:** AD-72, AD-46, AD-20
+**Catalog:** AD-74 · **Source PRD:** PRD-014 · **Status:** Accepted · **Related:** AD-72, AD-46, AD-20, AD-129
 
 ## Context
 
@@ -26,7 +26,7 @@ Wire exactly four Mem0 integration points: supplier relationship history (IP-1, 
 
 ## Results
 
-Each integration point has a defined writer agent and reader agent. The existing `RelationshipHistoryEnforcement` steering hook now receives real supplier history data from IP-1 instead of an empty list. Degradation is observable via `memory_degraded` (AD-20) and bounded by the 5-failure / 15-minute circuit breaker. This is consistent with AD-46's never-block rule, which is enforced on both the write and read paths of each IP. The two-tier memory architecture that makes these IPs possible is defined in AD-72.
+Each integration point has a defined writer agent and reader agent — as a target design against Mem0, none of the four have actually been wired that way yet (`mem0_enabled` is still `false`; there is no Mem0 call site anywhere in the agents). IP-1 shipped first, but not through Mem0 or a steering hook: PR #236 (2026-07-22) delivered it as a direct, non-Mem0 DynamoDB substitute — a new `supplier-memory` table read and written inline by `orchestrator/node_strategy_execute.py`, feeding `_precompute_supplier_analysis`'s relationship-history block directly rather than through `RelationshipHistoryEnforcement` or any Mem0 circuit breaker. See AD-129 for why that path was chosen and what it gives up relative to the Mem0 design below. IP-2 (bid patterns), IP-3 (approver preferences), and IP-4 (communication effectiveness) remain unimplemented — no call sites, Mem0 or otherwise. Degradation for IP-1's real substitute is via its own try/except (independent of `_strategic_partnership`'s agent-failure handler, see AD-129), not the Mem0 circuit breaker described below, which still applies only once Mem0 itself is wired. This is consistent with AD-46's never-block rule. The two-tier memory architecture this ADR assumed IP-1 would be built against is defined in AD-72.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
