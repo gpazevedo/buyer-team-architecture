@@ -1,6 +1,6 @@
 # AD-052 — AgentCore Provisioned Across Two Terraform Providers with SDK Provisioners for Gaps
 
-**Theme:** Infrastructure, Deployment & Platform Stack  **Catalog:** AD-52 · **Source PRD:** PRD-007 · **Status:** Accepted · **Related:** AD-51, AD-7
+**Theme:** Infrastructure, Deployment & Platform Stack  **Catalog:** AD-52 · **Source PRD:** PRD-007 · **Status:** Accepted · **Related:** AD-51, AD-7, AD-130
 
 ## Context
 

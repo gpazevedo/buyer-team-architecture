@@ -130,6 +130,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-115](07-observability-evaluation/AD-115-emit-metric-meta-alerting-fallback-datapoint.md) | `emit_metric` Meta-Alerting: Non-Recursive Fallback Datapoint on Publish Failure (superseded, see correction) |
 | [AD-120](07-observability-evaluation/AD-120-correlation-id-bridges-non-call-trace-gaps.md) | Correlation ID Persisted as Row Data to Bridge Trace Discontinuities Beyond A2A Calls |
 | [AD-121](07-observability-evaluation/AD-121-meta-observability-heartbeat-dead-mans-switch.md) | Meta-Observability Heartbeat Dead-Man's-Switch |
+| [AD-130](07-observability-evaluation/AD-130-agentcore-vended-log-delivery-for-platform-spans.md) | CloudWatch Vended Log Delivery Required to Resolve AgentCore's Own Platform-Generated Spans |
 
 ### 08 · Cost Architecture & Optimization
 
