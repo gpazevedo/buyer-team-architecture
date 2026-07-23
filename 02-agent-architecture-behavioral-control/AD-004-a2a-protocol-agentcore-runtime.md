@@ -12,7 +12,7 @@ Each agent is deployed as its own AgentCore Runtime and invoked over the A2A pro
 
 ## Alternatives Considered
 
-- **Monolithic multi-skill agent.** Rejected: couples all seven agents' release cycles and removes per-agent independent testability and blast-radius isolation.
+- **Monolithic multi-skill agent.** Rejected: couples all six agents' release cycles and removes per-agent independent testability and blast-radius isolation.
 - **In-process tool calls between agents.** Rejected: agents cannot be independently versioned or replaced; a regression in one domain takes down the entire agent process.
 
 ## Trade-offs

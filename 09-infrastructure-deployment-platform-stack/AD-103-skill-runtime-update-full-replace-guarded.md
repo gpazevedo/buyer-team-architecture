@@ -34,7 +34,7 @@ Hand-writing a bare `update_agent_runtime` call for the skill runtime is prohibi
 | Gained | Given up |
 | --- | --- |
 | Protocol/env resets can no longer slip in via a hand-written update — the guard re-asserts the full definition every time, `MCP` is non-overridable, and the targeted apply also closes TF state drift | The skill runtime stays a special-cased deploy path (not routine `terraform apply`), with two sanctioned tools to keep in sync with the TF resource definition |
-| The true root cause (full-replace resets every omitted field) is documented, ending the "cold-start 424" misdiagnosis | `update_agent_runtime` full-replace semantics must now be respected by anyone touching *any* runtime, not just the skill — the same foot-gun exists for the seven agents |
+| The true root cause (full-replace resets every omitted field) is documented, ending the "cold-start 424" misdiagnosis | `update_agent_runtime` full-replace semantics must now be respected by anyone touching *any* runtime, not just the skill — the same foot-gun exists for the six agents |
 
 The mutability correction generalizes: `update_agent_runtime` is full-replace for every AgentCore Runtime, so re-passing `protocolConfiguration` is the same invariant already recorded for Gateways in AD-52 (`update_gateway` is full-replace) and for the A2A agents in `feedback-agentcore-update-resets-protocol`.
 
