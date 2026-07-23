@@ -15,10 +15,10 @@
        ══════════════════════════════ -->
   <rect width="1200" height="82" fill="#0f172a"/>
   <text x="24" y="36" fill="white" font-size="22" font-weight="700" letter-spacing="-0.4">Buyer Team · Architecture Decision Records</text>
-  <text x="24" y="62" fill="#94a3b8" font-size="13">126 decisions across 14 concern areas · Agentic Procurement SaaS · buyer-team.com</text>
+  <text x="24" y="62" fill="#94a3b8" font-size="13">131 decisions across 14 concern areas · Agentic Procurement SaaS · buyer-team.com</text>
   <!-- KPI badge -->
   <rect x="1094" y="10" width="90" height="62" rx="8" fill="rgba(255,255,255,0.07)"/>
-  <text x="1139" y="42" text-anchor="middle" fill="white" font-size="28" font-weight="800">126</text>
+  <text x="1139" y="42" text-anchor="middle" fill="white" font-size="28" font-weight="800">131</text>
   <text x="1139" y="60" text-anchor="middle" fill="#64748b" font-size="10" font-weight="600" letter-spacing="0.5">DECISIONS</text>
 
   <!-- ══════════════════════════════
@@ -83,9 +83,9 @@
   </g>
   <text x="616" y="259" fill="white" font-size="11" font-weight="700">03 · Dynamic Configuration</text>
   <rect x="858" y="247" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="869" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">11</text>
-  <text x="616" y="282" fill="#374151" font-size="11" font-weight="600">11 Decisions</text>
-  <text x="616" y="298" fill="#6b7280" font-size="10">AgentFactory · flags · model-tier fallback</text>
+  <text x="869" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">12</text>
+  <text x="616" y="282" fill="#374151" font-size="11" font-weight="600">12 Decisions</text>
+  <text x="616" y="298" fill="#6b7280" font-size="10">AgentFactory · flags · model-tier fallback · canary variants</text>
 
   <!-- 11 · Integration & Transports -->
   <g filter="url(#shadow)">
@@ -130,9 +130,9 @@
   </g>
   <text x="420" y="385" fill="white" font-size="11" font-weight="700">05 · Security &amp; Governance</text>
   <rect x="760" y="373" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="771" y="385" fill="white" font-size="9" font-weight="800" text-anchor="middle">11</text>
-  <text x="420" y="408" fill="#374151" font-size="11" font-weight="600">11 Decisions</text>
-  <text x="420" y="424" fill="#6b7280" font-size="10">Cedar · guardrails · 6-layer defense · per-tenant federated IdP · Hosted-UI login</text>
+  <text x="771" y="385" fill="white" font-size="9" font-weight="800" text-anchor="middle">13</text>
+  <text x="420" y="408" fill="#374151" font-size="11" font-weight="600">13 Decisions</text>
+  <text x="420" y="424" fill="#6b7280" font-size="10">Cedar · guardrails · 6-layer defense · federated IdP · token-exchange broker</text>
 
   <!-- 06 · Reliability & Resilience -->
   <g filter="url(#shadow)">
@@ -142,9 +142,9 @@
   </g>
   <text x="812" y="385" fill="white" font-size="11" font-weight="700">06 · Reliability &amp; Resilience</text>
   <rect x="1152" y="373" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="1163" y="385" fill="white" font-size="9" font-weight="800" text-anchor="middle">11</text>
-  <text x="812" y="408" fill="#374151" font-size="11" font-weight="600">11 Decisions</text>
-  <text x="812" y="424" fill="#6b7280" font-size="10">degradation tiers · bulkheads · Mem0 · draining · admission control</text>
+  <text x="1163" y="385" fill="white" font-size="9" font-weight="800" text-anchor="middle">12</text>
+  <text x="812" y="408" fill="#374151" font-size="11" font-weight="600">12 Decisions</text>
+  <text x="812" y="424" fill="#6b7280" font-size="10">degradation tiers · bulkheads · Mem0 substitute · draining · admission control</text>
 
   <!-- Row 2: 08, 10 -->
 
@@ -191,10 +191,10 @@
   </g>
   <text x="28" y="595" fill="white" font-size="11" font-weight="700">07 · Observability &amp; Evaluation</text>
   <rect x="564" y="583" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="575" y="595" fill="white" font-size="9" font-weight="800" text-anchor="middle">11</text>
-  <text x="28" y="618" fill="#374151" font-size="11" font-weight="600">11 Decisions</text>
-  <text x="28" y="632" fill="#6b7280" font-size="10">3-layer observability (EMF metrics) · W3C traceparent · CloudWatch Transaction Search</text>
-  <text x="28" y="645" fill="#6b7280" font-size="10">AgentCore evals · ATLAS on schedule · correlation ID bridge · heartbeat dead-man's-switch</text>
+  <text x="575" y="595" fill="white" font-size="9" font-weight="800" text-anchor="middle">12</text>
+  <text x="28" y="618" fill="#374151" font-size="11" font-weight="600">12 Decisions</text>
+  <text x="28" y="632" fill="#6b7280" font-size="10">4-layer observability (Platform/App/Domain/FinOps) · W3C traceparent · Transaction Search</text>
+  <text x="28" y="645" fill="#6b7280" font-size="10">AgentCore evals · ATLAS on schedule · correlation ID bridge · heartbeat · vended log delivery</text>
 
   <!-- 09 · Infrastructure & Deployment Stack -->
   <g filter="url(#shadow)">
