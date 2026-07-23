@@ -4,7 +4,7 @@
 
 ## Context
 
-Seven agents must pass data along the pipeline — classification feeds strategy selection, strategy produces bids, bids feed evaluation, and the award feeds communications. They could discover and call each other directly (a mesh), or the Step Functions Orchestrator could mediate all data flow through a shared state dictionary (a hub). The choice interacts with recovery: if an agent holds state that another depends on, a crash requires reconstructing a conversation rather than replaying state.
+Six agents must pass data along the pipeline — classification feeds strategy selection, strategy produces bids, bids feed evaluation, and the award feeds communications. They could discover and call each other directly (a mesh), or the Step Functions Orchestrator could mediate all data flow through a shared state dictionary (a hub). The choice interacts with recovery: if an agent holds state that another depends on, a crash requires reconstructing a conversation rather than replaying state.
 
 ## Decision
 
@@ -20,12 +20,12 @@ No direct inter-agent communication. Each agent reads its input from the Step Fu
 | Gained | Given up |
 | --- | --- |
 | Loose coupling — any agent can be replaced, re-versioned, or tested in isolation against a state fixture | All coordination latency routes through the orchestrator; there is no fast agent-to-agent path |
-| A single source of workflow truth, and clean checkpoint/recovery because state lives in the orchestrator + DynamoDB (AD-3, AD-14) | The shared-state schema becomes a coupling point every agent depends on; schema changes ripple across all seven agents |
+| A single source of workflow truth, and clean checkpoint/recovery because state lives in the orchestrator + DynamoDB (AD-3, AD-14) | The shared-state schema becomes a coupling point every agent depends on; schema changes ripple across all six agents |
 | No agent needs service discovery or another agent's address | Patterns that would be natural as a direct conversation must be modeled as node boundaries |
 
 ## Results
 
-This is the agent-side reflection of AD-1 (Orchestration Before Intelligence): it is why agents can be stateless and ephemeral, and why recovery (AD-14) is a matter of replaying state rather than reconstructing a conversation. Each agent's outputs being written to shared state also enables the per-node DynamoDB checkpoint (AD-14) to capture the full pipeline result at every stage. The cost is that the shared-state schema is now load-bearing across all seven agents — a benefit for auditability and isolation, a constraint on how freely the data shape can evolve.
+This is the agent-side reflection of AD-1 (Orchestration Before Intelligence): it is why agents can be stateless and ephemeral, and why recovery (AD-14) is a matter of replaying state rather than reconstructing a conversation. Each agent's outputs being written to shared state also enables the per-node DynamoDB checkpoint (AD-14) to capture the full pipeline result at every stage. The cost is that the shared-state schema is now load-bearing across all six agents — a benefit for auditability and isolation, a constraint on how freely the data shape can evolve.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

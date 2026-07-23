@@ -20,7 +20,7 @@ Mandate that every agent-node executor invoke its agent exclusively through the 
 
 | Gained | Given up |
 | --- | --- |
-| Uniform resilience, cost attribution, and trace propagation across all seven agent nodes | A shared critical-path dependency — a wrapper regression affects all seven agents simultaneously |
+| Uniform resilience, cost attribution, and trace propagation across all six agent nodes | A shared critical-path dependency — a wrapper regression affects all six agents simultaneously |
 | `memory_degraded` and `agentcore.session_seconds` have a single, testable read/write site | One additional layer of indirection on every A2A call |
 | Tuning (retry counts, breaker thresholds, timeouts) is config-driven without touching node code (AD-45) | All callers must route through the wrapper; direct SDK use is prohibited |
 

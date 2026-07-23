@@ -7,13 +7,13 @@
 
 `orchestrator/warm_runtimes.py` keeps AgentCore microVMs warm by pinging each agent runtime with a stable `runtimeSessionId` on a <15-minute cadence, resetting the AgentCore idle timer so the next real request avoids a cold start. Each ping carries the payload `{"warmup": true}`.
 
-Before this decision, that payload flowed through the full agent pipeline: `_extract_request` → `prompt_builder` → `Agent(prompt)` → Bedrock model inference. The LLM response was always discarded (the warm-up script tolerates any response, even errors), but the model call itself consumed input tokens — the cached system prefix + tools schema — on every ping. Across 7 agents pinged every ~10 minutes, that is ~30,000 unnecessary LLM calls per month.
+Before this decision, that payload flowed through the full agent pipeline: `_extract_request` → `prompt_builder` → `Agent(prompt)` → Bedrock model inference. The LLM response was always discarded (the warm-up script tolerates any response, even errors), but the model call itself consumed input tokens — the cached system prefix + tools schema — on every ping. Across 6 agents pinged every ~10 minutes, that is ~30,000 unnecessary LLM calls per month.
 
 ## Decision
 
 The A2A executor in `buyer_agent_core.serve._make_executor` short-circuits warm-up pings immediately after request extraction: when `req` is a dict with a truthy `"warmup"` key, the task is marked complete and returns without invoking the runner or the model.
 
-The sentinel payload `{"warmup": true}` is the contract between the warm-up script and every agent entrypoint. The check sits in the shared `buyer_agent_core` package, so all 7 agents inherit it uniformly.
+The sentinel payload `{"warmup": true}` is the contract between the warm-up script and every agent entrypoint. The check sits in the shared `buyer_agent_core` package, so all 6 agents inherit it uniformly.
 
 ## Alternatives Considered
 
@@ -31,7 +31,7 @@ The reserved-key risk is theoretical: no agent's domain schema uses a `"warmup"`
 
 ## Results
 
-Implemented in `packages/buyer_agent_core/buyer_agent_core/serve.py:_make_executor`. The check runs after `_extract_request` and before the runner/LLM path. All 7 agents inherit it through the shared `build_app` → `_make_executor` call chain.
+Implemented in `packages/buyer_agent_core/buyer_agent_core/serve.py:_make_executor`. The check runs after `_extract_request` and before the runner/LLM path. All 6 agents inherit it through the shared `build_app` → `_make_executor` call chain.
 
 The warm-up script (`orchestrator/warm_runtimes.py`) is unchanged — its `{"warmup": true}` payload now triggers the early exit it always intended.
 

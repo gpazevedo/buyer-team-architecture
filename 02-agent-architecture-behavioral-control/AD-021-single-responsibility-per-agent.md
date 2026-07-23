@@ -8,7 +8,7 @@ The negotiation workflow spans seven distinct cognitive jobs: classify a categor
 
 ## Decision
 
-Seven agents, each owning exactly one cognitive domain, each independently deployable as its own AgentCore Runtime invoked by the Step Functions Orchestrator at a defined node: Kraljic Classifier (Step 2), Spot Bidding (Step 4a), Leverage Auction (Step 4b), Bottleneck Negotiation (Step 4c), Strategic Partnership (Step 4d), Bid Evaluation (Step 5), and Award & Communications (Step 7). The boundary is a design rule — the Spot Bidding Agent does not evaluate bids, and the Bid Evaluation Agent does not send emails.
+Six agents, each owning exactly one cognitive domain, each independently deployable as its own AgentCore Runtime invoked by the Step Functions Orchestrator at a defined node: Kraljic Classifier (Step 2), Spot Bidding (Step 4a), Leverage Auction (Step 4b), Bottleneck Negotiation (Step 4c), Strategic Partnership (Step 4d), and Award & Communications (Step 7). The boundary is a design rule — the Spot Bidding Agent does not evaluate bids, and the Bid Evaluation Agent does not send emails.
 
 ## Alternatives Considered
 

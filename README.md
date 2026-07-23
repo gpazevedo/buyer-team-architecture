@@ -67,6 +67,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-066](03-dynamic-configuration-agent-factory/AD-066-feature-flag-lifecycle.md) | Feature-Flag Lifecycle |
 | [AD-095](03-dynamic-configuration-agent-factory/AD-095-a2a-agent-model-tier-fallback.md) | A2A Agent Model-Tier Fallback (Boot-Safe Never-Raise Ladder) |
 | [AD-101](03-dynamic-configuration-agent-factory/AD-101-agent-base-image-package.md) | Agent Base Image + Shared Package Delivery via Immutable `agent-base` |
+| [AD-131](03-dynamic-configuration-agent-factory/AD-131-canary-by-tenant-variant-routing.md) | Tenant-Scoped Canary Rollout via Registry Variant Routing |
 
 ### 04 · Multi-Tenancy & Isolation
 

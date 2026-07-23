@@ -4,7 +4,7 @@
 
 ## Context
 
-Tests vary enormously in cost and speed — a unit test runs in milliseconds against mocks, an E2E negotiation runs minutes against real Bedrock, a load test runs tens of minutes. Running everything at every stage would make the feedback loop unusably slow; running too little at the PR stage allows regressions to reach expensive deployment stages. The system spans seven agents, a deterministic graph orchestrator, eight steering hooks, and Cedar policies — each with a different failure mode. Without a taxonomy that assigns each failure mode to the cheapest stage that can detect it, either developers wait too long for feedback or defects reach staging.
+Tests vary enormously in cost and speed — a unit test runs in milliseconds against mocks, an E2E negotiation runs minutes against real Bedrock, a load test runs tens of minutes. Running everything at every stage would make the feedback loop unusably slow; running too little at the PR stage allows regressions to reach expensive deployment stages. The system spans six agents, a deterministic graph orchestrator, eight steering hooks, and Cedar policies — each with a different failure mode. Without a taxonomy that assigns each failure mode to the cheapest stage that can detect it, either developers wait too long for feedback or defects reach staging.
 
 ## Decision
 
