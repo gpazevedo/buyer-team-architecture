@@ -6,6 +6,8 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 131 decisions add up to, organized by theme rather than by number.
+
 ## How to read an ADR
 
 See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
@@ -194,6 +196,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-070](11-integration-skills-plugins-transports/AD-070-tenant-predicate-rewriting.md) | Tenant Predicate Rewriting + User-Action Claim Propagation |
 | [AD-071](11-integration-skills-plugins-transports/AD-071-tenant-default-claims-ceiling.md) | `tenant_default_claims` Are the Ceiling for Per-PR Overrides |
 | [AD-097](11-integration-skills-plugins-transports/AD-097-po-export-outbox-handoff.md) | PO Export Decoupled from Award via a Durable Outbox |
+| [AD-099](11-integration-skills-plugins-transports/AD-099-progressive-disclosure-tools.md) | Progressive Disclosure for the MCP Skill Runtime (catalog → manual → invocation) |
 | [AD-116](11-integration-skills-plugins-transports/AD-116-fastmcp-typed-schema-decoupled-from-validation.md) | FastMCP Tool Params Stay `dict`; `WithJsonSchema` Carries the Real Schema |
 
 ### 12 · Procurement Domain Logic
