@@ -1,6 +1,6 @@
 # Buyer Team Architecture — Conceptual Summary of the ADRs
 
-A distillation of the knowledge captured across 131 architecture decision records for the
+A distillation of the knowledge captured across 133 architecture decision records for the
 Buyer Team agentic procurement platform. This is conceptual: it explains the ideas the
 decisions encode and how they hang together, not the implementation details.
 
@@ -147,6 +147,14 @@ non-recursive "I failed" datapoint, and a heartbeat dead-man's-switch alarms on 
 of data. Equally characteristic is scope honesty: what is built, stubbed, or deferred is
 recorded explicitly rather than left as implied-done design.
 
+Headline business KPIs get one further move: a *rate* is not an observation, so nothing
+can alarm on it until something computes it. A daily rollup reads the raw signals back
+out of the metrics store, derives the ratios, and republishes them as ordinary series
+that plain fixed-threshold alarms can watch. The definitional lesson that came with it
+generalizes past this platform — a rate assembled by counting *events* over a denominator
+of *objects* is not bounded, and will eventually print a nonsense number; flag the object
+instead, once, and average the flag.
+
 ## 8. Cost as an architectural dimension
 
 Cost is engineered, not observed after the fact. Each agent runs on the cheapest model
@@ -159,6 +167,14 @@ produces a canonical body; per-supplier copies are deterministic renders), keep-
 pings exit before touching the model, and oversized tool outputs are truncated
 head+tail. Ground truth for spend is the AWS bill itself: token-based estimates supply
 only the proportional breakdown, scaled to the billed total, attributed per tenant.
+
+The discipline turns on the observability estate too, which is where it gets
+uncomfortable: monitoring is not exempt from its own cost review. Alarms turned out to be
+the overwhelming majority of the CloudWatch bill, billed per alarm-month whether or not
+they were enabled and whether or not they matched anything — so pausing a non-production
+environment means *deleting* resources and replaying them, not disabling them, and an
+alarm covering nothing gets deleted rather than tolerated. The counterweight is stated in
+the same breath: an alarm is only cut when nothing is going to make it cover something.
 
 ## 9. Tenants as first-class lifecycle objects with fair, atomic admission
 

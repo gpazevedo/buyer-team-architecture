@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 131 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 133 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -68,6 +68,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-065](03-dynamic-configuration-agent-factory/AD-065-dynamic-agent-factory-cache-owner.md) | DynamicAgentFactory — Model-Ladder + Cache-Prefix Only; Governance/Flags Moved to Orchestrator |
 | [AD-066](03-dynamic-configuration-agent-factory/AD-066-feature-flag-lifecycle.md) | Feature-Flag Lifecycle |
 | [AD-095](03-dynamic-configuration-agent-factory/AD-095-a2a-agent-model-tier-fallback.md) | A2A Agent Model-Tier Fallback (Boot-Safe Never-Raise Ladder) |
+| [AD-098](03-dynamic-configuration-agent-factory/AD-098-agent-mcp-skill-registry.md) | Agent/MCP/Skill Registry Config Group |
 | [AD-101](03-dynamic-configuration-agent-factory/AD-101-agent-base-image-package.md) | Agent Base Image + Shared Package Delivery via Immutable `agent-base` |
 | [AD-131](03-dynamic-configuration-agent-factory/AD-131-canary-by-tenant-variant-routing.md) | Tenant-Scoped Canary Rollout via Registry Variant Routing |
 
@@ -134,6 +135,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-120](07-observability-evaluation/AD-120-correlation-id-bridges-non-call-trace-gaps.md) | Correlation ID Persisted as Row Data to Bridge Trace Discontinuities Beyond A2A Calls |
 | [AD-121](07-observability-evaluation/AD-121-meta-observability-heartbeat-dead-mans-switch.md) | Meta-Observability Heartbeat Dead-Man's-Switch |
 | [AD-130](07-observability-evaluation/AD-130-agentcore-vended-log-delivery-for-platform-spans.md) | CloudWatch Vended Log Delivery Required to Resolve AgentCore's Own Platform-Generated Spans |
+| [AD-132](07-observability-evaluation/AD-132-kpi-rollup-automation-rate-deviation-flag.md) | Headline KPIs Computed by a Daily Rollup Lambda; Automation Rate Defined as a Per-PR Deviation Flag |
 
 ### 08 · Cost Architecture & Optimization
 
@@ -150,6 +152,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-105](08-cost-architecture-optimization/AD-105-warmup-sentinel-early-exit.md) | Warm-Up Sentinel Early Exit — No LLM Cost for Keep-Alive Pings |
 | [AD-106](08-cost-architecture-optimization/AD-106-tool-output-compaction.md) | Tool-Output Compaction via AfterToolCallEvent Hook |
 | [AD-126](08-cost-architecture-optimization/AD-126-cost-explorer-daily-poller.md) | Daily Cost Explorer Poller Republishes Real AWS-Billed Cost to CloudWatch |
+| [AD-133](08-cost-architecture-optimization/AD-133-delete-and-replay-dev-alarms-across-pause.md) | Delete and Replay Dev Alarms Across a Pause Window; Suppressing Alarm Actions Saves Nothing |
 
 ### 09 · Infrastructure, Deployment & Platform Stack
 

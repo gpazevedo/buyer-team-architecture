@@ -1,7 +1,7 @@
 # AD-121 — Meta-Observability Heartbeat Dead-Man's-Switch
 
 **Theme:** Observability & Evaluation
-**Catalog:** AD-121 · **Source PRD:** PRD-004 · **Status:** Accepted · **Related:** AD-115, AD-29, AD-34
+**Catalog:** AD-121 · **Source PRD:** PRD-004 · **Status:** Accepted (pause-window mechanism superseded by AD-133 — see the 2026-08-01 update) · **Related:** AD-115, AD-29, AD-34, AD-133
 
 ## Context
 
@@ -10,6 +10,8 @@ AD-115's original two-tier `put_metric_data` fallback-datapoint mechanism was re
 ## Decision
 
 Add a schedule-triggered Lambda (`orchestrator/resilience/heartbeat.py`) that emits its own `pipeline_heartbeat` datapoint to the `procurement/observability` namespace every 5 minutes via the existing `emit_metric()` helper, independent of any business event. A CloudWatch alarm (`aws_cloudwatch_metric_alarm.pipeline_heartbeat`) watches for 2 consecutive missed periods using `treat_missing_data = "breaching"` — the only alarm in the codebase that intentionally treats missing data as a failure, since "no data" is exactly the condition being watched for. The heartbeat's EventBridge rule and the alarm's notification actions are paired into `release_vpc.sh` / `restore_vpc.sh`: an intentional, cost-saving VPC release disables the alarm's actions and then the rule (in that order, so there's no window where the rule is off but the alarm can still notify), and `restore_vpc.sh` re-enables both, rule first.
+
+> **Superseded 2026-08-01 — the pause-window half of this paragraph only.** The disable-actions/enable-actions pairing described above no longer exists. [AD-133](../08-cost-architecture-optimization/AD-133-delete-and-replay-dev-alarms-across-pause.md) now snapshot-deletes *every* dev alarm — this one included — on `release_vpc.sh` and replays it on `restore_vpc.sh`, because suppressing alarm actions saved $0 (CloudWatch bills per alarm-month regardless of actions being enabled). What remains paired into the two scripts is the EventBridge **rule** alone. The heartbeat mechanism itself, the `treat_missing_data = "breaching"` choice, and the 2-missed-period threshold are all unchanged.
 
 ## Alternatives Considered
 
@@ -24,11 +26,13 @@ Add a schedule-triggered Lambda (`orchestrator/resilience/heartbeat.py`) that em
 | --- | --- |
 | A dead EMF pipeline is observable in CloudWatch itself, independent of business traffic — including during legitimate quiet periods | A 5th always-on scheduled Lambda and its own IAM role, alongside the 3 existing ones (`runtime_warmer`, `dlq_redrive`, `recovery`) |
 | Detection is decoupled from load — works identically for a busy production tenant or an idle dev sandbox | 10-minute detection floor (2 × 5-min periods) is a first-pass, untuned threshold, matching this repo's other early-stage alarms |
-| `release_vpc.sh` / `restore_vpc.sh` stay the single source of truth for what's paused during a cost-saving release, rather than leaving an unmanaged always-on resource outside their scope | The disable-actions-then-rule / enable-rule-then-actions ordering is a manual invariant maintained across two scripts, not enforced by any single mechanism |
+| `release_vpc.sh` / `restore_vpc.sh` stay the single source of truth for what's paused during a cost-saving release, rather than leaving an unmanaged always-on resource outside their scope | ~~The disable-actions-then-rule / enable-rule-then-actions ordering is a manual invariant maintained across two scripts, not enforced by any single mechanism~~ — retired 2026-08-01; AD-133 deletes the alarm outright across the window, so there is no ordering left to maintain |
 
 ## Results
 
 Shipped in PR #181: `orchestrator/resilience/heartbeat.py` (handler), `infra/modules/step-functions/heartbeat.tf` (Lambda, logs-only IAM role, `rate(5 minutes)` EventBridge rule), `infra/heartbeat_alarm.tf` (the alarm, kept at root because only root config can wire `module.messaging.evaluation_alerts_topic_arn` into another module's resources — the same reason `agent_runtime_alarms.tf` lives there). The alarm also deviates from house style by setting `ok_actions`, not just `alarm_actions`, so a pipeline-health outage's end is notified, not just its start. The `platform_dashboard.tf` split (see AD-29's update) plots the same `pipeline_heartbeat` metric alongside pure `AWS/*` infra signals, since "is the metrics pipeline itself alive" is a platform-health question even though the metric is custom-emitted. Closes AD-115's previously-"moot" open item with a differently-shaped mechanism than the one AD-115 originally described.
+
+**Update 2026-08-01 (impl PR #252): the pause-window mechanism is replaced; the dead-man's-switch is not.** This ADR's premise for the ordering dance was that suspending the rule without silencing the alarm turns a routine release into a guaranteed false page. That premise still holds — what changed is the cheaper way to satisfy it. CloudWatch bills $0.10 per alarm-month prorated hourly whether or not an alarm's actions are enabled, so `disable-alarm-actions` bought silence and no savings at all. [AD-133](../08-cost-architecture-optimization/AD-133-delete-and-replay-dev-alarms-across-pause.md) now snapshots and deletes every `dev-buyer-team-` alarm at the top of `release_vpc.sh` and replays it at the end of `restore_vpc.sh`; both `disable-alarm-actions` and `enable-alarm-actions` calls are gone from the scripts, along with the `HEARTBEAT_ALARM` variable that named this alarm specifically. A deleted alarm cannot page, so the false-page problem is solved as a side effect and the cross-script ordering invariant this ADR's Trade-offs table flagged as unenforced simply no longer exists. Two consequences specific to this alarm: it returns from a pause in `INSUFFICIENT_DATA` rather than its prior state (state history does not survive the round trip, which for a `treat_missing_data = "breaching"` alarm means it re-arms on the first fresh tick), and `restore_vpc.sh` deliberately replays alarms **last** — after the rule is re-enabled — so the heartbeat has begun emitting again before its watcher comes back.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

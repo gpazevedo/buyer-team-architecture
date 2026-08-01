@@ -1,7 +1,7 @@
 # AD-077 — Two New MCP Servers and Event-Driven PR Pickup via DynamoDB Streams
 
 **Theme:** Test Tenant Platform & Data
-**Catalog:** AD-77 · **Source PRD:** PRD-015 · **Status:** Accepted · **Related:** AD-75, AD-76, AD-78
+**Catalog:** AD-77 · **Source PRD:** PRD-015 · **Status:** Accepted (loader half unbuilt — see the 2026-08-01 correction) · **Related:** AD-75, AD-76, AD-78
 
 ## Context
 
@@ -28,6 +28,12 @@ Add two new MCP servers: `dynamodb-master-data` (internal CRUD against the four 
 ## Results
 
 This decision brings the platform MCP-server total from 6 to 8 (the 6 production servers plus these 2 test-tenant-scoped ones, not used by production tenants). PR create and cancel flows through the master store and the Stream router. The `pr-event-router` Lambda is deployed with `MaximumRetryAttempts=3`, `BisectBatchOnFunctionError=true`, and an SQS DLQ (`{env}-pr-event-router-dlq`) with a CloudWatch alarm on DLQ depth > 0. The two ingestion paths consume the same CSVs and produce the same canonical entities; shadow comparison gates retirement of the legacy path (AD-75). The `tenant-mdm-emulator`'s ordered list tools depend on the synthetic GSI sort keys defined in AD-78.
+
+**Correction 2026-08-01 (impl PR #250): the two halves of this decision are in very different states — the paragraph above overstates one of them.** The **event-driven half is real**: `infra/modules/master-data/main.tf` provisions the 5 master tables, the `pr-event-router` Lambda, the DynamoDB Stream event-source mapping, and the DLQ, exactly as described.
+
+The **`dynamodb-master-data` MCP server half has never run.** It has no deployed AgentCore Runtime and no Gateway target — `infra/gateway.tf` declares a single `aws_bedrockagentcore_gateway_target`, `ingest`, and the master-data module provisions no AgentCore resources at all — so `_invoke_mcp("dynamodb-master-data", …)` in `skills/test_tenant_master/` had nothing to invoke. PR #250's live verification had to route `_invoke_mcp` directly to the tool functions in-process (same DynamoDB calls, no network transport) to exercise it at all, and doing so immediately surfaced two crash-on-first-use bugs that had been latent since the server was written: `PutItem` performed no float→`Decimal` conversion, and DynamoDB rejects Python floats outright — so *most* writes across all three master loaders (`profit_impact`, `estimated_unit_price`, KPI scores) would have crashed; and `DeleteItem` accepted no `ExpressionAttributeValues`, so `_release_load_lock`'s conditional delete crashed in every run's `finally` block. Both are fixed, but their existence is the evidence: nothing had ever executed this path end to end.
+
+**Consequence for the shadow-validation claim** (repeated in [AD-75](AD-075-test-tenant-data-public-datasets.md)'s closing paragraph): the two ingestion paths cannot have been running in parallel, and no shadow comparison has gated anything. The legacy PRD-012 loader is the only path that has actually loaded data — `run_demo_load.py` uses it. Retirement of the legacy path remains blocked on deploying a runtime/gateway target for this server, not on a comparison result.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
