@@ -33,5 +33,7 @@ Implemented in `skills/test_tenant/` (PRD-012). The three load tools (`load_kral
 
 This loader is the *legacy* direct-to-domain path. The v1.0 target routes test-tenant ingestion through the master data store via the `tenant-mdm-emulator` MCP server (AD-76, AD-77). Both paths consume the same CSVs and produce the same canonical entities; the legacy path runs in parallel for shadow validation until its retirement is decided.
 
+> **Correction 2026-08-01:** no shadow validation has ever run. The master path's `dynamodb-master-data` MCP server has no deployed AgentCore Runtime or Gateway target and had never been executed end to end — see [AD-77](AD-077-two-mcp-servers-event-driven-pr-pickup.md)'s 2026-08-01 correction. This legacy loader is not "one of two paths running in parallel"; it is the only path that has loaded data.
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

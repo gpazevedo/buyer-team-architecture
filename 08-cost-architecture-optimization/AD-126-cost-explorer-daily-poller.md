@@ -1,7 +1,7 @@
 # AD-126 — Daily Cost Explorer Poller Republishes Real AWS-Billed Cost to CloudWatch
 
 **Theme:** Cost Architecture & Optimization
-**Catalog:** AD-126 · **Source PRD:** PRD-009 · **Status:** Accepted · **Related:** AD-61, AD-13
+**Catalog:** AD-126 · **Source PRD:** PRD-009 · **Status:** Accepted · **Related:** AD-61, AD-13, AD-132, AD-133
 
 ## Context
 
