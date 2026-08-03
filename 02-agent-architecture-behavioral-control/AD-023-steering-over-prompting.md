@@ -21,12 +21,14 @@ Behavioral guardrails are implemented as Strands Steering Hooks that intercept t
 | --- | --- |
 | Deterministic enforcement — 100% vs 82.5%; the gap justifies the approach | Hooks are code that must be written, deployed, and version-matched to the tools they guard |
 | Resistance to prompt injection — a guardrail in a hook cannot be overridden by adversarial supplier content in bid text | Added pre-call latency and a new failure mode: a hook can wrongly reject valid work |
-| Independently unit-testable as pure Python functions | Rejection handling becomes its own subsystem — the 5-rejection escalation ladder and early alarm (REQ-A951) exist because of this |
+| Independently unit-testable as pure Python functions | Rejection handling becomes its own subsystem — a guard that repeatedly cancels a call drives the negotiation toward REQUIRES_ATTENTION (AD-16) rather than completing |
 | Keeps governance out of the prompt, reinforcing cache-prefix purity (AD-28) | A misconfigured hook can block forward progress entirely |
 
 ## Results
 
-The 82.5 → 100% compliance delta is the core result — guardrails that previously failed roughly one time in six now hold every time. This decision depends on AD-22 (tools as boundaries) to have a call-interception point. It drives the design of AD-24 (the specific failure semantics chosen for hook crashes and rejections), including the rejection-loop machinery, the `steering.hook.rejection_count` alarm, and the `excluded_bid_count` correction — all downstream consequences of moving enforcement into code rather than prose.
+The 82.5 → 100% compliance delta is the core result — guardrails that previously failed roughly one time in six now hold every time. This decision depends on AD-22 (tools as boundaries) to have a call-interception point. It drives the design of AD-24 (the specific failure semantics chosen for hook crashes and rejections), including the rejection-loop machinery and the `excluded_bid_count` correction — downstream consequences of moving enforcement into code rather than prose.
+
+> **Correction (2026-08-03, impl PR #253):** this section previously credited a `steering.hook.rejection_count` alarm and a "5-rejection escalation ladder and early alarm (REQ-A951)" to this decision. Neither was ever implemented — see AD-24's correction, which audits the real signals (`governance.violation_count`, and now `governance.hook_error`). Moving enforcement into code also moved a *failure mode* into code that this ADR did not anticipate: the framework's steering handler is fail-open on a handler exception, so for a period these guards were code that could silently stop enforcing. AD-24 carries the fix.
 
 **Realization note (PRD-003 v1.1.3).** The "steering over prompting" decision stands; only the hook *mechanism* was reconciled to the shipped Strands 1.43 API — all guards now run PRE-CALL in **GUIDE** mode (cancel + corrective guidance), since that API exposes no tool-I/O mutation and no after-tool hook. The "post-processing output filters" alternative rejected above is in fact reinforced by this: the shipped API has no after-tool stage, so pre-call enforcement is the only option for side-effecting tools. See AD-24 for the revised semantics.
 

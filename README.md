@@ -50,7 +50,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-021](02-agent-architecture-behavioral-control/AD-021-single-responsibility-per-agent.md) | Single Responsibility per Agent |
 | [AD-022](02-agent-architecture-behavioral-control/AD-022-tools-as-boundaries.md) | Tools as Boundaries |
 | [AD-023](02-agent-architecture-behavioral-control/AD-023-steering-over-prompting.md) | Steering over Prompting |
-| [AD-024](02-agent-architecture-behavioral-control/AD-024-steering-hook-failure-semantics.md) | Steering Hook Failure Semantics (7 PRE-CALL GUIDE Hooks + 1 Declarative, No Retry-Wrap, Fail-Closed) |
+| [AD-024](02-agent-architecture-behavioral-control/AD-024-steering-hook-failure-semantics.md) | Steering Hook Failure Semantics (6 PRE-CALL GUIDE Guards + 1 Declarative, No Retry-Wrap, Fail-Closed in a Base Class We Own) |
 | [AD-027](02-agent-architecture-behavioral-control/AD-027-agents-communicate-through-shared-state.md) | Agents Communicate Only Through Step Functions Shared State |
 | [AD-117](02-agent-architecture-behavioral-control/AD-117-bid-evaluation-inline-scoring-replaces-llm.md) | Bid-Evaluation AgentCore Runtime Removed; Inline Deterministic Scoring Replaces the LLM Agent |
 | [AD-125](02-agent-architecture-behavioral-control/AD-125-response-builder-replaces-structured-output.md) | `response_builder` Replaces the Deprecated `structured_output()` Second Bedrock Call |

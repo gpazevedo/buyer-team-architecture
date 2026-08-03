@@ -1,10 +1,10 @@
 # AD-004 — A2A Protocol; Each Agent Is Its Own AgentCore Runtime
 
-**Theme:** Agent Architecture & Behavioral Control  **Catalog:** AD-4 · **Source PRD:** PRD-001 · **Status:** Accepted · **Related:** AD-13, AD-21, AD-27, AD-53
+**Theme:** Agent Architecture & Behavioral Control  **Catalog:** AD-4 · **Source PRD:** PRD-001 · **Status:** Accepted · **Related:** AD-13, AD-21, AD-27, AD-53, AD-117
 
 ## Context
 
-The system is decomposed into seven specialized agents, each owning one cognitive domain, invoked at defined nodes in the Step Functions workflow. They need to be independently versioned, tested, and replaced without redeploying the whole system. A deployment model must be chosen: a single multi-skill monolith, in-process calls between agents, or separate runtimes with a well-defined inter-agent protocol.
+The system is decomposed into six specialized agents (seven until AD-117 replaced the Bid Evaluation agent with inline scoring), each owning one cognitive domain, invoked at defined nodes in the Step Functions workflow. They need to be independently versioned, tested, and replaced without redeploying the whole system. A deployment model must be chosen: a single multi-skill monolith, in-process calls between agents, or separate runtimes with a well-defined inter-agent protocol.
 
 ## Decision
 
@@ -25,7 +25,7 @@ Each agent is deployed as its own AgentCore Runtime and invoked over the A2A pro
 
 ## Results
 
-This decision mandates AD-13 (a shared `invoke_agent_runtime` wrapper so resilience and cost attribution are uniform across every agent invocation). It enables AD-21 (single-responsibility decomposition of the seven cognitive domains) and AD-27 (agents communicate only through Step Functions shared state, never directly). The runtime protocol and ports are treated as immutable after creation, validated at Terraform plan time (AD-53).
+This decision mandates AD-13 (a shared `invoke_agent_runtime` wrapper so resilience and cost attribution are uniform across every agent invocation). It enables AD-21 (single-responsibility decomposition of the six cognitive domains) and AD-27 (agents communicate only through Step Functions shared state, never directly). The runtime protocol and ports are treated as immutable after creation, validated at Terraform plan time (AD-53).
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
