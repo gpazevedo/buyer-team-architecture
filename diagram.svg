@@ -15,10 +15,10 @@
        ══════════════════════════════ -->
   <rect width="1200" height="82" fill="#0f172a"/>
   <text x="24" y="36" fill="white" font-size="22" font-weight="700" letter-spacing="-0.4">Buyer Team · Architecture Decision Records</text>
-  <text x="24" y="62" fill="#94a3b8" font-size="13">133 decisions across 14 concern areas · Agentic Procurement SaaS · buyer-team.com</text>
+  <text x="24" y="62" fill="#94a3b8" font-size="13">135 decisions across 14 concern areas · Agentic Procurement SaaS · buyer-team.com</text>
   <!-- KPI badge -->
   <rect x="1094" y="10" width="90" height="62" rx="8" fill="rgba(255,255,255,0.07)"/>
-  <text x="1139" y="42" text-anchor="middle" fill="white" font-size="28" font-weight="800">133</text>
+  <text x="1139" y="42" text-anchor="middle" fill="white" font-size="28" font-weight="800">135</text>
   <text x="1139" y="60" text-anchor="middle" fill="#64748b" font-size="10" font-weight="600" letter-spacing="0.5">DECISIONS</text>
 
   <!-- ══════════════════════════════
@@ -59,8 +59,8 @@
   </g>
   <text x="28" y="259" fill="white" font-size="11" font-weight="700">01 · Orchestration &amp; State</text>
   <rect x="270" y="247" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="281" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">10</text>
-  <text x="28" y="282" fill="#374151" font-size="11" font-weight="600">10 Decisions</text>
+  <text x="281" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">11</text>
+  <text x="28" y="282" fill="#374151" font-size="11" font-weight="600">11 Decisions</text>
   <text x="28" y="298" fill="#6b7280" font-size="10">7-node DAG · recovery · idempotency</text>
 
   <!-- 02 · Agent Architecture -->
@@ -71,8 +71,8 @@
   </g>
   <text x="322" y="259" fill="white" font-size="11" font-weight="700">02 · Agent Architecture</text>
   <rect x="564" y="247" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="575" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">8</text>
-  <text x="322" y="282" fill="#374151" font-size="11" font-weight="600">8 Decisions</text>
+  <text x="575" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">9</text>
+  <text x="322" y="282" fill="#374151" font-size="11" font-weight="600">9 Decisions</text>
   <text x="322" y="298" fill="#6b7280" font-size="10">A2A · bid-eval inline · response_builder (no 2nd call)</text>
 
   <!-- 03 · Dynamic Configuration -->

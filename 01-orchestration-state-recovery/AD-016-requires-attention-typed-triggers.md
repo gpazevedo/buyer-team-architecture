@@ -1,4 +1,4 @@
-# AD-016 — REQUIRES_ATTENTION with Eighteen Typed Triggers
+# AD-016 — REQUIRES_ATTENTION with Twenty Typed Triggers
 
 **Theme:** Orchestration, State & Recovery
 **Catalog:** AD-16 · **Source PRD:** PRD-002 · **Status:** Accepted · **Related:** AD-17, AD-12
@@ -9,7 +9,7 @@ Many distinct conditions warrant pulling a negotiation out of automated flow —
 
 ## Decision
 
-Use one `REQUIRES_ATTENTION` status reachable from *any* status, carrying a machine-readable `entry_trigger` code plus a human-readable `entry_reason`. Maintain a numbered trigger table (currently 18) where each trigger has a condition, escalation path, and SLA. Sub-codes (e.g. `superseded_marking_failure`) are emitted as the literal `entry_trigger` value so dashboards can filter at sub-code granularity, while the column-3 code remains the canonical taxonomy mapping. Ops always resolves to either ACTIVE or CANCELLED.
+Use one `REQUIRES_ATTENTION` status reachable from *any* status, carrying a machine-readable `entry_trigger` code plus a human-readable `entry_reason`. Maintain a numbered trigger table (currently 20 — see the 2026-08-05 count reconciliation in Results) where each trigger has a condition, escalation path, and SLA. Sub-codes (e.g. `superseded_marking_failure`) are emitted as the literal `entry_trigger` value so dashboards can filter at sub-code granularity, while the column-3 code remains the canonical taxonomy mapping. Ops always resolves to either ACTIVE or CANCELLED.
 
 ## Alternatives Considered
 
@@ -20,7 +20,7 @@ Use one `REQUIRES_ATTENTION` status reachable from *any* status, carrying a mach
 
 | Gained | Given up |
 | --- | --- |
-| Ops dashboards filter at sub-code granularity with per-condition SLAs | The trigger table is a living maintenance surface — it has grown 9 → 13 → 14 → 16 → 17 → 18 → 19 across revisions |
+| Ops dashboards filter at sub-code granularity with per-condition SLAs | The trigger table is a living maintenance surface — it has grown 9 → 13 → 14 → 16 → 17 → 18 → 19 → 20 across revisions, and two of those growth steps collided on the same number |
 | Core state machine stays small (one status, not one per failure type) | Each new failure mode discovered in audit must be slotted in with a code, SLA, and escalation path |
 
 Keeping the state-machine diagram and cross-PRD trigger-count references in sync is recurring coherence work.
@@ -29,7 +29,23 @@ Keeping the state-machine diagram and cross-PRD trigger-count references in sync
 
 Ops dashboards filter at sub-code granularity; every escalation has an SLA and a defined resolution. The single status keeps the core state machine small while the trigger code carries the detail. `REQUIRES_ATTENTION` deliberately does **not** decrement the tenant concurrency counter, because the negotiation may resume to ACTIVE without re-admission. A 7-day stall in REQUIRES_ATTENTION auto-cancels (REQ-G203a) so nothing stalls forever.
 
-**19th trigger — `compensation_incomplete` (PR #220, merged 2026-07-16).** Recovery's total-timeout path (`orchestrator/resilience/recovery.py::run_recovery_flow`) previously cancelled a timed-out negotiation unconditionally once its saga compensation ran, regardless of whether every compensating action actually succeeded — a partial compensation failure (e.g. a still-ISSUED PO a supplier-side compensating call couldn't undo) was silently orphaned by a `CANCELLED` write, terminal and excluded from `RECOVERABLE_STATUSES`, so it could never be retried. Recovery now branches on `compensate_negotiation`'s result: full success still cancels as before, but any un-compensated entries route to `REQUIRES_ATTENTION` with `entry_trigger="compensation_incomplete"` instead, keeping the negotiation on the recovery sweep so a future sweep retries the outstanding saga-log entries. Field convention mirrors `node_strategy_execute.py`'s own `_flag_requires_attention`.
+**Correction 2026-08-04 (impl PR #256): the sentence "A 7-day stall in REQUIRES_ATTENTION auto-cancels (REQ-G203a) so nothing stalls forever" was a specification, not a behaviour — and the opposite was true.** REQ-G203 (96h in PENDING_APPROVAL → REQUIRES_ATTENTION, trigger #3 `approval_timeout_96h`) and REQ-G203a (7 days under that trigger → CANCELLED) were both written into PRD-001 REQ-505 and PRD-002 §4.4 from the start, but neither had an implementation: nothing swept for either condition, so a negotiation could sit in PENDING_APPROVAL indefinitely and trigger #3 was never emitted by anything.
+
+Worse, the Step Functions gate actively defeated the ceiling it was supposed to enforce. `ApprovalGate` carried `States.Timeout` in its retry list, so when the 96h `TimeoutSeconds` fired, Step Functions re-invoked Node 6 — whose `_pause_for_human` resets `approval_started_at` and installs a fresh task token, re-arming the clock from zero. Each retry bought another 96 hours, and the 96h ceiling this trigger encodes never actually bounded anything.
+
+PR #256 makes both durable via a scheduled sweep rather than the state machine (AD-134): `States.Timeout` is removed from the gate's retry list so the execution ends cleanly at an `ApprovalTimedOut` Succeed state, and a 30-minute `requires_attention_evaluator` Lambda performs the status writes. The trigger *taxonomy* is unchanged by this — `approval_timeout_96h` was always trigger #3 and the count is unaffected; what changed is that trigger #3 now fires. Note the resulting SLA shape: escalation is bounded by 96h + one sweep interval, so the trigger's own SLA is met on the next 30-minute boundary rather than at the instant of expiry.
+
+**Count reconciliation 2026-08-05 — the taxonomy is 20 triggers, and two of them were both numbered #19.** This ADR's title said eighteen, its Decision said "currently 18", and the note below claimed `compensation_incomplete` as the nineteenth. Counted against the canonical table in PRD-002 §4.4, all three were wrong:
+
+- The PRD table holds **19 numbered rows**, and **#19 is `kraljic_low_confidence`** (PR #216) — a trigger this ADR had never mentioned. It is live in `orchestrator/node_kraljic_classify.py`.
+- **`compensation_incomplete` is the 20th**, not the 19th. It was assigned #19 here without checking that PR #216 had already taken that number.
+- `compensation_incomplete` is **absent from PRD-002 §4.4 entirely** (zero occurrences in PRD-002 and PRD-006), so the canonical table does not yet carry the trigger this ADR has documented since 2026-07-16. Both codes are real in impl; it is the spec table that is behind.
+
+Title and Decision now say twenty. Renumbering the PRD table and adding the missing row is a PRD-side fix, tracked there rather than resolved here — this ADR owns the decision, not the table.
+
+This is the concrete form of the maintenance cost the Trade-offs table warns about, and it is worth naming precisely: the failure was not that a trigger went undocumented, but that **two independent authors each appended "the next one" to a table they read at different times**. A count in prose cannot detect that; only the numbered table can, and only if it is the single place numbers are assigned.
+
+**20th trigger — `compensation_incomplete` (PR #220, merged 2026-07-16).** Recovery's total-timeout path (`orchestrator/resilience/recovery.py::run_recovery_flow`) previously cancelled a timed-out negotiation unconditionally once its saga compensation ran, regardless of whether every compensating action actually succeeded — a partial compensation failure (e.g. a still-ISSUED PO a supplier-side compensating call couldn't undo) was silently orphaned by a `CANCELLED` write, terminal and excluded from `RECOVERABLE_STATUSES`, so it could never be retried. Recovery now branches on `compensate_negotiation`'s result: full success still cancels as before, but any un-compensated entries route to `REQUIRES_ATTENTION` with `entry_trigger="compensation_incomplete"` instead, keeping the negotiation on the recovery sweep so a future sweep retries the outstanding saga-log entries. Field convention mirrors `node_strategy_execute.py`'s own `_flag_requires_attention`.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
