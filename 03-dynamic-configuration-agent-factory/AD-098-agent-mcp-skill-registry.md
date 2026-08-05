@@ -22,7 +22,7 @@ Add a **`registry` config group** to the existing `{env}-system-config` DynamoDB
 table (5th group, alongside `governance`, `model`, `features`, `external-rates`).
 The registry declares:
 
-- **agents** — 7 logical agents, each with `runtime_name`, `protocol` (A2A), `capability`, `model_tier`
+- **agents** — 7 logical agents, each with `runtime_name`, `protocol` (A2A), `capability`, `model_tier` *(6 since the `bid_evaluation` agent's retirement — see the 2026-08-03 update)*
 - **mcp_servers** — 4 MCP servers, each with `protocol` (MCP), `endpoint`
 - **skills** — 3 skills, each with `capabilities` list
 
@@ -45,3 +45,13 @@ All 6 orchestrator nodes + the accuracy harness call `agent_runtime_arn(logical)
   falling through to the legacy default at WARNING level
 - Registry is seeded via `scripts/seed_test_tenant.py` alongside the 4 other config groups
 - The `registry` item's `config_json` blob is structured, validated at read time
+
+## Update 2026-08-03 (impl PR #255) — tier 3 is now deliberately incomplete
+
+**Agent count is 6, not 7.** The `bid_evaluation` *agent* was retired 2026-07-06 (PR #151, AD-117); Node 5 scores inline. The registry's `agents` map and `scripts/seed_test_tenant.py` both carry 6 entries.
+
+**The legacy-fallback tier no longer covers every agent, and that is the point.** `_LEGACY_AGENT_RUNTIME_DEFAULTS` in `graph_common.py` still mapped `bid_evaluation` → `dev_bid_evaluation` a month after the runtime was destroyed. Because tier 3 is consulted whenever the registry lookup misses, that one stale entry silently resurrected a dead runtime: a caller got an ARN lookup against something that does not exist instead of a clear resolution error, and the WARNING it logged (`fell through to legacy hardcoded default`) read like ordinary pre-seed behaviour. PR #255 removed the entry, so `resolve_agent_runtime_name("bid_evaluation")` now raises `RuntimeError: Cannot resolve runtime name ... not in registry and no legacy default known`.
+
+This sharpens the consequence recorded above. "Legacy fallback ensures the code builds and runs before the seed populates the registry" holds only while an entry names a runtime that actually exists; once it outlives its runtime, the fallback is strictly worse than no entry at all, because it converts an honest resolution failure into a misleading one and masks exactly the registry-config drift it sits above. Removing a retired agent from this map is therefore part of retiring the agent, not cleanup that can follow later.
+
+**The 3-tier precedence is superseded.** AD-131 inserted tenant variant pins and deterministic `ab_split` between the env override and the registry's base `runtime_name`; the live order in `_resolve` is env override → tenant variant pin → `ab_split` → registry `runtime_name` → legacy default. See AD-131 for the variant tiers, and AD-13's 2026-08-03 update for the unpaginated `list_agent_runtimes` bug that broke the ARN lookup this resolver feeds.

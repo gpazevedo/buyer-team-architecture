@@ -14,7 +14,7 @@ AD-65 narrowed the shared factory to model-ladder + cache-prefix only (governanc
 
 ## Decision
 
-Ship a single immutable `agent-base` Docker image and a shared `buyer_agent_core` Python package. All 7 agent images `FROM agent-base:<git-sha>` and COPY only their own thin files.
+Ship a single immutable `agent-base` Docker image and a shared `buyer_agent_core` Python package. All 7 agent images `FROM agent-base:<git-sha>` and COPY only their own thin files. *(6 agents since `bid_evaluation`'s retirement — AD-117. The count in this ADR's Context and Decision is the fleet as it stood at PR #42.)*
 
 **Shared package (`impl/packages/buyer_agent_core/`):**
 - `factory.py` — `DynamicAgentFactory` + `AgentBlueprint` (model-ladder + cache-prefix only)
@@ -83,6 +83,14 @@ spec = AgentSpec(
 ## Results
 
 Implemented in PR #42 (`feat/dynamic-agent-factory`): `impl/packages/buyer_agent_core/` (shared package), `impl/docker/agent-base/Dockerfile` (base image), `scripts/bootstrap_ecr_images.sh` (build orchestration). All 7 agent `Dockerfile`s thinned to the pattern above. `impl/agents/kraljic_classifier_llm/agent_spec.py` + `agent.py` serve as the reference thin-agent example. Placement-guard test verifies no agent imports from outside `buyer_agent_core`; drift-guard CI validates that the base tag is the current SHA.
+
+**Correction 2026-08-05 (impl PR #258): the import guard credited in the paragraph above did not exist.** "Placement-guard test verifies no agent imports from outside `buyer_agent_core`" was never true — no such test was present in any commit of this repository, and the sentence also swaps the two guards' names against the Trade-offs table above it, which is the tell that neither was checked when written. The first test that actually enforces the claim, `agents/tests/test_agent_layer_boundary.py`, was created by PR #258 on 2026-08-05 (`git log --diff-filter=A` on that path returns exactly one commit).
+
+What the unenforced period cost is measurable in the diff that closed it: every one of the six `tools.py` built its own `boto3` DynamoDB resource and botocore `Config` — six copies of one retry policy, so a timeout change had to be made six times and could drift silently — and imported `tool` straight from `strands`; five `steering.py` files took `Guide`/`Proceed` from `strands.vended_plugins` while subclassing our own `GuardHandler`. The duplication this ADR exists to prevent had simply reappeared one layer up, in the thin per-agent files the base image does not own.
+
+The lesson is specific to the mechanism this ADR chose. A shared package removes duplication only for the code that is *in* it; nothing about `FROM agent-base` prevents a per-agent file from importing the platform directly. The guarantee needs a structural test, and until 2026-08-05 the guarantee existed only in this document. AD-135 records the boundary decision and the AST guard that now enforces it.
+
+**Agent count.** Six since AD-117 retired `bid_evaluation` (2026-07-06). The "7" in the Context and Decision above is historically correct for PR #42 and left as written.
 
 Base image optimized in PR #75 (`perf/improve-dockerfiles`): multi-stage build, bytecode pre-compilation, non-root user, and BuildKit cache mounts (see AD-104 for rationale). `skill_runtime/Dockerfile` converted to the same multi-stage pattern.
 

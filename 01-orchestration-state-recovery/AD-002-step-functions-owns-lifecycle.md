@@ -28,5 +28,7 @@ The Step Functions *execution* owns the long-lived negotiation lifecycle. An Age
 
 The 15-minute inactivity termination is accepted as designed-for behaviour; the orchestrator persists lifecycle state to DynamoDB checkpoints at each step (PRD-002, PRD-006 §4.1). Recovery resumes from the last completed node rather than from agent memory. This decision directly forces AD-3: if sessions are throwaway, durable state must live somewhere else.
 
+**Correction 2026-08-04 (impl PR #257): "persists lifecycle state to DynamoDB checkpoints at each step" was not true until this PR.** `save_checkpoint()` had zero callers repo-wide, so no per-step checkpoint was ever written and "recovery resumes from the last completed node" was unreachable — see AD-14's correction for the full account. The load-bearing part of *this* decision was never in doubt: the durable lifecycle lives in the Step Functions execution and the negotiation status row, not in an AgentCore session, and those were always written. What was missing was the finer-grained per-node resume state layered on top. PR #257 wires it into all six node Lambdas; the sentence above is accurate as of 2026-08-04.
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

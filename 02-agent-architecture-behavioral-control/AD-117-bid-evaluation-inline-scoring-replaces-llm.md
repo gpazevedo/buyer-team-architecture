@@ -33,5 +33,14 @@ Also bundled in the same change (PR #151): low-value SPOT_BID and COMPETITIVE_AU
 
 Shipped in PR #151 (merged 2026-07-06). 164 tests pass, clean terraform plan. Dev resources destroyed: IAM role + 4 policies, ECR repo + lifecycle policy, 2 CloudWatch alarms, AgentCore runtime. The 6 remaining LLM agents are: Kraljic Classifier, Spot Bidding, Leverage Auction, Bottleneck Negotiation, Strategic Partnership, Award & Comms. The inline pattern established here applies to any future agent step whose task is deterministic structural validation of structured outputs.
 
+**Retirement completed 2026-08-03 (impl PR #255) — four references outlived the runtime by a month.** Destroying the infrastructure in PR #151 did not finish the job; code and tests kept describing `bid_evaluation` as a live A2A agent until an audit found them:
+
+- `graph_common.py::_LEGACY_AGENT_RUNTIME_DEFAULTS` still mapped `bid_evaluation` → `dev_bid_evaluation`, so the resolver's fallback tier silently revived a runtime destroyed a month earlier (see AD-98's 2026-08-03 update — this was the sharpest of the four, because it produced a plausible-looking WARNING rather than an error).
+- The integration suite's `EXPECTED_RUNTIMES` listed 8 runtimes including `dev_bid_evaluation`; now 7, with canaries deliberately excluded and the reason recorded.
+- `test_bid_evaluation_invoke_ranks_bids` invoked the non-existent runtime and was deleted; `test_registry.py`'s expected agents now match the seed script.
+- Three docstrings still called the inline node an "agent".
+
+The **node** was untouched throughout — it is alive and doing the scoring, `source="bid_evaluation_inline"`. The generalizable point for the inline pattern this ADR establishes: converting an agent to an inline node leaves a logical name embedded in resolver fallbacks, expected-runtime fixtures and test names, none of which fail when the runtime disappears. Retiring an agent has a code-side checklist, not just a `terraform destroy`.
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

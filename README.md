@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 133 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 135 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -38,9 +38,10 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-012](01-orchestration-state-recovery/AD-012-single-governed-cycle-back.md) | Single Governed Cycle-Back (Node 6 → Node 4x, Max 1) |
 | [AD-014](01-orchestration-state-recovery/AD-014-idempotent-nodes-checkpoint.md) | Idempotent Nodes with Explicit Dedup Keys + Checkpoint After Every Node |
 | [AD-015](01-orchestration-state-recovery/AD-015-concurrent-recovery-lock.md) | Concurrent Recovery Lock Scoped to (tenant_id, negotiation_id), 600s TTL |
-| [AD-016](01-orchestration-state-recovery/AD-016-requires-attention-typed-triggers.md) | REQUIRES_ATTENTION with Eighteen Typed Triggers |
+| [AD-016](01-orchestration-state-recovery/AD-016-requires-attention-typed-triggers.md) | REQUIRES_ATTENTION with Twenty Typed Triggers |
 | [AD-017](01-orchestration-state-recovery/AD-017-dynamodb-status-authoritative.md) | DynamoDB Status Write Is Authoritative; DLQ Best-Effort + S3 Archive |
 | [AD-026](01-orchestration-state-recovery/AD-026-tool-level-idempotency.md) | Tool-Level Idempotency via Dedup Keys / Session Cache |
+| [AD-134](01-orchestration-state-recovery/AD-134-scheduled-sweep-owns-approval-timeout.md) | A Scheduled Sweep, Not the State Machine, Owns the Approval Timeout |
 
 ### 02 · Agent Architecture & Behavioral Control
 
@@ -54,6 +55,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-027](02-agent-architecture-behavioral-control/AD-027-agents-communicate-through-shared-state.md) | Agents Communicate Only Through Step Functions Shared State |
 | [AD-117](02-agent-architecture-behavioral-control/AD-117-bid-evaluation-inline-scoring-replaces-llm.md) | Bid-Evaluation AgentCore Runtime Removed; Inline Deterministic Scoring Replaces the LLM Agent |
 | [AD-125](02-agent-architecture-behavioral-control/AD-125-response-builder-replaces-structured-output.md) | `response_builder` Replaces the Deprecated `structured_output()` Second Bedrock Call |
+| [AD-135](02-agent-architecture-behavioral-control/AD-135-buyer-agent-core-is-the-only-platform-seam.md) | `buyer_agent_core` Is the Agent Layer's Only Seam onto Strands, A2A and boto3 |
 
 ### 03 · Dynamic Configuration & Agent Factory
 

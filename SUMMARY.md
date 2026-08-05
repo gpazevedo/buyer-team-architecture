@@ -1,6 +1,6 @@
 # Buyer Team Architecture — Conceptual Summary of the ADRs
 
-A distillation of the knowledge captured across 133 architecture decision records for the
+A distillation of the knowledge captured across 135 architecture decision records for the
 Buyer Team agentic procurement platform. This is conceptual: it explains the ideas the
 decisions encode and how they hang together, not the implementation details.
 
@@ -79,11 +79,19 @@ guarded by a TTL lock sized from worst-case node execution time.
 
 When automation cannot safely proceed, it does not guess: it escalates to a single
 `REQUIRES_ATTENTION` status carrying a machine-readable trigger from a numbered taxonomy
-(currently 18), each with a defined escalation path and SLA. The escalation signal
+(currently 20), each with a defined escalation path and SLA. The escalation signal
 itself follows a priority order — the DynamoDB status write is authoritative; the DLQ
 publish and its immutable S3 archive are best-effort and can never block it. Fallbacks
 are quadrant-aware rather than uniform: a rule-based classification is auto-accepted
 only where a wrong answer is cheap, and escalated to a human where it is not.
+
+Deadlines that outlive a workflow execution belong to scheduled sweeps, not to the state
+machine. A workflow engine can end an execution when a timer expires, but it cannot write
+the authoritative status the rest of the system reads, and some deadlines — the auto-cancel
+that stops a human-escalated negotiation from stalling forever — only start counting after
+that execution has already ended. So the engine owns ending the pause and a periodic sweep
+owns the transitions, made race-safe against a human acting concurrently by conditional
+writes rather than by locking.
 
 ## 5. Multi-tenancy and security: layered independence, non-spoofable identity
 
