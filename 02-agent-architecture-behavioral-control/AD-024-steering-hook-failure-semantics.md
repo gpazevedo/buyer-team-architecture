@@ -1,6 +1,6 @@
 # AD-024 — Steering Hook Failure Semantics (6 PRE-CALL GUIDE Guards + 1 Declarative, No Retry-Wrap, Fail-Closed in a Base Class We Own)
 
-**Theme:** Agent Architecture & Behavioral Control  **Catalog:** AD-24 · **Source PRD:** PRD-003 · **Status:** Accepted — the fail-closed guarantee was unrealized until 2026-08-03; see the correction below · **Related:** AD-22, AD-23, AD-16, AD-115, AD-117, AD-133
+**Theme:** Agent Architecture & Behavioral Control  **Catalog:** AD-24 · **Source PRD:** PRD-003 · **Status:** Accepted — the fail-closed guarantee was unrealized until 2026-08-03; see the correction below · **Related:** AD-22, AD-23, AD-16, AD-115, AD-117, AD-133, AD-43
 
 > **Correction (2026-08-03, impl PR #253) — this ADR's central safety claim was false as written, and the system was fail-*open* on a guard crash from the v1.1.3 Strands-1.43 reconciliation until this date.**
 >
@@ -54,6 +54,8 @@ The fail-closed guarantee is the headline result, and the headline correction: i
 The availability cost stands as originally accepted: when TCO or risk assessment is persistently unavailable, the `TCOEnforcementGuard` / `RiskAssessmentEnforcement` GUIDE loop is the expected escalation path, not a bug, and it parks the negotiation in REQUIRES_ATTENTION (AD-16) for an operator rather than guessing.
 
 **Open item.** `governance.hook_error` should be zero forever — any datapoint is a code defect, not a business event — but its alarm publishes to `dev-buyer-team-evaluation-alerts`, which has **0 subscribers** (verified live during PR #252). A broken safety guard currently pages nobody. That is the same reasoning that deleted AD-34's evaluation alarms in AD-133, so this alarm is a deletion candidate on its own terms unless a subscription is added. The alarm is also **merged but not applied** — dev was mid-pause when PR #253 landed, and AD-133 requires alarm edits to be applied while dev is up.
+
+**Update 2026-08-05 (impl PR #259) — the subscriber half of the open item is resolved; the apply half is not.** `infra/modules/messaging/sns.tf` now conditionally subscribes `var.alert_email` to `evaluation_alerts` (a `count`-gated `aws_sns_topic_subscription`, empty default so environments that haven't set it are unaffected). Dev's subscription was applied and confirmed live via `sns.list_subscriptions_by_topic` — see [AD-43](../05-security-governance-trust-boundaries/AD-043-bedrock-guardrails-all-agents.md)'s 2026-08-05 update for the targeted-apply details. `evaluation_alerts` has its first real subscriber ever, so `governance_hook_error` no longer pages nobody *once it is live*. What PR #259 did not touch is the other half: `governance_hook_error` itself is still exactly where the 2026-08-03 correction above left it — merged to Terraform, not yet applied, because dev was mid-pause when PR #253 landed and AD-133 requires alarm edits to land while dev is up. The alarm still is not live; the reason it would have paged nobody once it is no longer holds.
 
 Realization was verified live (PRD-003 v1.1.3) on `BidConfidentialityGuard` / `WinnerDisclosureGuard` / `AuctionIntegrityGuard`. The fourth guard named in the previous version of this line, `EvaluationCompletenessGuard`, no longer exists (AD-117).
 
