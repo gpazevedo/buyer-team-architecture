@@ -97,8 +97,8 @@ writes rather than by locking.
 
 The security model is stated as an invariant: **no single layer's failure produces a
 breach or cross-tenant exposure**. Six conceptual layers (infrastructure, identity,
-tool/entity access via Cedar, content filtering via Bedrock Guardrails, behavioral
-steering hooks, application checks) stand independently, and tenancy specifically is
+tool access, content filtering via Bedrock Guardrails, behavioral steering hooks,
+application checks) stand independently, and tenancy specifically is
 defended four ways — partition-key namespacing at the data engine, a gateway interceptor
 that *overwrites* any client-supplied tenant id with the JWT-derived one (failing closed
 on any error), per-request ABAC session credentials, and predicate rewriting at
@@ -111,8 +111,10 @@ browser can never write, or the authenticated per-tenant machine client), and fe
 tenants get a dedicated IdP whose attribute mapping is fixed at onboarding. Human
 approval authority is enforced at exactly one place — the interrupt-resume API — with
 tenant-configured claims acting as a ceiling that per-request overrides may only narrow.
-Tool access is default-deny Cedar generated from one authoritative table, rolled out
-log-only before enforcement. Security-critical tables are hardened defensively: write
+Tool access for PO Receiving is default-deny Cedar, rolled out log-only before
+enforcement; the 6 LLM agents' own tools are in-process calls with no Gateway in the
+path for Cedar to reach, so that plane is instead governed by an authoritative
+permission table plus a fail-closed steering-hook layer (AD-39, AD-24). Security-critical tables are hardened defensively: write
 denied to agents, audited, alarmed, and auto-reverted if a threshold is ever set below
 its governance floor.
 

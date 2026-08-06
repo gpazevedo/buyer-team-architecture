@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 135 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 136 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -103,6 +103,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-108](05-security-governance-trust-boundaries/AD-108-demo-spa-hosted-ui-login.md) | Demo SPA Interactive Login via Cognito Hosted UI (Native PKCE Public Client) |
 | [AD-127](05-security-governance-trust-boundaries/AD-127-token-exchange-broker-delegation-chain.md) | Self-Sufficient RFC 8693 Token-Exchange Broker for the Delegation Chain |
 | [AD-128](05-security-governance-trust-boundaries/AD-128-guardrail-false-positive-context-and-masking.md) | Precomputed Context After the Cache Point; Anonymize-Only Interventions Are Not Blocks |
+| [AD-136](05-security-governance-trust-boundaries/AD-136-guardrail-reconnaissance-detection.md) | Guardrail-Triggered Reconnaissance Detection (REQ-S601) |
 
 ### 06 · Reliability, Resilience & Graceful Degradation
 

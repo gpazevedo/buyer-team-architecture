@@ -1,6 +1,8 @@
 # AD-040 — Cedar Rollout Phases Distinct from Per-Environment Mode
 
-**Theme:** Security, Governance & Trust Boundaries  **Catalog:** AD-40 · **Source PRD:** PRD-005 · **Status:** Accepted · **Related:** AD-39, AD-55
+**Theme:** Security, Governance & Trust Boundaries  **Catalog:** AD-40 · **Source PRD:** PRD-005 · **Status:** Accepted — scope narrowed 2026-08-06 to PO Receiving; see AD-39's correction · **Related:** AD-39, AD-55
+
+> **Scope correction (2026-08-06, follow-up to AD-39's correction).** This rollout sequence was written for "Cedar enforcement" generally, at a time this ADR family assumed Cedar would eventually cover the 6 LLM agents' ~60-rule table in addition to PO Receiving. AD-39 now establishes that the 6 agents' own tool calls never traverse a Gateway, so there is no Cedar deployment to roll out there, ever — the phases below apply to PO Receiving only, the one Gateway Cedar actually fronts. The distinction this ADR draws (a one-time temporal rollout vs. a permanent per-environment mode) is still the right model; it now has a single subject rather than the "6 agents + PO Receiving" scope this ADR previously implied.
 
 ## Context
 
@@ -25,7 +27,7 @@ An earlier version's section ordering in the PRD invited the confusion between t
 
 ## Results
 
-A three-phase rollout table is specified in PRD-005 §5.2. Permanent per-environment modes are owned by PRD-007 §8 / REQ-I203 and governed by AD-55's five-environment model. The two concerns are documented as independent. Cedar policy generation and the authoritative permission table are governed by AD-39.
+A three-phase rollout table is specified in PRD-005 §5.2, scoped to PO Receiving (§9) — see AD-39's correction for why the 6 LLM agents' tool calls are out of scope for this rollout entirely, not merely earlier in it. Permanent per-environment modes are owned by PRD-007 §8 / REQ-I203 and governed by AD-55's five-environment model. The two concerns are documented as independent. Cedar policy generation and the authoritative permission table are governed by AD-39.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
