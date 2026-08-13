@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 136 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 138 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -104,6 +104,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-127](05-security-governance-trust-boundaries/AD-127-token-exchange-broker-delegation-chain.md) | Self-Sufficient RFC 8693 Token-Exchange Broker for the Delegation Chain |
 | [AD-128](05-security-governance-trust-boundaries/AD-128-guardrail-false-positive-context-and-masking.md) | Precomputed Context After the Cache Point; Anonymize-Only Interventions Are Not Blocks |
 | [AD-136](05-security-governance-trust-boundaries/AD-136-guardrail-reconnaissance-detection.md) | Guardrail-Triggered Reconnaissance Detection (REQ-S601) |
+| [AD-137](05-security-governance-trust-boundaries/AD-137-memory-write-candidate-scope-validation.md) | Memory-Write Authorization via Candidate-Scope Validation, Not a JWT Claim Check (REQ-S608) |
 
 ### 06 · Reliability, Resilience & Graceful Degradation
 
@@ -204,6 +205,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-097](11-integration-skills-plugins-transports/AD-097-po-export-outbox-handoff.md) | PO Export Decoupled from Award via a Durable Outbox |
 | [AD-099](11-integration-skills-plugins-transports/AD-099-progressive-disclosure-tools.md) | Progressive Disclosure for the MCP Skill Runtime (catalog → manual → invocation) |
 | [AD-116](11-integration-skills-plugins-transports/AD-116-fastmcp-typed-schema-decoupled-from-validation.md) | FastMCP Tool Params Stay `dict`; `WithJsonSchema` Carries the Real Schema |
+| [AD-138](11-integration-skills-plugins-transports/AD-138-single-governed-supplier-comms-delivery-path.md) | One Governed Delivery Function Replaces Six Simulated Supplier-Send Paths |
 
 ### 12 · Procurement Domain Logic
 

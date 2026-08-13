@@ -1,6 +1,6 @@
 # Buyer Team Architecture — Conceptual Summary of the ADRs
 
-A distillation of the knowledge captured across 135 architecture decision records for the
+A distillation of the knowledge captured across 138 architecture decision records for the
 Buyer Team agentic procurement platform. This is conceptual: it explains the ideas the
 decisions encode and how they hang together, not the implementation details.
 
@@ -116,7 +116,10 @@ enforcement; the 6 LLM agents' own tools are in-process calls with no Gateway in
 path for Cedar to reach, so that plane is instead governed by an authoritative
 permission table plus a fail-closed steering-hook layer (AD-39, AD-24). Security-critical tables are hardened defensively: write
 denied to agents, audited, alarmed, and auto-reverted if a threshold is ever set below
-its governance floor.
+its governance floor. Persistence gets the same skepticism toward agent output as the
+pricing path: cross-negotiation supplier memory is written only for suppliers in the
+orchestrator's own trusted candidate set, never for whatever supplier id an agent's LLM
+output happens to name, with rejections alarmed (AD-137).
 
 ## 6. Resilience: degrade where optional, refuse where essential
 
@@ -207,7 +210,11 @@ External systems connect through one **Skill** (all logic) exposed by thin **Plu
 same skill serves any ERP via per-tenant configuration. PO export is decoupled from
 awarding through a durable outbox — the procurement decision never waits on a partner
 system. Tool surfaces use progressive disclosure (catalog → manual → invocation) so
-agents load capability detail only when needed.
+agents load capability detail only when needed. Outbound supplier communication follows
+the same discipline: six agents' independent, inconsistent simulated-send paths were
+collapsed into one governed function — idempotent, tenant-revalidated, content-safety
+fail-closed, circuit-breaker-wrapped — the single place a real external side effect
+(an SES send) can happen at all.
 
 Delivery follows build-once-promote: images built on merge move unchanged through
 environments, and rollback *is* a roll-forward to a known-good SHA. Infrastructure is

@@ -57,5 +57,7 @@ Routine quality drift is handled automatically without human intervention. Compl
 
 **Still fully unbuilt, unchanged by today's update:** the other four AD-034 automated actions (model rollback, disable auto-send, block auto-award, invalidate semantic cache, halt new negotiations) remain alert-a-human-only, same as every prior update recorded. Today's update closes the one bullet in this ADR's Decision that was ever *only* an escalation requirement, not a behavior change — it does not narrow that remaining gap.
 
+**Update 2026-08-13 (impl PR #269): `eval_negotiation_quality` is merged and applied — all 4 detection alarms from the 2026-08-12 update are now live simultaneously for the first time since the 2026-07-13 correction first found the metric dead.** The re-wire (`node_award_comms.py` scoring `negotiations.reasoning` post-award, per the 2026-08-12 update's description) is deployed to dev alongside the alarm. Detection is now fully re-established: `eval_bid_format_compliance`, `eval_governance_policy_compliance`, `eval_communication_tone`, and `eval_negotiation_quality` all alarm on live metrics, all wired to `evaluation_alerts` (subscribed since PR #259). This closed-loop's automated-action half is unaffected by today's update — see the paragraph above, still unbuilt.
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

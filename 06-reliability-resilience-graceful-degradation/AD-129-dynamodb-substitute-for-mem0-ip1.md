@@ -1,7 +1,7 @@
 # AD-129 — DynamoDB-Only Substitute for Mem0 IP-1, Isolated from the Agent-Failure Path
 
 **Theme:** Reliability, Resilience & Graceful Degradation
-**Catalog:** AD-129 · **Source PRD:** PRD-014 · **Status:** Accepted · **Related:** AD-72, AD-74, AD-46, AD-3, AD-38
+**Catalog:** AD-129 · **Source PRD:** PRD-014 · **Status:** Accepted · **Related:** AD-72, AD-74, AD-46, AD-3, AD-38, AD-137
 
 ## Context
 
@@ -28,7 +28,7 @@ Ship IP-1 now as a real, non-Mem0 substitute rather than continue deriving it fr
 
 ## Results
 
-Realized in `orchestrator/node_strategy_execute.py` (PR #236, 2026-07-22): `_query_supplier_memory`, `_record_supplier_memory`, and the `supplier-memory` table in `infra/modules/dynamodb/main.tf`. 372 orchestrator tests passing (+7 new), covering the write-path happy path, cold-start/real-history mixing within one negotiation, and the key regression — a full STRATEGIC run survives a totally broken supplier-memory table with the real agent-negotiated bid intact and zero `strategy.fallback_engaged` fires. `terraform validate` and a `-target`-scoped plan are clean; the live `dev-supplier-memory` table has not yet been created via `terraform apply`. AD-72 and AD-74 are updated to point here rather than describe IP-1 as Mem0-backed; IP-2 through IP-4 still await both Mem0 itself and a decision on whether they follow this same substitute pattern or wait for the SaaS account.
+Realized in `orchestrator/node_strategy_execute.py` (PR #236, 2026-07-22): `_query_supplier_memory`, `_record_supplier_memory`, and the `supplier-memory` table in `infra/modules/dynamodb/main.tf`. 372 orchestrator tests passing (+7 new), covering the write-path happy path, cold-start/real-history mixing within one negotiation, and the key regression — a full STRATEGIC run survives a totally broken supplier-memory table with the real agent-negotiated bid intact and zero `strategy.fallback_engaged` fires. `terraform validate` and a `-target`-scoped plan are clean; the live `dev-supplier-memory` table has not yet been created via `terraform apply`. AD-72 and AD-74 are updated to point here rather than describe IP-1 as Mem0-backed; IP-2 through IP-4 still await both Mem0 itself and a decision on whether they follow this same substitute pattern or wait for the SaaS account. **Update (2026-08-06):** this table's write path had no authorization check against the writing agent's own output until AD-137 added candidate-scope validation (PR #264) — a prompt-injected agent could otherwise write history rows for suppliers that were never real negotiation candidates. AD-137 covers the vulnerability and the fix; this ADR's own Decision and Results are otherwise unchanged.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
