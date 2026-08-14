@@ -1,6 +1,6 @@
 # Buyer Team Architecture — Conceptual Summary of the ADRs
 
-A distillation of the knowledge captured across 138 architecture decision records for the
+A distillation of the knowledge captured across 142 architecture decision records for the
 Buyer Team agentic procurement platform. This is conceptual: it explains the ideas the
 decisions encode and how they hang together, not the implementation details.
 
@@ -121,6 +121,25 @@ pricing path: cross-negotiation supplier memory is written only for suppliers in
 orchestrator's own trusted candidate set, never for whatever supplier id an agent's LLM
 output happens to name, with rejections alarmed (AD-137).
 
+The layered-independence claim gets its first genuinely AWS-native, account-level layer
+with GuardDuty Extended Threat Detection (AD-139): every other security signal in the
+system is application-emitted, so this closes a real blind spot — threats visible only at
+the account/network level, below anything app code could ever observe. The same pass drew
+a sharper line around what a policy-formalization control can honestly claim: Automated
+Reasoning checks (AD-140) encode the real award policy as machine-checkable rules taken
+directly from the code that already enforces it, attached to the one fleet-wide guardrail
+since the architecture has no per-agent guardrail scoping — but the alarm stays silent by
+construction until LLM-generated award text actually exists on the critical path to check,
+a limitation the decision states rather than hides. Where a control's target had already
+been designed out from under it, the record says so plainly: REQ-S607's contextual
+grounding check named an agent (Bid Evaluation) that a separate, earlier decision had
+already made deterministic, so it is marked superseded rather than left as a permanently
+open gap (AD-141). And the discipline of §11's "record reality" lesson turns on itself
+here — the ATLAS Navigator control-mapping file had been described as built across three
+changelog entries while never once existing in the repository; rebuilding it (AD-142) now
+includes its own fabrication history in its header, so the same gap can't quietly reopen
+unnoticed.
+
 ## 6. Resilience: degrade where optional, refuse where essential
 
 Seven config-driven resilience patterns (retry+jitter, circuit breaker, idempotency,
@@ -232,8 +251,9 @@ Reading across all fourteen themes, a few convictions recur:
 1. **Trust structure, not the model.** Determinism, schemas, hooks, and database
    constraints do the enforcing; the LLM contributes judgment inside code-owned bounds.
 2. **One owner per invariant.** The factory owns the request shape, the wrapper owns
-   resilience, one API owns approvals, one table owns config — invariants live where
-   they can be tested once.
+   resilience, one API owns approvals, one table owns config, `buyer_agent_core` owns
+   the only seam onto the underlying platform SDKs — invariants live where they can be
+   tested once, structurally rather than by convention.
 3. **Decide failure semantics per dependency.** Fail fast where wrong answers are
    dangerous; degrade gracefully where partial answers are useful; make every exception
    bounded, named, and written down.

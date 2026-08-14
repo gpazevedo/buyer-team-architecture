@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 138 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 142 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -105,6 +105,10 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-128](05-security-governance-trust-boundaries/AD-128-guardrail-false-positive-context-and-masking.md) | Precomputed Context After the Cache Point; Anonymize-Only Interventions Are Not Blocks |
 | [AD-136](05-security-governance-trust-boundaries/AD-136-guardrail-reconnaissance-detection.md) | Guardrail-Triggered Reconnaissance Detection (REQ-S601) |
 | [AD-137](05-security-governance-trust-boundaries/AD-137-memory-write-candidate-scope-validation.md) | Memory-Write Authorization via Candidate-Scope Validation, Not a JWT Claim Check (REQ-S608) |
+| [AD-139](05-security-governance-trust-boundaries/AD-139-guardduty-extended-threat-detection.md) | Enable GuardDuty Extended Threat Detection (REQ-S605) |
+| [AD-140](05-security-governance-trust-boundaries/AD-140-automated-reasoning-award-validation.md) | Bedrock Automated Reasoning Checks for Award Decisions (REQ-S606) |
+| [AD-141](05-security-governance-trust-boundaries/AD-141-req-s607-descoped-bid-evaluation-removed.md) | REQ-S607 Descoped: Contextual Grounding Check Has No Target (REQ-S607) |
+| [AD-142](05-security-governance-trust-boundaries/AD-142-atlas-navigator-layer-baseline.md) | ATLAS Navigator Layer Baseline (REQ-S600, REQ-S610) |
 
 ### 06 · Reliability, Resilience & Graceful Degradation
 
