@@ -1,6 +1,6 @@
 # Buyer Team Architecture — Conceptual Summary of the ADRs
 
-A distillation of the knowledge captured across 142 architecture decision records for the
+A distillation of the knowledge captured across 143 architecture decision records for the
 Buyer Team agentic procurement platform. This is conceptual: it explains the ideas the
 decisions encode and how they hang together, not the implementation details.
 
@@ -174,7 +174,10 @@ golden sets for accuracy, cheap code checks for structure. Judges deliberately c
 a *different model family* than the agents they score. Coverage is 100% online except
 where volume forces tiered sampling, and scores are wired to automated consequences —
 model rollback, auto-send disable, auto-award block — closing the loop from measurement
-to action. The observability system also watches itself: metric emission failures emit a
+to action. Consistency is not calibration: the judges' thresholds ultimately rest on
+human scores, and the missing input — real dual-reviewer labels from a private
+in-house workforce over a synthetic transcript corpus (AD-143) — progressively replaces
+the synthetic placeholder scores the panel was built on. The observability system also watches itself: metric emission failures emit a
 non-recursive "I failed" datapoint, and a heartbeat dead-man's-switch alarms on *absence*
 of data. Equally characteristic is scope honesty: what is built, stubbed, or deferred is
 recorded explicitly rather than left as implied-done design.

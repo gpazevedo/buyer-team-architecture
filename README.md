@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 142 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 143 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -144,6 +144,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-121](07-observability-evaluation/AD-121-meta-observability-heartbeat-dead-mans-switch.md) | Meta-Observability Heartbeat Dead-Man's-Switch |
 | [AD-130](07-observability-evaluation/AD-130-agentcore-vended-log-delivery-for-platform-spans.md) | CloudWatch Vended Log Delivery Required to Resolve AgentCore's Own Platform-Generated Spans |
 | [AD-132](07-observability-evaluation/AD-132-kpi-rollup-automation-rate-deviation-flag.md) | Headline KPIs Computed by a Daily Rollup Lambda; Automation Rate Defined as a Per-PR Deviation Flag |
+| [AD-143](07-observability-evaluation/AD-143-ground-truth-labeling-private-workforce.md) | Ground Truth Labeling via a Private Workforce for Judge Calibration |
 
 ### 08 · Cost Architecture & Optimization
 

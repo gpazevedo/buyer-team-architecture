@@ -28,5 +28,7 @@ When the Kraljic Classifier agent is unavailable, fall back to deterministic rul
 
 Fallback decisions are idempotency-keyed like any side effect; rejected fallback cases set REQUIRES_ATTENTION. The quadrant-specific rejection thresholds are sourced from `{env}-system-config` alongside the primary classifier thresholds, so they tune together. Security note: the rule-based path bypasses LLM content filtering but never bypasses Cedar or partition-key isolation (PRD-005 §1.4). This decision applies the availability-first principle of AD-46 to the Kraljic routing node specifically, and uses the same REQUIRES_ATTENTION escalation path defined in AD-16.
 
+**2026-08-14 (impl PR #290):** `fallback_classification_count`/`fallback_rejection_count` now carry `tenant_id` as a metric dimension (previously `quadrant` only), and a `kraljic_fallback_quality` alarm fires on >3 fallback classifications in a rolling 60-minute window across any tenant (PRD-002's `fallback_quality_below_threshold` trigger, #4 in AD-16's taxonomy) — sustained fallback usage, meaning the classifier agent is degraded or unavailable for an extended stretch, is now visible instead of only inferable from individual REQUIRES_ATTENTION rows.
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
