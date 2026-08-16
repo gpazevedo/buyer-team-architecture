@@ -127,10 +127,14 @@ system is application-emitted, so this closes a real blind spot — threats visi
 the account/network level, below anything app code could ever observe. The same pass drew
 a sharper line around what a policy-formalization control can honestly claim: Automated
 Reasoning checks (AD-140) encode the real award policy as machine-checkable rules taken
-directly from the code that already enforces it, attached to the one fleet-wide guardrail
-since the architecture has no per-agent guardrail scoping — but the alarm stays silent by
-construction until LLM-generated award text actually exists on the critical path to check,
-a limitation the decision states rather than hides. Where a control's target had already
+directly from the code that already enforces it, applied as a second, structurally
+independent implementation of the deterministic check on the award-decision path — not
+sold as stronger, only as defense-in-depth against a bug in the code itself. The wiring
+then taught a live lesson of its own: Bedrock refuses streaming calls through an
+AR-carrying guardrail, so the fleet guardrail is now split in two — the AR carrier
+reserved for the nodes' non-streaming checks, an AR-free twin built from the same content
+policy on the agents' streaming path — which finally gives the system the per-path
+guardrail scoping it had previously lacked. Where a control's target had already
 been designed out from under it, the record says so plainly: REQ-S607's contextual
 grounding check named an agent (Bid Evaluation) that a separate, earlier decision had
 already made deterministic, so it is marked superseded rather than left as a permanently
@@ -170,11 +174,13 @@ human approval pause), correlation state is persisted as plain row data and rest
 resume, so traces survive discontinuities.
 
 Evaluation is matched to the question: LLM-as-judge for qualitative scores, ground-truth
-golden sets for accuracy, cheap code checks for structure. Judges deliberately come from
+golden sets for accuracy — or computable model-mirror ground truth where no golden data
+exists — and cheap code checks for structure. Judges deliberately come from
 a *different model family* than the agents they score. Coverage is 100% online except
 where volume forces tiered sampling, and scores are wired to automated consequences —
-model rollback, auto-send disable, auto-award block — closing the loop from measurement
-to action. Consistency is not calibration: the judges' thresholds ultimately rest on
+model rollback, auto-send disable, auto-award block, semantic-cache invalidation, and a
+halt on new negotiations — closing the loop from measurement to action, all five actions
+built. Consistency is not calibration: the judges' thresholds ultimately rest on
 human scores, and the missing input — real dual-reviewer labels from a private
 in-house workforce over a synthetic transcript corpus (AD-143) — progressively replaces
 the synthetic placeholder scores the panel was built on. The observability system also watches itself: metric emission failures emit a
@@ -201,7 +207,9 @@ self-invalidate, supplier communications are O(1) in supplier count (one LLM cal
 produces a canonical body; per-supplier copies are deterministic renders), keep-alive
 pings exit before touching the model, and oversized tool outputs are truncated
 head+tail. Ground truth for spend is the AWS bill itself: token-based estimates supply
-only the proportional breakdown, scaled to the billed total, attributed per tenant.
+only the proportional breakdown, scaled to the billed total, attributed per tenant —
+token and invocation counts now carry a tenant dimension in the cost namespace, so the
+per-tenant split is queryable even though the billing-grade CUR join remains design.
 
 The discipline turns on the observability estate too, which is where it gets
 uncomfortable: monitoring is not exempt from its own cost review. Alarms turned out to be
