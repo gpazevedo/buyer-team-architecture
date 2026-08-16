@@ -180,10 +180,12 @@ a *different model family* than the agents they score. Coverage is 100% online e
 where volume forces tiered sampling, and scores are wired to automated consequences —
 model rollback, auto-send disable, auto-award block, semantic-cache invalidation, and a
 halt on new negotiations — closing the loop from measurement to action, all five actions
-built. Consistency is not calibration: the judges' thresholds ultimately rest on
+built, deployed, and E2E-verified. Consistency is not calibration: the judges' thresholds ultimately rest on
 human scores, and the missing input — real dual-reviewer labels from a private
 in-house workforce over a synthetic transcript corpus (AD-143) — progressively replaces
-the synthetic placeholder scores the panel was built on. The observability system also watches itself: metric emission failures emit a
+the synthetic placeholder scores the panel was built on. Until that input lands, the
+staging gate is structurally held by the calibration check scoring live judges against
+those placeholders — a data gap, not judge drift. The observability system also watches itself: metric emission failures emit a
 non-recursive "I failed" datapoint, and a heartbeat dead-man's-switch alarms on *absence*
 of data. Equally characteristic is scope honesty: what is built, stubbed, or deferred is
 recorded explicitly rather than left as implied-done design.
