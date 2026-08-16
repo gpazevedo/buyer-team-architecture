@@ -71,5 +71,7 @@ PR #294 adds a new detection binding adjacent to the five this ADR's Decision na
 
 **Update 2026-08-16 (impl PR #315): the Kraljic Accuracy signal gains a PR-gate sibling (Phase 6 of the hardening plan).** `pr-checks.yml`'s new `kraljic-accuracy-gate` job invokes the live dev Kraljic Classifier through the production path (`orchestrator/agent_invoke.py`) in `name_only` mode and fails the PR below a 0.80 floor — deliberately below the measured 17/20 = 85% baseline (2026-08-13). Exit 3 (>= 80% of rows unclassified, or zero rows — the dev VPC cost-pause surfaces as 424s) is SKIPPED with a warning and never emits metrics: a paused dev VPC must not block merges, and a bogus 0.0 would spuriously trip the cache-invalidation alarm. This is a deployment gate, not a detection binding — no alarm, no automated action.
 
+**Update 2026-08-16 (completion): the fifth automated action is live, not just built.** PR #316 (invalidate semantic cache) merged 2026-08-16T00:13Z and dev-deployed 00:31Z; its synthetic-ALARM E2E passed live (wrong-alarm and OK transitions ignored, ALARM transition bumped `cache_epoch` 0→1, dev restored to the pre-test state). The P3 update's "Remaining: 0 — all five … are built" is now "all five are built, deployed, and E2E-verified"; every action has its detection alarm live in dev.
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
