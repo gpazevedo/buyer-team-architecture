@@ -15,10 +15,10 @@
        ══════════════════════════════ -->
   <rect width="1200" height="82" fill="#0f172a"/>
   <text x="24" y="36" fill="white" font-size="22" font-weight="700" letter-spacing="-0.4">Buyer Team · Architecture Decision Records</text>
-  <text x="24" y="62" fill="#94a3b8" font-size="13">143 decisions across 14 concern areas · Agentic Procurement SaaS · buyer-team.com</text>
+  <text x="24" y="62" fill="#94a3b8" font-size="13">146 decisions across 14 concern areas · Agentic Procurement SaaS · buyer-team.com</text>
   <!-- KPI badge -->
   <rect x="1094" y="10" width="90" height="62" rx="8" fill="rgba(255,255,255,0.07)"/>
-  <text x="1139" y="42" text-anchor="middle" fill="white" font-size="28" font-weight="800">143</text>
+  <text x="1139" y="42" text-anchor="middle" fill="white" font-size="28" font-weight="800">146</text>
   <text x="1139" y="60" text-anchor="middle" fill="#64748b" font-size="10" font-weight="600" letter-spacing="0.5">DECISIONS</text>
 
   <!-- ══════════════════════════════
@@ -95,8 +95,8 @@
   </g>
   <text x="910" y="259" fill="white" font-size="11" font-weight="700">11 · Integration &amp; Transports</text>
   <rect x="1152" y="247" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="1163" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">9</text>
-  <text x="910" y="282" fill="#374151" font-size="11" font-weight="600">9 Decisions</text>
+  <text x="1163" y="259" fill="white" font-size="9" font-weight="800" text-anchor="middle">10</text>
+  <text x="910" y="282" fill="#374151" font-size="11" font-weight="600">10 Decisions</text>
   <text x="910" y="298" fill="#6b7280" font-size="10">4 transports · Kafka/SDK bypass · governed comms delivery</text>
 
   <!-- ══════════════════════════════
@@ -191,10 +191,10 @@
   </g>
   <text x="28" y="595" fill="white" font-size="11" font-weight="700">07 · Observability &amp; Evaluation</text>
   <rect x="564" y="583" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="575" y="595" fill="white" font-size="9" font-weight="800" text-anchor="middle">14</text>
-  <text x="28" y="618" fill="#374151" font-size="11" font-weight="600">14 Decisions</text>
+  <text x="575" y="595" fill="white" font-size="9" font-weight="800" text-anchor="middle">15</text>
+  <text x="28" y="618" fill="#374151" font-size="11" font-weight="600">15 Decisions</text>
   <text x="28" y="632" fill="#6b7280" font-size="10">4-layer observability (Platform/App/Domain/FinOps) · W3C traceparent · Transaction Search</text>
-  <text x="28" y="645" fill="#6b7280" font-size="10">AgentCore evals · ATLAS on schedule · correlation ID bridge · heartbeat · vended log delivery · KPI rollup · Ground Truth labeling</text>
+  <text x="28" y="645" fill="#6b7280" font-size="10">AgentCore evals · ATLAS on schedule · correlation ID bridge · heartbeat · vended log delivery · KPI rollup · Ground Truth labeling · scheduled-Lambda alarm registry</text>
 
   <!-- 09 · Infrastructure & Deployment Stack -->
   <g filter="url(#shadow)">
@@ -204,8 +204,8 @@
   </g>
   <text x="616" y="595" fill="white" font-size="11" font-weight="700">09 · Infrastructure &amp; Deployment Stack</text>
   <rect x="1152" y="583" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="1163" y="595" fill="white" font-size="9" font-weight="800" text-anchor="middle">15</text>
-  <text x="616" y="618" fill="#374151" font-size="11" font-weight="600">15 Decisions</text>
+  <text x="1163" y="595" fill="white" font-size="9" font-weight="800" text-anchor="middle">16</text>
+  <text x="616" y="618" fill="#374151" font-size="11" font-weight="600">16 Decisions</text>
   <text x="616" y="632" fill="#6b7280" font-size="10">Python/Strands/AgentCore/Terraform · modular IaC · GitOps build-once-promote · decoupled deploy</text>
   <text x="616" y="645" fill="#6b7280" font-size="10">5-env model · canary · guarded full-replace · image optimization · prevent_destroy · demo harness split out</text>
 

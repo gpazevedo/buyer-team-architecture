@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 143 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 146 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -145,6 +145,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-130](07-observability-evaluation/AD-130-agentcore-vended-log-delivery-for-platform-spans.md) | CloudWatch Vended Log Delivery Required to Resolve AgentCore's Own Platform-Generated Spans |
 | [AD-132](07-observability-evaluation/AD-132-kpi-rollup-automation-rate-deviation-flag.md) | Headline KPIs Computed by a Daily Rollup Lambda; Automation Rate Defined as a Per-PR Deviation Flag |
 | [AD-143](07-observability-evaluation/AD-143-ground-truth-labeling-private-workforce.md) | Ground Truth Labeling via a Private Workforce for Judge Calibration |
+| [AD-144](07-observability-evaluation/AD-144-scheduled-lambda-errors-alarm-registry.md) | Every Scheduled Lambda Registers for an Errors Alarm via a Central Map |
 
 ### 08 · Cost Architecture & Optimization
 
@@ -182,6 +183,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-112](09-infrastructure-deployment-platform-stack/AD-112-prevent-destroy-stateful-guardrail.md) | `prevent_destroy` as the Guardrail for Dev's Automated Apply |
 | [AD-114](09-infrastructure-deployment-platform-stack/AD-114-adot-layer-arn-defaults-on.md) | ADOT Layer ARN Defaults On at the Root, Not via Workflow `-var` |
 | [AD-122](09-infrastructure-deployment-platform-stack/AD-122-demo-harness-extracted-to-own-repository.md) | Demo Harness and Test-Tenant App Extracted to Their Own Repository |
+| [AD-145](09-infrastructure-deployment-platform-stack/AD-145-lambda-core-shared-platform-seam.md) | `lambda_core` Is the Lambda Fleet's Shared Platform Seam |
 
 ### 10 · Capacity, Admission Control & Tenant Lifecycle
 
@@ -211,6 +213,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-099](11-integration-skills-plugins-transports/AD-099-progressive-disclosure-tools.md) | Progressive Disclosure for the MCP Skill Runtime (catalog → manual → invocation) |
 | [AD-116](11-integration-skills-plugins-transports/AD-116-fastmcp-typed-schema-decoupled-from-validation.md) | FastMCP Tool Params Stay `dict`; `WithJsonSchema` Carries the Real Schema |
 | [AD-138](11-integration-skills-plugins-transports/AD-138-single-governed-supplier-comms-delivery-path.md) | One Governed Delivery Function Replaces Six Simulated Supplier-Send Paths |
+| [AD-146](11-integration-skills-plugins-transports/AD-146-mcp-servers-shared-platform-seam.md) | `mcp_servers/shared` Becomes the MCP Servers' Platform Seam |
 
 ### 12 · Procurement Domain Logic
 

@@ -1,6 +1,6 @@
 # Buyer Team Architecture — Conceptual Summary of the ADRs
 
-A distillation of the knowledge captured across 143 architecture decision records for the
+A distillation of the knowledge captured across 146 architecture decision records for the
 Buyer Team agentic procurement platform. This is conceptual: it explains the ideas the
 decisions encode and how they hang together, not the implementation details.
 
@@ -162,7 +162,11 @@ saturated agent never looks dead. A replica's lifecycle is closed at both ends �
 readiness gate opens only after the agent has proven it can serve, and shutdown drains
 in-flight work before exit. Bulkhead sizes are derived from platform rate limits and
 SLAs, not intuition — including one recorded decision *rejecting* a proposed cap
-reduction by showing the arithmetic it would break.
+reduction by showing the arithmetic it would break. A parallel audit of the Lambda
+fleet found eight scheduled or async-invoke handlers with no on-failure destination
+configured anywhere — including two with no exception handling at all — closed by
+wiring all eight into a shared DLQ as part of consolidating the fleet onto one platform
+seam (AD-145).
 
 ## 7. Observability and evaluation as a closed, self-watching loop
 
@@ -187,8 +191,13 @@ the synthetic placeholder scores the panel was built on. Until that input lands,
 staging gate is structurally held by the calibration check scoring live judges against
 those placeholders — a data gap, not judge drift. The observability system also watches itself: metric emission failures emit a
 non-recursive "I failed" datapoint, and a heartbeat dead-man's-switch alarms on *absence*
-of data. Equally characteristic is scope honesty: what is built, stubbed, or deferred is
-recorded explicitly rather than left as implied-done design.
+of data. A plainer version of the same discipline covers the Lambda fleet: every
+schedule-triggered function — with no synchronous caller to notice its own failure —
+registers for an AWS-emitted Errors alarm via one central map (AD-144), closing the gap
+that let a 12-day AccessDenied streak and a 44-run failure run both go unnoticed, the
+latter with business alarms reading "no data" as "nothing wrong" the whole time. Equally
+characteristic is scope honesty: what is built, stubbed, or deferred is recorded
+explicitly rather than left as implied-done design.
 
 Headline business KPIs get one further move: a *rate* is not an observation, so nothing
 can alarm on it until something computes it. A daily rollup reads the raw signals back
@@ -210,8 +219,9 @@ produces a canonical body; per-supplier copies are deterministic renders), keep-
 pings exit before touching the model, and oversized tool outputs are truncated
 head+tail. Ground truth for spend is the AWS bill itself: token-based estimates supply
 only the proportional breakdown, scaled to the billed total, attributed per tenant —
-token and invocation counts now carry a tenant dimension in the cost namespace, so the
-per-tenant split is queryable even though the billing-grade CUR join remains design.
+token and invocation counts now carry a tenant dimension in the cost namespace, and a
+per-call dollar figure rides the same dimensions, so the per-tenant split is queryable
+directly, in dollars, even though the billing-grade CUR join remains design.
 
 The discipline turns on the observability estate too, which is where it gets
 uncomfortable: monitoring is not exempt from its own cost review. Alarms turned out to be
@@ -265,7 +275,9 @@ Reading across all fourteen themes, a few convictions recur:
    constraints do the enforcing; the LLM contributes judgment inside code-owned bounds.
 2. **One owner per invariant.** The factory owns the request shape, the wrapper owns
    resilience, one API owns approvals, one table owns config, `buyer_agent_core` owns
-   the only seam onto the underlying platform SDKs — invariants live where they can be
+   the only seam onto the underlying platform SDKs — with `lambda_core` (AD-145) and
+   `mcp_servers/shared` (AD-146) repeating the same discipline one layer down, for the
+   Lambda fleet and the MCP servers respectively — invariants live where they can be
    tested once, structurally rather than by convention.
 3. **Decide failure semantics per dependency.** Fail fast where wrong answers are
    dangerous; degrade gracefully where partial answers are useful; make every exception
