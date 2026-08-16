@@ -56,5 +56,7 @@ Shipped in impl PR #256 (merged 2026-08-04): `orchestrator/requires_attention_ev
 
 **Not yet live-verified.** The sweep is deployed and unit/moto-tested, but no negotiation has been observed crossing 96h or 7 days on dev — both windows exceed any test run to date, and forcing one requires back-dating `approval_started_at` on a live row.
 
+**Update 2026-08-16 (impl PR #319): the sweep failed every 30-minute invocation for its first 12 days — silently.** From 2026-08-04 (the day PR #256 shipped) to 08-16, every tick died with `AccessDeniedException` on its `status_index` GSI query — the IAM role lacked the Query grant on the index ARN — and nothing surfaced it, because no Lambda-error alarm existed. Fixed: the grant, plus `approval_sweep_errors` (`AWS/Lambda Errors >= 1`, wired to `evaluation_alerts`) so the failure mode is loud next time. A related mirror gap closed in the same PR: Node 5's RA escalations (`suspicious_bid_overflow`, `risk_threshold_breach`) previously mirrored only the negotiation row, and since this sweep's mirror covers only PENDING_APPROVAL rows, the app-visible requisition stayed IN_NEGOTIATION forever — `_flag_requires_attention` now writes the requisition row too.
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

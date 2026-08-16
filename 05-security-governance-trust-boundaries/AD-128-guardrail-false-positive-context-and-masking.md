@@ -45,5 +45,7 @@ Shipped in impl PR #226 (merged 2026-07-19). Files: `buyer_agent_core/guardrail.
 
 This decision is downstream of AD-43 (which establishes the Guardrail and its `PROMPT_ATTACK:HIGH` + ANONYMIZE-PII policy) and constrained by AD-65/AD-28 (the cache-prefix invariant it must not break).
 
+**Update 2026-08-16 (impl PR #319): a second instance of the same request-shape class.** The directive prompts `agents/{bottleneck_negotiation,strategic_partnership}_llm/agent_spec.py` carried in the user turn ("Copy each block through unchanged" — context-poisoning; "Make exactly two tool calls: (1)…(2)…" — tool-call injection) each independently tripped Bedrock's PROMPT_ATTACK input filter; system-role content is not scanned. Both directives now live in `_build_context` after the cache breakpoint — the same seam this ADR's Results describes — while items/suppliers stay in the user turn so AD-35's adversarial coverage is unchanged. Verified via Converse guardrail traces (PASS 8/8) and the full Strands agent loop. This also sharpens the "Not yet live-verified" question (1) above: it was not only the precomputed blobs — directive prose in the user turn is an independent trip source.
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
