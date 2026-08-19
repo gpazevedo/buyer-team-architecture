@@ -100,5 +100,34 @@ fine-grained layer, exactly as AD-38 intends.
   implementation, blocking 8 call sites (the master-data loaders' S3 reads and ingest's domain
   writes); the remaining two Gateways; and the Lambda re-hosting that phase 3 now depends on.
 
+### Addendum (2026-08-19) — the calling tree is dead, not merely incomplete
+
+Completing phase 2 established that the two missing MCP servers were a symptom of something
+larger: **the entire tree that calls them is unreachable.** `skill_runtime/server.py` — the
+runtime actually served — imports exclusively from `skills/test_tenant/test_tenant_skill/` and
+contains **zero** references to any of the three MCP runtimes. It reads master data with direct
+boto3 (`_get_master_pr`) and starts workflows with direct Step Functions (`_start_workflow`).
+
+`skills/test_tenant_master/` and `skills/integration/` are imported by nothing live — only by
+each other. `ingest_purchase_requisitions` is defined **twice**, and the live definition is the
+one in `server.py`, not the `_invoke_mcp`-based one in `skills/integration/ingest_pr.py`. A
+parallel, working implementation of what `s3-reader` / `dynamodb-domain` were meant to provide
+already exists in `skills/test_tenant/test_tenant_skill/mcp_clients.py`, backed by boto3.
+
+Two consequences. First, the `_invoke_mcp` repair recorded above is real but currently inert:
+it fixed a client in a tree nothing imports, so "19 of 27 call sites now work" means they would
+work if something called them. Second, and more importantly for this ADR's decision: all three
+Gateways gate runtimes with **no live caller**, so their gates can only be tripped by a
+deliberate probe. That does not invalidate them — the runtimes remain reachable by any principal
+holding IAM `InvokeAgentRuntime`, which is exactly the exposure a front door closes — but it
+does mean **no `ENFORCE` flip should happen until a real caller routes through them**, because
+`LOG_ONLY` telemetry from a probe cannot tell you what production traffic would be denied.
+
+The open decision this creates, deliberately not taken here: either wire the live path through
+the Gateways (`server.py`'s direct boto3 calls become Gateway calls) and delete the duplicate
+tree, or delete the duplicate tree and accept that these Gateways stay probe-only. Building
+`s3-reader` and `dynamodb-domain` is not on either path — it would be new infrastructure for
+dead code.
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
