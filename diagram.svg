@@ -15,10 +15,10 @@
        ══════════════════════════════ -->
   <rect width="1200" height="82" fill="#0f172a"/>
   <text x="24" y="36" fill="white" font-size="22" font-weight="700" letter-spacing="-0.4">Buyer Team · Architecture Decision Records</text>
-  <text x="24" y="62" fill="#94a3b8" font-size="13">146 decisions across 14 concern areas · Agentic Procurement SaaS · buyer-team.com</text>
+  <text x="24" y="62" fill="#94a3b8" font-size="13">149 decisions across 14 concern areas · Agentic Procurement SaaS · buyer-team.com</text>
   <!-- KPI badge -->
   <rect x="1094" y="10" width="90" height="62" rx="8" fill="rgba(255,255,255,0.07)"/>
-  <text x="1139" y="42" text-anchor="middle" fill="white" font-size="28" font-weight="800">146</text>
+  <text x="1139" y="42" text-anchor="middle" fill="white" font-size="28" font-weight="800">149</text>
   <text x="1139" y="60" text-anchor="middle" fill="#64748b" font-size="10" font-weight="600" letter-spacing="0.5">DECISIONS</text>
 
   <!-- ══════════════════════════════
@@ -130,8 +130,8 @@
   </g>
   <text x="420" y="385" fill="white" font-size="11" font-weight="700">05 · Security &amp; Governance</text>
   <rect x="760" y="373" width="22" height="18" rx="9" fill="rgba(0,0,0,0.22)"/>
-  <text x="771" y="385" fill="white" font-size="9" font-weight="800" text-anchor="middle">19</text>
-  <text x="420" y="408" fill="#374151" font-size="11" font-weight="600">19 Decisions</text>
+  <text x="771" y="385" fill="white" font-size="9" font-weight="800" text-anchor="middle">22</text>
+  <text x="420" y="408" fill="#374151" font-size="11" font-weight="600">22 Decisions</text>
   <text x="420" y="424" fill="#6b7280" font-size="10">Cedar · guardrails · 6-layer defense · token broker · GuardDuty · Automated Reasoning · ATLAS layer</text>
 
   <!-- 06 · Reliability & Resilience -->
