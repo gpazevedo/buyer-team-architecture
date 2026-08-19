@@ -123,11 +123,23 @@ holding IAM `InvokeAgentRuntime`, which is exactly the exposure a front door clo
 does mean **no `ENFORCE` flip should happen until a real caller routes through them**, because
 `LOG_ONLY` telemetry from a probe cannot tell you what production traffic would be denied.
 
-The open decision this creates, deliberately not taken here: either wire the live path through
-the Gateways (`server.py`'s direct boto3 calls become Gateway calls) and delete the duplicate
-tree, or delete the duplicate tree and accept that these Gateways stay probe-only. Building
-`s3-reader` and `dynamodb-domain` is not on either path — it would be new infrastructure for
-dead code.
+**Decided 2026-08-19: the duplicate tree is not deleted.** `skills/test_tenant_master/` and
+`skills/integration/` stay in the repo despite being unreachable. That rules out the tidiest
+resolution and leaves exactly one route to a Gateway that real traffic passes through: wire the
+live path — `server.py`'s direct boto3 calls become Gateway calls — while the duplicate tree
+remains alongside it.
+
+Two consequences worth stating plainly, because they are the cost of that decision:
+
+- The repo keeps two implementations of the same behaviour, only one of which runs. Anyone
+  reading `skills/integration/ingest_pr.py` will find a plausible-looking
+  `ingest_purchase_requisitions` that is not the one being served. The live definition is
+  `skill_runtime/server.py`'s. This ADR is the pointer that disambiguates them.
+- Until the live path is wired, every Gateway built in phase 2 stays probe-only, so the
+  `ENFORCE` blocker above stands indefinitely rather than until a cleanup lands.
+
+Building `s3-reader` and `dynamodb-domain` remains off every path — it would be new
+infrastructure for dead code, and `mcp_clients.py` already implements their behaviour.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
