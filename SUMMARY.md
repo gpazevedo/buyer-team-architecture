@@ -1,6 +1,6 @@
 # Buyer Team Architecture — Conceptual Summary of the ADRs
 
-A distillation of the knowledge captured across 148 architecture decision records for the
+A distillation of the knowledge captured across 149 architecture decision records for the
 Buyer Team agentic procurement platform. This is conceptual: it explains the ideas the
 decisions encode and how they hang together, not the implementation details.
 
@@ -111,12 +111,18 @@ browser can never write, or the authenticated per-tenant machine client), and fe
 tenants get a dedicated IdP whose attribute mapping is fixed at onboarding. Human
 approval authority is enforced at exactly one place — the interrupt-resume API — with
 tenant-configured claims acting as a ceiling that per-request overrides may only narrow.
-Tool access for PO Receiving is default-deny Cedar, rolled out log-only before
-enforcement, and the caller's tenant is now proven to reach Cedar as a principal tag —
-so policy can discriminate by tenant, not merely by OAuth scope (AD-147); the 6 LLM
-agents' own tools are in-process calls with no Gateway in the
-path for Cedar to reach, so that plane is instead governed by an authoritative
-permission table plus a fail-closed steering-hook layer (AD-39, AD-24). Security-critical tables are hardened defensively: write
+Gateway tool access is default-deny Cedar, rolled out log-only before enforcement — five
+policy engines now, having started as one on PO Receiving — and the caller's tenant is
+proven to reach Cedar as a principal tag, so policy can discriminate by tenant, not merely
+by OAuth scope (AD-147). Where the host is an AgentCore Runtime the gate is necessarily
+coarse, because only Lambda-hosted targets expose per-tool actions (AD-148). Flipping any
+of these to enforcement has a counter-intuitive precondition: the callers degrade rather
+than fail, so a misconfigured enforce mode denies everything, the caller falls back past
+the entire authorization chain, and the result is weaker than log-only while looking
+healthy — the bypass must be alarmed at the caller before the flip (AD-149). The 6 LLM
+agents' own tools are in-process calls with no Gateway in the path for Cedar to reach, so
+that plane is instead governed by an authoritative permission table plus a fail-closed
+steering-hook layer (AD-39, AD-24). Security-critical tables are hardened defensively: write
 denied to agents, audited, alarmed, and auto-reverted if a threshold is ever set below
 its governance floor. Persistence gets the same skepticism toward agent output as the
 pricing path: cross-negotiation supplier memory is written only for suppliers in the

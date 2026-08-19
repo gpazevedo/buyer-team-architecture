@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 148 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 149 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -111,6 +111,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-142](05-security-governance-trust-boundaries/AD-142-atlas-navigator-layer-baseline.md) | ATLAS Navigator Layer Baseline (REQ-S600, REQ-S610) |
 | [AD-147](05-security-governance-trust-boundaries/AD-147-cedar-principal-tenant-tag-resolves.md) | Cedar Principal Tags Carry `tenantId`, Unblocking Per-Tenant Policy |
 | [AD-148](05-security-governance-trust-boundaries/AD-148-agentcore-runtime-targets-preclude-per-tool-cedar.md) | AgentCore Runtime Targets Preclude Per-Tool Cedar; Gate Coarsely Now |
+| [AD-149](05-security-governance-trust-boundaries/AD-149-alarm-the-bypass-before-enforce.md) | A Degrading Caller Inverts an Enforcement Flip: Alarm the Bypass Before ENFORCE |
 
 ### 06 · Reliability, Resilience & Graceful Degradation
 
