@@ -1,6 +1,6 @@
 # Buyer Team Architecture — Conceptual Summary of the ADRs
 
-A distillation of the knowledge captured across 146 architecture decision records for the
+A distillation of the knowledge captured across 148 architecture decision records for the
 Buyer Team agentic procurement platform. This is conceptual: it explains the ideas the
 decisions encode and how they hang together, not the implementation details.
 
@@ -112,7 +112,9 @@ tenants get a dedicated IdP whose attribute mapping is fixed at onboarding. Huma
 approval authority is enforced at exactly one place — the interrupt-resume API — with
 tenant-configured claims acting as a ceiling that per-request overrides may only narrow.
 Tool access for PO Receiving is default-deny Cedar, rolled out log-only before
-enforcement; the 6 LLM agents' own tools are in-process calls with no Gateway in the
+enforcement, and the caller's tenant is now proven to reach Cedar as a principal tag —
+so policy can discriminate by tenant, not merely by OAuth scope (AD-147); the 6 LLM
+agents' own tools are in-process calls with no Gateway in the
 path for Cedar to reach, so that plane is instead governed by an authoritative
 permission table plus a fail-closed steering-hook layer (AD-39, AD-24). Security-critical tables are hardened defensively: write
 denied to agents, audited, alarmed, and auto-reverted if a threshold is ever set below

@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 146 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 148 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -109,6 +109,8 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-140](05-security-governance-trust-boundaries/AD-140-automated-reasoning-award-validation.md) | Bedrock Automated Reasoning Checks for Award Decisions (REQ-S606) |
 | [AD-141](05-security-governance-trust-boundaries/AD-141-req-s607-descoped-bid-evaluation-removed.md) | REQ-S607 Descoped: Contextual Grounding Check Has No Target (REQ-S607) |
 | [AD-142](05-security-governance-trust-boundaries/AD-142-atlas-navigator-layer-baseline.md) | ATLAS Navigator Layer Baseline (REQ-S600, REQ-S610) |
+| [AD-147](05-security-governance-trust-boundaries/AD-147-cedar-principal-tenant-tag-resolves.md) | Cedar Principal Tags Carry `tenantId`, Unblocking Per-Tenant Policy |
+| [AD-148](05-security-governance-trust-boundaries/AD-148-agentcore-runtime-targets-preclude-per-tool-cedar.md) | AgentCore Runtime Targets Preclude Per-Tool Cedar; Gate Coarsely Now |
 
 ### 06 · Reliability, Resilience & Graceful Degradation
 
