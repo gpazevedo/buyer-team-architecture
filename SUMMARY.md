@@ -119,7 +119,11 @@ coarse, because only Lambda-hosted targets expose per-tool actions (AD-148). Fli
 of these to enforcement has a counter-intuitive precondition: the callers degrade rather
 than fail, so a misconfigured enforce mode denies everything, the caller falls back past
 the entire authorization chain, and the result is weaker than log-only while looking
-healthy — the bypass must be alarmed at the caller before the flip (AD-149). The 6 LLM
+healthy — the bypass must be alarmed at the caller before the flip (AD-149). Per-request ABAC
+(scoped `AssumeRole` credentials handed to a tool via the interceptor) targets the Gateway that
+actually carries traffic — ingest/receiving's `skill_runtime` — rather than the three MCP-server
+Gateways AD-148 already showed have no live caller; `dynamodb_master_data` is permanently excluded
+because it carries no interceptor to hand credentials through (AD-150). The 6 LLM
 agents' own tools are in-process calls with no Gateway in the path for Cedar to reach, so
 that plane is instead governed by an authoritative permission table plus a fail-closed
 steering-hook layer (AD-39, AD-24). Security-critical tables are hardened defensively: write

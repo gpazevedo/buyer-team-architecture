@@ -112,6 +112,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-147](05-security-governance-trust-boundaries/AD-147-cedar-principal-tenant-tag-resolves.md) | Cedar Principal Tags Carry `tenantId`, Unblocking Per-Tenant Policy |
 | [AD-148](05-security-governance-trust-boundaries/AD-148-agentcore-runtime-targets-preclude-per-tool-cedar.md) | AgentCore Runtime Targets Preclude Per-Tool Cedar; Gate Coarsely Now |
 | [AD-149](05-security-governance-trust-boundaries/AD-149-alarm-the-bypass-before-enforce.md) | A Degrading Caller Inverts an Enforcement Flip: Alarm the Bypass Before ENFORCE |
+| [AD-150](05-security-governance-trust-boundaries/AD-150-abac-targets-the-live-path-not-the-probed-gateways.md) | ABAC Targets the Live Path, Not the Probed Gateways; Re-Hosting Stays Deferred |
 
 ### 06 · Reliability, Resilience & Graceful Degradation
 
