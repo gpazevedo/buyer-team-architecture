@@ -1,6 +1,6 @@
 # Buyer Team Architecture — Conceptual Summary of the ADRs
 
-A distillation of the knowledge captured across 149 architecture decision records for the
+A distillation of the knowledge captured across 152 architecture decision records for the
 Buyer Team agentic procurement platform. This is conceptual: it explains the ideas the
 decisions encode and how they hang together, not the implementation details.
 
@@ -48,6 +48,17 @@ runtime. Three principles bound what an agent can do:
   not an instruction; it is structurally impossible because winner fields are not
   template parameters.
 
+A fourth principle emerged from measurement rather than design, and it is the same idea one
+level down: **the model estimates, code decides.** The Kraljic classifier was asked for both
+the two axis scores *and* the quadrant they imply, and it demonstrably got the lookup wrong
+while its own written reasoning got the axes right — a deterministic 2×2 sitting between a
+correct judgment and the answer, applied by the component least suited to apply it. Taking
+the quadrant argument away entirely and deriving it in a pure function moved a tenant's
+configured thresholds from prompt text (honoured at the model's discretion) into code that
+must honour them. The same review found the companion failure: an axis the tools could not
+actually resolve, conveyed by a signal whose buckets straddled the very boundary being
+decided. A guardrail cannot fix a question the inputs cannot answer.
+
 ## 3. Configuration as data, with a disciplined fail-fast doctrine
 
 All dynamic configuration lives in one DynamoDB table, read once at agent instantiation
@@ -69,6 +80,17 @@ incident is never misdiagnosed as a config-deploy defect. The same registry that
 logical agents to runtimes also carries canary machinery: per-tenant variant pins, shadow
 invocations that measure agreement without affecting results, and deterministic
 population splits — rollout as configuration, not deployment.
+
+One refinement to the freshness doctrine, learned by measuring it: "never hold a config
+value across invocations" was being read as "re-read it every time it is needed," and a
+single node invocation was fetching the same governance blob from five call sites — about
+40% of its DynamoDB calls, each also a trace segment. The guarantee is about not carrying
+a value *across* invocations, so one cache scoped to a single invocation, cleared by the
+same decorator that already wraps every handler, costs nothing in freshness; the clearing
+call *is* the boundary, stated as such. The chain's inline nodes then carry that snapshot
+forward rather than each re-deriving it — with the one node whose decision can follow an
+arbitrarily long human wait deliberately excluded, because for it a stale snapshot is
+exactly the failure mode the doctrine exists to prevent (AD-151).
 
 ## 4. Recovery is designed in: idempotency, checkpoints, and honest escalation
 
@@ -210,6 +232,37 @@ that let a 12-day AccessDenied streak and a 44-run failure run both go unnoticed
 latter with business alarms reading "no data" as "nothing wrong" the whole time. Equally
 characteristic is scope honesty: what is built, stubbed, or deferred is recorded
 explicitly rather than left as implied-done design.
+
+Three later findings sharpen what "one distributed trace" actually costs to keep true. A
+trace can be propagated perfectly and still arrive incomplete, for reasons that live
+entirely below the propagation layer: a deployment package that vendors a library the
+runtime layer also provides will shadow it and split the tracer provider silently; and
+X-Ray caps a trace document at 500 KB, discarding *every* segment that arrives after the
+cap — so a chatty SDK's self-instrumentation can cost the last node in a chain all of its
+spans, with no error anywhere. **Trace payload is a budget, not a preference**, which
+makes deleting instrumentation nobody consumes a correctness measure rather than a
+tidiness one: Application Signals, defaulted on by the ADOT layer and consumed by nothing
+here, was two thirds of a full-chain trace, while this platform's own domain attributes
+were 0.4% of it.
+
+The self-watching loop has a structural limit worth naming, because it was reached: a
+dead-man's-switch detects "the pipeline stopped" only insofar as its own liveness is
+independent of the pipeline's, and here the watcher and the watched ship the same
+deployment package, are attached by the same Terraform block, and deploy in the same job.
+One missing layer attachment took out four schedule-triggered workers *and* the heartbeat
+that existed to notice — four of five alarms in ALARM were a single bug, and the fifth
+was that bug hiding itself. The registry of Errors alarms did fire; what was missing was
+the reading. Simultaneous ALARM across unrelated scheduled workers is itself a signal — a
+shared cause, not a coincidence — and the heartbeat being one of them is the strongest
+form of that signal, not a reason to discount the rest.
+
+The closed loop also depends on the *provenance* of the number that triggers it, which is
+not automatic. A gate that reuses a stable session id will keep being served by a warm
+microVM running the pre-deploy image, while the endpoint reports the new version healthy
+throughout — so a measurement can be internally consistent, plausible, and about the wrong
+build entirely (AD-152). An automated action is only as trustworthy as the freshness and
+provenance of the score behind it; anything whose purpose is to measure a deployment must
+mint fresh sessions, while everything else keeps reusing them for the warm-path savings.
 
 Headline business KPIs get one further move: a *rate* is not an observation, so nothing
 can alarm on it until something computes it. A daily rollup reads the raw signals back
