@@ -28,7 +28,11 @@ The enforcement asymmetry is a direct consequence of the preference order: the m
 
 ## Results
 
-Transport is declared in the Plugin manifest, implemented by the Skill, and validated at deploy time. The declared transports drive the bypass behavior specified in AD-69 and determine which tenancy-enforcement mechanism applies (Cedar/Interceptor for MCP, IAM for SDK, topic ACLs for Kafka). The immutability rule is enforced at plan time by Terraform validation (AD-53).
+**Decision accepted; the manifest mechanism is not built.** As of 2026-08-20 the Plugin manifest does not exist in the implementation — there is no manifest schema, no `sdk_config.resource_arns` declaration, no deploy-time transport validation, and no Terraform plan-time immutability check. Of the four transports, only MCP and SDK have code: MCP through the ingest and receiving AgentCore Gateways (`infra/gateway.tf`, `infra/receiving_gateway.tf`), SDK through the Skill Runtime's own IAM role. **Kafka has no implementation at all** — no client, no topics, no MSK — so the topic-ACL tenancy mechanism this ADR names is likewise unbuilt (PRD-011 §10 phases it at Phase 3/4). REST/webhook exists only as the SES email leg of supplier comms.
+
+Consequently the enforcement asymmetry this ADR trades away is currently *theoretical*: every live integration path goes through the Gateway's Cedar policy engine and tenant-id interceptor, or is IAM-bound SDK. The asymmetry becomes real the moment Kafka ships, and the compensating controls in AD-69 must land with it rather than after.
+
+What the decision does bind today is the preference order and the requirement that transport be declared rather than chosen ad hoc — honoured by convention, not by a validator. Re-verify this section against `impl/` before citing it as as-built.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

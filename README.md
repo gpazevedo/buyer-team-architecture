@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 149 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 152 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -73,6 +73,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-098](03-dynamic-configuration-agent-factory/AD-098-agent-mcp-skill-registry.md) | Agent/MCP/Skill Registry Config Group |
 | [AD-101](03-dynamic-configuration-agent-factory/AD-101-agent-base-image-package.md) | Agent Base Image + Shared Package Delivery via Immutable `agent-base` |
 | [AD-131](03-dynamic-configuration-agent-factory/AD-131-canary-by-tenant-variant-routing.md) | Tenant-Scoped Canary Rollout via Registry Variant Routing |
+| [AD-151](03-dynamic-configuration-agent-factory/AD-151-per-invocation-config-cache-and-inline-chain-snapshot.md) | Per-Invocation Config Cache, Shared by Both Readers, Carried Along the Inline Chain |
 
 ### 04 · Multi-Tenancy & Isolation
 
@@ -188,6 +189,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-114](09-infrastructure-deployment-platform-stack/AD-114-adot-layer-arn-defaults-on.md) | ADOT Layer ARN Defaults On at the Root, Not via Workflow `-var` |
 | [AD-122](09-infrastructure-deployment-platform-stack/AD-122-demo-harness-extracted-to-own-repository.md) | Demo Harness and Test-Tenant App Extracted to Their Own Repository |
 | [AD-145](09-infrastructure-deployment-platform-stack/AD-145-lambda-core-shared-platform-seam.md) | `lambda_core` Is the Lambda Fleet's Shared Platform Seam |
+| [AD-152](09-infrastructure-deployment-platform-stack/AD-152-fresh-session-id-per-measurement-run.md) | A Measurement Run Mints Fresh Session IDs; Only Production Reuses Them |
 
 ### 10 · Capacity, Admission Control & Tenant Lifecycle
 

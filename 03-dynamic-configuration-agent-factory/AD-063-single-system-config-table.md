@@ -1,6 +1,6 @@
 # AD-063 — Single `{env}-system-config` Table, Read-Once-at-Instantiation
 
-**Theme:** Dynamic Configuration & the Agent Factory  **Catalog:** AD-63 · **Source PRD:** PRD-010 · **Status:** Accepted · **Related:** AD-25, AD-48, AD-49, AD-64, AD-65, AD-66
+**Theme:** Dynamic Configuration & the Agent Factory  **Catalog:** AD-63 · **Source PRD:** PRD-010 · **Status:** Accepted · **Related:** AD-25, AD-48, AD-49, AD-64, AD-65, AD-66, AD-151
 
 ## Context
 
@@ -29,6 +29,8 @@ The absence of a built-in gradual-rollout mechanism for config changes is mitiga
 ## Results
 
 `DynamicAgentFactory` reads this table at instantiation (AD-65, PRD-010 §3). The fail-fast rule (AD-48) applies if the table is unreachable, with the two security-critical flag exceptions (AD-49). Two-stage threshold resolution (AD-64) cascades from per-tenant overrides through the profile SK to system defaults. Feature flags are evaluated at instantiation per the five-phase lifecycle (AD-66). The `external-rates` group is consumed only by the monthly per-tenant cost report (PRD-009 REQ-CST012), not by the agent runtime path.
+
+**Update 2026-08-22 — one table, but until now also one wasted read per caller (impl PR #350/#351/#352).** Because every consumer reads this table directly and independently, a single node invocation fetched the identical `governance/default` item from five call sites — ~40% of its DynamoDB calls. Reads are now memoized in one per-invocation store shared by both readers fronting this table, loaded **a whole `config_group` per `Query`** rather than a `GetItem` per key (a group is a `default` base plus any `tenant#<id>` overlays, and a missing overlay now costs no read at all), and carried forward across the inline node chain. Live-measured: 5 `GetItem`s per node → 3 `Query`s. The single-table choice this ADR makes is what allows the group-granular Query in the first place — the key schema (`config_group` partition, `config_key` sort, AD-64's two-stage resolution riding the sort key) means one Query returns a base and its overlays together. Recorded as [AD-151](AD-151-per-invocation-config-cache-and-inline-chain-snapshot.md), including the REQ-R405 freshness boundary that makes the cache safe and the IAM consequence of the read-shape change.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

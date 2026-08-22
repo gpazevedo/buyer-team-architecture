@@ -39,3 +39,18 @@ Implement a **progressive disclosure** pattern with three levels:
 - **Unknown capability** returns a structured error dict, not a crash
 - The manifest must be kept in sync with actual tools — out-of-sync is a documentation
   bug, not a runtime failure
+
+## Update 2026-08-20 — L2 was broken in every deployed image since creation (impl PR #340)
+
+`_SKILLS_DIR = Path(__file__).resolve().parent.parent / "skills"` computed correctly
+against the repo layout (`impl/skill_runtime/server.py` → `impl/skills/`), which is what
+every local test ran against. The Dockerfile does `COPY skill_runtime/server.py ./`, so
+in the deployed container `__file__` resolves to `/app/server.py` and `.parent.parent`
+lands on `/skills` — a path that has never existed in any built image, while the real
+skills land at `/app/skills`. `skill_manual(capability)` therefore raised or returned
+empty in production from day one; only `catalog()` (L1, in-memory manifest) and L3 (the
+tools themselves) worked. Caught during the 2026-08-20 integration review, verified by
+building a probe image mirroring the Dockerfile's actual `COPY` layout — not by reasoning
+about the path abstractly. Fixed with `_skills_dir()`, which probes `here/skills` then
+`here.parent/skills` and returns whichever exists, covering both the repo layout tests
+run against and the container layout the image actually ships.
