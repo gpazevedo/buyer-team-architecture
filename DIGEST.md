@@ -1,10 +1,10 @@
-# Buyer Team ADR Digest — All 152 Decisions, One Entry Each
+# Buyer Team ADR Digest — All 153 Decisions, One Entry Each
 
-A concise per-decision digest of all 152 Architecture Decision Records, grouped by category.
+A concise per-decision digest of all 153 Architecture Decision Records, grouped by category.
 Each entry condenses five dimensions from the ADR itself: the problem that forced the
 decision, the alternatives considered and why they were rejected, the trade-offs accepted,
-the decision, and its realized results. Status reflects the ADR files as of 2026-08-22
-(reconciled through impl PR #356).
+the decision, and its realized results. Status reflects the ADR files as of 2026-08-23
+(reconciled through impl PR #376).
 
 ## Contents
 
@@ -853,6 +853,15 @@ the decision, and its realized results. Status reflects the ADR files as of 2026
 - **Trade-offs:** Gained all 9 scheduled Lambdas alarming on `AWS/Lambda Errors` (the one signal the service emits regardless of handler behavior); given up convention-not-guarantee enforcement and two maps split by owning module.
 - **Decision:** Two `for_each`-driven central maps register every `schedule_expression` Lambda's `Errors` metric for one shared alarm shape (Sum ≥ 1, `notBreaching` — the opposite of AD-121, since not-having-run-yet is not a failure), notifying `evaluation-alerts`; a `moved` block preserved `approval_sweep`'s history.
 - **Results:** Shipped in impl PR #320 (2026-08-16). Inert until the next `restore_vpc.sh` replay since dev alarms were cost-paused (AD-133). Closes the gap AD-132's flag could not catch, since that flag depends on the Lambda running at all; **2026-08-22 (PR #353) — first real outage caught; the alarms worked, the reading of them did not:** four registry alarms went to ALARM and stayed there for a nine-Lambda ADOT-layer import failure, but the fifth alarm in ALARM was AD-121's heartbeat, whose missing-data state normally means "telemetry may be dark" — so the cluster read as an artifact rather than four workers down. Simultaneous ALARM across unrelated scheduled workers is itself a shared-cause signal, most strongly when the heartbeat is one of them; 2026-08-22 (PR #357) the registry gains `trace-size-monitor` — its two business alarms sit under `notBreaching`, so registering the emitter's own `Errors` alarm was a precondition of shipping it, not a follow-up
+
+### AD-153 — A Reserved Synthetic Tenant Runs Real Negotiations as an End-to-End Canary
+**Status:** Accepted · **Theme:** 07 Observability & Evaluation · **PRD:** PRD-004
+
+- **Problem:** The failure signal was layer-local — AD-121's heartbeat, AD-144's alarm registry and the domain alarms each watch a single surface, but nothing asserted the whole DAG on a schedule, and with ~60 real negotiations/month a full-pipeline regression could go unnoticed for days. Task 9 of the observability plan calls for an end-to-end synthetic canary over the exact production path.
+- **Alternatives:** Browser-based Synthetics walk (rejected: the pipeline's real entry is a master-PR row write, not a UI, so a walk would exercise its own Selenium path); liveness-only terminal-AWARDED assertion (rejected: a scoring regression that still completes sails through — the composite band is what catches it); DynamoDB TTL for cleanup (rejected: forces production write paths to stamp a `ttl` attribute, teaching them about synthetic tenants — the property the mailbox simulator protects); reuse the dev tenant (rejected: a no-human canary would distort `automation_rate` and flood the re-baseline counter); status quo (rejected: nothing end-to-end).
+- **Trade-offs:** A real hourly liveness + weak scoring-regression signal over the exact production path with nothing in code aware of it, at the cost of a reserved tenant swept daily by a dedicated cleanup Lambda, deterministic fixture rows in live domain tables that `terraform apply` can drift, and a third "canary" concept (after AD-56's deploy window and AD-131's variant routing) kept distinct only by name.
+- **Decision:** Reserve tenant `canary-synthetic` (`lambda_core.CANARY_TENANT_ID` + an `is_synthetic_tenant` predicate) and run a Lambda-backed CloudWatch Synthetics canary hourly: a pure DynamoDB client that puts one master PR row, polls the deterministic `negotiation_id` to terminal `AWARDED`, asserts the winning award's `composite_score` in [0.93, 1.0], and self-publishes `procurement/canary canary.success = 1.0` on PASS only (the managed `CloudWatchSynthetics` `SuccessPercent` never materialized, so "no datapoint" is the failure). The alarm reads it 2-of-3 at hourly with `treat_missing_data = "breaching"` — a paused canary alarms — MTTD ~3h, coupled to the cadence (a future daily schedule must revert to 1-of-1). Deterministic fixtures (category/item/two suppliers/governance overlay) are Terraform table items whose ids `_assert_fixtures` cross-checks; a budget pin keeps runs on the deterministic SPOT_BID path. `kpi_rollup`'s `all_tenants` queries and the re-baseline countdown exclude synthetic tenants via the predicate (the canary is the first *scheduled* stream — ~720 runs/mo vs ~60 real — and would otherwise have fired the countdown ~17× too often). `canary_cleanup` sweeps canary rows daily from the seven no-TTL tables; dedicated M2M clients bind the tenant through AD-119's `COGNITO_CLIENT_MAP`; supplier comms go to the SES mailbox simulator; a `Pausable = true` tag lets the VPC scripts suspend it with the environment.
+- **Results:** Shipped in impl PRs #364–#369, #370, #373–#376; live-verified 2026-08-23 (PASS, composite in band, alarm reading the self-published metric). `canary_cleanup` registered in AD-144's alarm map. Follow-ons: cadence↔alarm coupling, fixture-drift discipline (`.tf` literals and `_assert_fixtures` must move together), and any future synthetic stream must join `is_synthetic_tenant` or it contaminates the same KPIs the canary was excluded from.
 
 
 ## 8. Cost Architecture & Optimization

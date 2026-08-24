@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 152 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 153 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -151,6 +151,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-132](07-observability-evaluation/AD-132-kpi-rollup-automation-rate-deviation-flag.md) | Headline KPIs Computed by a Daily Rollup Lambda; Automation Rate Defined as a Per-PR Deviation Flag |
 | [AD-143](07-observability-evaluation/AD-143-ground-truth-labeling-private-workforce.md) | Ground Truth Labeling via a Private Workforce for Judge Calibration |
 | [AD-144](07-observability-evaluation/AD-144-scheduled-lambda-errors-alarm-registry.md) | Every Scheduled Lambda Registers for an Errors Alarm via a Central Map |
+| [AD-153](07-observability-evaluation/AD-153-reserved-synthetic-tenant-end-to-end-canary.md) | A Reserved Synthetic Tenant Runs Real Negotiations as an End-to-End Canary |
 
 ### 08 · Cost Architecture & Optimization
 

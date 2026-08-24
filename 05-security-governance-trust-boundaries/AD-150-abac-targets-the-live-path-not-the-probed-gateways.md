@@ -123,5 +123,20 @@ comment — both corrected in place.
   the shared interceptor Lambda. `terraform validate` passes; **not applied** — dev apply and the
   Phase 3 burn-in are a separate, deliberate step.
 
+**Update 2026-08-23 (impl PR #359): the first live exercise of the ABAC roles exposed a
+trust-policy bug and a condition-key error that were both invisible at rest.** When the
+ingest/receiving ABAC roles first served real `_tenant_credentials()` calls, every
+`AssumeRole`-with-tags closed with `AccessDenied` on `sts:TagSession` (REQ-S706).
+`sts:TagSession` must be granted in the *trust policy of the assumed role* — not only in the
+caller's identity policy — whenever `AssumeRole` is called with `Tags`, which
+`_tenant_credentials()` always does; the caller granting itself the ability to pass session
+tags is not enough for the role to accept them. Both `ingest_abac` and `receiving_abac` trust
+policies now allow `["sts:AssumeRole", "sts:TagSession"]`. The same change corrected a
+condition-key error: there is **no `sts:RequestTag`** — the global condition key is
+`aws:RequestTag`, the same `aws:` prefix as the `aws:PrincipalTag/tenant_id` conditions the
+ABAC policies key off. The original `StringLike "sts:RequestTag/tenant_id"` silently never
+matched, so it enforced nothing; it is now `StringLike "aws:RequestTag/tenant_id" = "*"`.
+Fixed in `infra/gateway.tf` (impl PR #359, merged 2026-08-23).
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
