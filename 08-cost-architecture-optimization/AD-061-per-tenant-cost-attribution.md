@@ -45,5 +45,36 @@ What this changes about this ADR: the Context's "per-tenant token counts are ava
 
 **Update 2026-08-21 (impl PR #342): the dollar series finally gets a dollar-denominated alarm.** `cost.usd` had been emitting since 2026-08-16 (the PR #320 addendum above), but only the token-volume proxies were alarmed — so a spend spike driven by a price/tier change rather than by token count had no watcher. `cost_spike_usd` (`infra/bucket_a_alarms.tf`) applies the same Metrics Insights `SUM` pattern the token alarms use to the `cost.usd` series, into the warning-tier `evaluation_alerts` topic, at a first-pass **$50 / 1h** threshold. That threshold is untuned and carries the same caveat as the existing token alarms: it is a placeholder chosen without a spend baseline, not a calibrated budget, and dev's spend profile is not representative enough to calibrate it against. Nothing about this ADR's estimated-vs-CUR distinction changes — the alarm watches the same emission-time multiplication, so it inherits every gap listed above and is a spike detector, not a billing control.
 
+**Update 2026-08-23 — two cost-signal changes.**
+
+*First (impl PR #361): the `agentcore.session_seconds` metric this ADR references in its
+Trade-offs note and Results is no longer emitted.* `invoke_agent_runtime` retired the
+session-timer emission (dashboard-rework Task 6). The rationale was cost and redundancy: no
+alarm or dashboard consumed it, and as a custom metric carrying a `tenant_id` dimension it
+was still billing. The surviving per-call cost signal is `cost.usd` (the 2026-08-16 addendum);
+nothing about the estimated-vs-CUR distinction changes.
+
+*Second (impl PRs #362, #363): a per-negotiation cost *outlier* alarm joins the spike
+detector.* `negotiation_cost_outlier` (`infra/modules/observability/cost_alarms.tf`) answers a
+different question than `cost_spike_usd`: *"did any single negotiation cost far more than it
+should"*, so it aggregates **`MAX`** (not `SUM`) of `negotiation.total_cost_usd` across the
+`procurement/cost` namespace in a 1-hour window — total spend is a separate concern with a
+separate answer. Its threshold is the one derived rather than guessed number in this file:
+23 e2e runs measured ~$0.0025 (spot), ~$0.0024 (leverage), ~$0.0143 (bottleneck) and ~$0.0099
+(strategic) per negotiation, and **$0.15 is 10× the most expensive observed strategy**, so it
+fires on a genuine outlier, not on normal variance between quadrants. Two Metrics Insights
+decisions are baked in: the alarm is an **MI expression rather than a dimensioned alarm** —
+CloudWatch matches an alarm's dimension set exactly, and a strategy-only alarm would have
+matched zero series and sat at OK forever (the PR #252 failure mode) — and the expression
+uses a **bare `FROM "procurement/cost"`, not `FROM SCHEMA("procurement/cost", tenant_id,
+negotiation_id, strategy, kraljic_quadrant)`**, because `SCHEMA(namespace, dims…)` matches
+only series whose dimension set is exactly that list: any emission path that omits
+`kraljic_quadrant` or `strategy` (e.g. a fallback that only carries `tenant_id` +
+`negotiation_id`) would drop out of the `MAX` silently — an invisible undercount, the one
+thing an outlier alarm must not have. Bare namespace matches every series carrying the
+metric name regardless of dimensions. This remains an *estimated*-cost alarm (PR #362 merged
+the SCHEMA form; PR #363's review corrected it to bare namespace) and inherits every
+estimated-vs-CUR gap listed above.
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
