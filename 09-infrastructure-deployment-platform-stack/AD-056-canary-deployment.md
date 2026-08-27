@@ -1,4 +1,4 @@
-# AD-056 — Canary as Monitoring-Only Observation Window → Per-Quadrant Smoke → 100% with Roll-Forward on Failure
+# AD-056 — Monitoring-Only Observation Window → Per-Quadrant Smoke → 100% with Roll-Forward on Failure
 
 **Theme:** Infrastructure, Deployment & Platform Stack  **Catalog:** AD-56 · **Source PRD:** PRD-007 · **Status:** Accepted (mechanism revised at PRD-007 v1.0.33 — AgentCore has no fractional traffic routing) · **Related:** AD-54, AD-5, AD-11, AD-53
 
@@ -6,9 +6,11 @@
 
 A bad production deploy should be caught before it is confirmed as the full rollout. The system has four distinct workflow paths — one per Kraljic quadrant (AD-5, AD-11) — and a regression on any quadrant would be invisible to a deployment that tests only one path. Per-path coverage and a bounded confirmation gate must both be achieved before full rollout is declared. A platform constraint shapes the mechanism: AgentCore Runtimes do **not** support fractional traffic routing — there is no microVM-level traffic split, so a true "send 10% of traffic to the new version" canary is not available.
 
+**Naming:** this mechanism is the *observation window* — distinct from AD-131's *variant rollout* and AD-153's *Synthetics canary* (the three were disambiguated by this naming decision).
+
 ## Decision
 
-Because AgentCore offers no fractional traffic routing, the canary is a **monitoring-only observation window**, not a traffic slice. All images are promoted to production ECR and deployed to every Runtime at once; full rollout is then *confirmed* — not *begun* — only after an observation window (error rate, p99 latency, eval quality) passes with no alarms and one smoke-test negotiation per Kraljic quadrant succeeds. Any failure rolls forward to the last known-good SHA within 5 minutes (REQ-I103, REQ-I104). The mechanism is realized by the `canary-observation` job in the `prod-deploy.yml` workflow (PRD-007 §7.4 / impl §11).
+Because AgentCore offers no fractional traffic routing, the mechanism is a **monitoring-only observation window**, not a traffic slice. All images are promoted to production ECR and deployed to every Runtime at once; full rollout is then *confirmed* — not *begun* — only after an observation window (error rate, p99 latency, eval quality) passes with no alarms and one smoke-test negotiation per Kraljic quadrant succeeds. Any failure rolls forward to the last known-good SHA within 5 minutes (REQ-I103, REQ-I104). The mechanism is realized by the `observation-window` job in the `prod-deploy.yml` workflow (PRD-007 §7.4 / impl §11).
 
 ## Alternatives Considered
 
@@ -27,7 +29,7 @@ The safety property this decision delivers is **fast structured detection + roll
 
 ## Results
 
-Satisfies REQ-I103 (observation window + per-quadrant smoke) and REQ-I104 (roll-forward within 5 minutes). Rollback reuses AD-54's already-built images and the normal deploy path, so recovery introduces no new variables. The observation settings (`canary_observation_minutes`) are per-environment overrides in the production tier defined by AD-55; the former `canary_traffic_pct` slice has no effect on AgentCore and is not a traffic control. The constraint that forces this shape is the same immutable-runtime/managed-platform reality recorded in AD-53.
+Satisfies REQ-I103 (observation window + per-quadrant smoke) and REQ-I104 (roll-forward within 5 minutes). Roll-forward reuses AD-54's already-built images and the normal deploy path, so recovery introduces no new variables. The observation settings (`observation_window_minutes`) are per-environment overrides in the production tier defined by AD-55; the former traffic-percentage slice has no effect on AgentCore and is not a traffic control. The constraint that forces this shape is the same immutable-runtime/managed-platform reality recorded in AD-53.
 
 **Update 2026-08-19 (impl PR #332) — reconciling this gate against the workflow found that neither half could have passed a first production run.**
 

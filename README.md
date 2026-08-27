@@ -72,7 +72,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-095](03-dynamic-configuration-agent-factory/AD-095-a2a-agent-model-tier-fallback.md) | A2A Agent Model-Tier Fallback (Boot-Safe Never-Raise Ladder) |
 | [AD-098](03-dynamic-configuration-agent-factory/AD-098-agent-mcp-skill-registry.md) | Agent/MCP/Skill Registry Config Group |
 | [AD-101](03-dynamic-configuration-agent-factory/AD-101-agent-base-image-package.md) | Agent Base Image + Shared Package Delivery via Immutable `agent-base` |
-| [AD-131](03-dynamic-configuration-agent-factory/AD-131-canary-by-tenant-variant-routing.md) | Tenant-Scoped Canary Rollout via Registry Variant Routing |
+| [AD-131](03-dynamic-configuration-agent-factory/AD-131-canary-by-tenant-variant-routing.md) | Tenant-Scoped Variant Rollout via Registry Variant Routing |
 | [AD-151](03-dynamic-configuration-agent-factory/AD-151-per-invocation-config-cache-and-inline-chain-snapshot.md) | Per-Invocation Config Cache, Shared by Both Readers, Carried Along the Inline Chain |
 
 ### 04 · Multi-Tenancy & Isolation
@@ -181,7 +181,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-053](09-infrastructure-deployment-platform-stack/AD-053-runtime-protocol-immutable.md) | AgentCore Runtime Protocol Is Immutable and Validated at Plan Time |
 | [AD-054](09-infrastructure-deployment-platform-stack/AD-054-gitops-build-once-promote.md) | GitOps: Build-Once-Promote, Rollback as Forward Deploy |
 | [AD-055](09-infrastructure-deployment-platform-stack/AD-055-five-environment-model.md) | Five-Environment Model with Per-Environment Cedar, PITR, and Retention Settings |
-| [AD-056](09-infrastructure-deployment-platform-stack/AD-056-canary-deployment.md) | Canary as Monitoring-Only Observation Window → Per-Quadrant Smoke → 100% with Roll-Forward on Failure |
+| [AD-056](09-infrastructure-deployment-platform-stack/AD-056-canary-deployment.md) | Monitoring-Only Observation Window → Per-Quadrant Smoke → 100% with Roll-Forward on Failure |
 | [AD-103](09-infrastructure-deployment-platform-stack/AD-103-skill-runtime-update-full-replace-guarded.md) | Skill-Runtime Updates Are Full-Replace; Protocol & Env Re-Asserted via a Guarded Path (corrects AD-53) |
 | [AD-104](09-infrastructure-deployment-platform-stack/AD-104-docker-image-optimization-strategy.md) | Docker Image Optimization Strategy: Multi-Stage, Bytecode, Non-Root, Cache Mounts, .dockerignore |
 | [AD-110](09-infrastructure-deployment-platform-stack/AD-110-cognito-custom-attributes-out-of-band.md) | Cognito Pool Custom Attributes Are Added Out-of-Band via AddCustomAttributes, Not Terraform |

@@ -8,7 +8,7 @@ Different environments serve different purposes and carry different risk profile
 
 ## Decision
 
-Define five environments — Local, CI, Dev, Staging, and Production — each with its own Cedar enforcement mode, PITR setting, log retention, and canary configuration. Cedar is LOG_ONLY in CI/dev/staging and ENFORCE in production only; PITR is production-only.
+Define five environments — Local, CI, Dev, Staging, and Production — each with its own Cedar enforcement mode, PITR setting, log retention, and observation-window configuration. Cedar is LOG_ONLY in CI/dev/staging and ENFORCE in production only; PITR is production-only.
 
 ## Alternatives Considered
 
@@ -21,11 +21,11 @@ Define five environments — Local, CI, Dev, Staging, and Production — each wi
 | --- | --- |
 | Progressive validation with cost and safety scaled to each stage — cheap, permissive lower environments; strict, durable production | Parity — lower environments differ from prod (LOG_ONLY Cedar, no PITR, mock/SimpleLLM Bedrock), so prod-only behaviors such as ENFORCE denials are not exercised until staging |
 | LocalStack at the bottom tier lets developers iterate without AWS cost (REQ-I200) | The parity gap is mitigated by staging E2E but not eliminated; a Cedar policy error in production could escape staging validation |
-| Per-environment overrides are config-driven (`policy_enforcement_mode`, `enable_pitr`, `log_retention_days`, `canary_traffic_pct`) without code changes | — |
+| Per-environment overrides are config-driven (`policy_enforcement_mode`, `enable_pitr`, `log_retention_days`, `observation_window_minutes`) without code changes | — |
 
 ## Results
 
-Environment table (PRD-007 §8) fixes each property per tier. Satisfies REQ-I200 (five environments), REQ-I201 (production PITR), REQ-I202 (log retention: prod 365d / staging 90d / dev 30d), REQ-I203 (Cedar LOG_ONLY in CI/dev/staging, ENFORCE in prod), and REQ-I204 (no production data in non-production environments). The regional constraint from AD-8 applies to every non-local environment. AD-54's build-once-promote pipeline drives the promotion path through these tiers; AD-56's canary settings are applied in the production tier.
+Environment table (PRD-007 §8) fixes each property per tier. Satisfies REQ-I200 (five environments), REQ-I201 (production PITR), REQ-I202 (log retention: prod 365d / staging 90d / dev 30d), REQ-I203 (Cedar LOG_ONLY in CI/dev/staging, ENFORCE in prod), and REQ-I204 (no production data in non-production environments). The regional constraint from AD-8 applies to every non-local environment. AD-54's build-once-promote pipeline drives the promotion path through these tiers; AD-56's observation-window settings are applied in the production tier.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*
