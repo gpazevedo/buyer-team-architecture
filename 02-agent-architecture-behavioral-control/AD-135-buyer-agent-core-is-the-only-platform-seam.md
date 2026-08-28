@@ -57,5 +57,11 @@ One real type error surfaced while clearing the package's pyright warnings: `Gua
 
 This closes the gap recorded in AD-101's 2026-08-05 correction. It also strengthens AD-22 and AD-23: tools-as-boundaries and steering-over-prompting both assume agent modules are declarative surfaces, and that assumption is now checked rather than asserted.
 
+**2026-08-25 (impl PR #382) — the import boundary held while the seam leaked around it.** `test_agent_layer_boundary.py` proved `agents/` imports no boto3, but `buyer_agent_core` re-exported `Attr` and `ClientError`, so agent code was still building its own DynamoDB scan filters and branching on the store's error type. The boundary was intact and the *coupling it exists to prevent* was not: what leaked was the query grammar and the error surface, which is the part that makes a store swappable. A re-export is a boundary hole that every import-based check passes.
+
+Two helpers in `aws.py` absorb both escapes — `bids_for_negotiation()`, replacing a byte-identical `Attr("negotiation_id").eq(...)` scan duplicated in spot-bidding and leverage-auction `tools.py`, and `ddb_get_item()`, which collapses a failed read to `None` so award-comms' auto-send policy read no longer catches `ClientError` (behavior unchanged: a store failure still defaults the policy to manual). `Attr` and `ClientError` are dropped from `__all__` and the package namespace, so the existing `__all__` assertion now *enforces* the rule instead of waving it through. Award-comms and leverage-auction come out holding no DynamoDB table handle at all.
+
+The generalizable lesson for any seam of this shape: an import-boundary test is necessary and not sufficient — the seam's own `__all__` is the second surface, and re-exported vendor types defeat the first check without tripping it.
+
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

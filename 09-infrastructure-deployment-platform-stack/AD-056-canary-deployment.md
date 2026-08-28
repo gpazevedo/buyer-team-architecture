@@ -6,7 +6,7 @@
 
 A bad production deploy should be caught before it is confirmed as the full rollout. The system has four distinct workflow paths — one per Kraljic quadrant (AD-5, AD-11) — and a regression on any quadrant would be invisible to a deployment that tests only one path. Per-path coverage and a bounded confirmation gate must both be achieved before full rollout is declared. A platform constraint shapes the mechanism: AgentCore Runtimes do **not** support fractional traffic routing — there is no microVM-level traffic split, so a true "send 10% of traffic to the new version" canary is not available.
 
-**Naming:** this mechanism is the *observation window* — distinct from AD-131's *variant rollout* and AD-153's *Synthetics canary* (the three were disambiguated by this naming decision).
+**Naming:** this mechanism is the *observation window* — distinct from AD-131's *variant rollout* and AD-153's *Synthetics canary* (the three were disambiguated by this naming decision). The retired spellings `canary-observation` and `canary_observation_minutes` are now failed by the `pr-checks` naming gate (`scripts/check_naming.py`, impl PR #384), so the rename cannot silently regress.
 
 ## Decision
 
