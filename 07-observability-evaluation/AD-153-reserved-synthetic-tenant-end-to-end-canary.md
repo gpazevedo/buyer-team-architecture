@@ -9,7 +9,7 @@ The platform's failure signal was layer-local. AD-121's heartbeat watches the or
 
 Task 9 of the observability plan (PRD-004) is an end-to-end synthetic canary: drive a real purchase negotiation through the orchestrator on an hourly cadence under a reserved tenant, and assert it completes. The design goal is that *nothing in the pipeline knows the canary exists* — it enters through the same master-PR DynamoDB Stream → router → ingest skill → Step Functions chain every real requisition uses, and supplier comms go to the SES mailbox simulator (`success@simulator.amazonses.com`) so sender-identity resolution, dedup and the SES send all execute identically.
 
-A naming hazard comes with this decision. The platform now has **three distinct mechanisms called "canary"** — AD-56's deployment-time observation window over a full-fleet release, AD-131's registry variant routing (tenant pin / shadow / population split) for validating a behavioral change, and this end-to-end synthetic detector. AD-131's Trade-offs already warned that the first two must not be conflated; this third one is a *liveness + weak scoring-regression* signal, not a rollout mechanism. The ADRs must say which is which.
+The naming hazard this decision introduced is now resolved: of the three mechanisms that once shared the word "canary" — AD-56's observation window, AD-131's variant rollout, and this synthetic detector — this one keeps the bare word, because AWS owns the vocabulary (`aws_synthetics_canary`, `synthetics:canary`). AD-56's mechanism is now the *observation window* and AD-131's is *variant rollout*; "canary" (unqualified) means this Synthetics canary.
 
 ## Decision
 

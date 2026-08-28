@@ -77,7 +77,7 @@ ladder (config → env override → seed mirror) so a fresh environment can alwa
 Everything else — thresholds, temperatures, governance blocks — still fails fast, and a
 missing governance block is distinguished from an unreachable table so an infrastructure
 incident is never misdiagnosed as a config-deploy defect. The same registry that maps
-logical agents to runtimes also carries canary machinery: per-tenant variant pins, shadow
+logical agents to runtimes also carries variant machinery: per-tenant variant pins, shadow
 invocations that measure agreement without affecting results, and deterministic
 population splits — rollout as configuration, not deployment.
 
