@@ -272,6 +272,23 @@ generalizes past this platform — a rate assembled by counting *events* over a 
 of *objects* is not bounded, and will eventually print a nonsense number; flag the object
 instead, once, and average the flag.
 
+A distributed trace and an audit record answer different questions and expire on
+different schedules, so the platform keeps a second, deliberately separate ledger: an
+append-only `negotiation-events` row per decision, tool call, and node outcome, written
+through three independently-built copies of the same emitter (one per runtime) rather
+than a shared import, and retained permanently rather than for 30 days like a trace.
+Permanence and fail-open compound each other by design — nothing may block a negotiation
+on its own record-keeping, but a table nothing ever expires from is exactly the place a
+100%-silent write failure must not go unnoticed, so the failure metric ships with its own
+alarm in the same slice as the table, and a later pass locks that alarm's dimension
+contract with a test rather than trusting three hand-synchronized copies to stay aligned
+by convention. The same honesty this system already applies to *what* is built extends to
+*whose* decision is on record: agent-tier actor identity is captured as empty, not
+deferred, because the Step Functions input that starts every negotiation carries no human
+identity to propagate — the only human decision in the whole pipeline is the HITL
+approver's, and it surfaces once, at award time, well after the record this ledger keeps
+of everything upstream.
+
 ## 8. Cost as an architectural dimension
 
 Cost is engineered, not observed after the fact. Each agent runs on the cheapest model
