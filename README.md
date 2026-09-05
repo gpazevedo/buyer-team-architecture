@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 155 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 156 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -131,6 +131,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-123](06-reliability-resilience-graceful-degradation/AD-123-readiness-draining-fail-open-window.md) | Readiness Gate + SIGTERM Draining Close the Fail-Open Window at Both Ends of a Replica's Life |
 | [AD-124](06-reliability-resilience-graceful-degradation/AD-124-inbound-admission-control-replaces-outbound-bulkhead.md) | Inbound Concurrency-Cap Shedding Is the Live Backpressure AD-50's Removed Bulkhead Was Meant to Provide |
 | [AD-129](06-reliability-resilience-graceful-degradation/AD-129-dynamodb-substitute-for-mem0-ip1.md) | DynamoDB-Only Substitute for Mem0 IP-1, Isolated from the Agent-Failure Path |
+| [AD-156](06-reliability-resilience-graceful-degradation/AD-156-dlq-consumer-three-tier-model.md) | DLQ Recovery Is a Three-Tier Model, Factored into One Reusable Consumer |
 
 ### 07 · Observability & Evaluation
 
