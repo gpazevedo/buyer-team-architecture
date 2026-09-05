@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 156 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 157 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -224,6 +224,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-138](11-integration-skills-plugins-transports/AD-138-single-governed-supplier-comms-delivery-path.md) | One Governed Delivery Function Replaces Six Simulated Supplier-Send Paths |
 | [AD-146](11-integration-skills-plugins-transports/AD-146-mcp-servers-shared-platform-seam.md) | `mcp_servers/shared` Becomes the MCP Servers' Platform Seam |
 | [AD-155](11-integration-skills-plugins-transports/AD-155-sapmcp-tenancy-pins-service-name-not-tenant-id.md) | sapmcp Gateway Tenancy: Pin `service_name`, Not `tenant_id` |
+| [AD-157](11-integration-skills-plugins-transports/AD-157-supplier-mcp-discovery-registration.md) | Supplier-MCP Discovery + Registration: a Real Endpoint to Probe, Not a Bool |
 
 ### 12 · Procurement Domain Logic
 
