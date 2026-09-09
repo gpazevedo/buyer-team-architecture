@@ -1,6 +1,6 @@
 # AD-155 — sapmcp Gateway Tenancy: Pin `service_name`, Not `tenant_id`
 
-**Theme:** Integration (Skills, Plugins & Transports)  **Catalog:** AD-155 · **Source PRD:** PRD-011 · **Status:** Accepted · **Related:** AD-70, AD-147, AD-148, AD-149, AD-52
+**Theme:** Integration (Skills, Plugins & Transports)  **Catalog:** AD-155 · **Source PRD:** PRD-011 · **Status:** Accepted — A.7 leak closed 2026-09-05 (impl PR #460); multi-tenant Terraform prep landed 2026-09-05 (impl PR #461), not yet activated · **Related:** AD-70, AD-147, AD-148, AD-149, AD-52, AD-158
 
 ## Context
 
@@ -108,9 +108,22 @@ until a live cross-tenant read was caught by hand.
   `var.sap_mcp_tenants` map entry plus a second Cognito client, not a new Runtime or Gateway —
   the scaling property the original per-tenant-Gateway decision was reaching for, now achieved
   without it.
-- Open, deliberately deferred: the `find_sap_services` catalog-enumeration leak (A.7), and
-  extending this same routing to `skill_runtime/server.py`'s own (still single-client,
-  gap-closure plan B.4-scoped) SAP MCP calls.
+- **Closed 2026-09-05 (impl PR #460):** the `find_sap_services` catalog-enumeration leak
+  (A.7). `sap_gateway_interceptor` gained `_catalog_response()`, which synthesizes a
+  single-entry `find_sap_services` response scoped to the caller's already-bound tenant
+  instead of passing the real (multi-tenant) catalog response through — SSE-framing
+  verified byte-for-byte compatible with `GatewayClient._post_jsonrpc`'s parser via
+  round-trip tests. Not yet live-exercised (dev VPC down at merge); flagged for a real
+  `find_sap_services` call once it's restored.
+- **Terraform prep landed 2026-09-05 (impl PR #461), not activated:** `sap_mcp_tenant_ids`
+  variable added to the step-functions module and the `sap-mcp-authz-denied` alarm
+  (AD-149) converted to `for_each`, one per tenant — backward-compatible, single-tenant
+  deploys unchanged. Still single-tenant in practice: activating a second tenant is still
+  the `var.sap_mcp_tenants` map entry plus a second Cognito client this ADR's Decision
+  already described, now with the alarm-side plumbing ready too. Live multi-tenant
+  validation stays explicitly deferred.
+- Still open: extending this same routing to `skill_runtime/server.py`'s own (still
+  single-client, gap-closure plan B.4-scoped) SAP MCP calls.
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

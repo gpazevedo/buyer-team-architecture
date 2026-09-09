@@ -1,7 +1,7 @@
 # AD-149 — A Degrading Caller Inverts an Enforcement Flip: Alarm the Bypass Before ENFORCE
 
 **Theme:** Security, Governance & Trust Boundaries
-**Catalog:** AD-149 · **Source PRD:** PRD-005 · **Status:** Accepted · **Related:** AD-39, AD-40, AD-41, AD-46, AD-133, AD-147, AD-148
+**Catalog:** AD-149 · **Source PRD:** PRD-005 · **Status:** Accepted · **Related:** AD-39, AD-40, AD-41, AD-46, AD-133, AD-147, AD-148, AD-155
 
 ## Context
 
@@ -106,6 +106,19 @@ callers generally, not on Cedar specifically.
 Open: the four remaining engines have no caller-side classification. When the live Skill-runtime path is
 wired through a Gateway (AD-148's addendum), that caller acquires this obligation before its engine can
 leave `LOG_ONLY`.
+
+**Realized for a sixth engine, sapmcp, 2026-09-05 (impl PR #453, gap-closure plan A.5) — this engine
+didn't exist when the "four remaining" count above was written; it arrived already carrying the
+obligation, not as a fifth item added to that count.** A shared
+`orchestrator.mcp_gateway_client.is_sap_mcp_authz_denial()` classifies an HTTP 403 or the
+`sap_gateway_interceptor`'s own `-32600` "Missing tenant context"/"No SAP service bound to tenant"
+short-circuit (AD-155) as an authorization denial, distinct from a transport or configuration failure,
+at all six of `sap_pr_poller`/`sap_pr_ingest_handler`/`po_export_drain`'s MCP call sites. Emits
+`procurement/resilience sap_mcp_authz_denied`, dimensioned by `tenant_id`; alarmed as
+`${env}-buyer-team-sap-mcp-authz-denied` in `modules/step-functions/sap_alarms.tf` (converted to
+`for_each` per tenant by impl PR #461). `sap_mcp_policy_mode` stays `LOG_ONLY` — this ADR's own
+precondition — pending a clean live-traffic window to watch the alarm read `OK` (dev VPC down at
+merge, so unverified live as of this writing).
 
 ---
 *Part of the [Buyer Team architecture](https://buyer-team.com) decision record · by [Gustavo Peixoto de Azevedo](https://linkedin.com/in/gpazevedo)*

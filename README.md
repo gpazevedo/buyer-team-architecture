@@ -6,7 +6,7 @@ Architecture by Gustavo Peixoto de Azevedo, AI Solution Architect — [linkedin.
 
 ![ADR Diagram](diagram.svg)
 
-**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 157 decisions add up to, organized by theme rather than by number.
+**New to the record?** Start with [SUMMARY.md](SUMMARY.md) — a conceptual distillation of what all 159 decisions add up to, organized by theme rather than by number.
 
 ## How to read an ADR
 
@@ -225,6 +225,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-146](11-integration-skills-plugins-transports/AD-146-mcp-servers-shared-platform-seam.md) | `mcp_servers/shared` Becomes the MCP Servers' Platform Seam |
 | [AD-155](11-integration-skills-plugins-transports/AD-155-sapmcp-tenancy-pins-service-name-not-tenant-id.md) | sapmcp Gateway Tenancy: Pin `service_name`, Not `tenant_id` |
 | [AD-157](11-integration-skills-plugins-transports/AD-157-supplier-mcp-discovery-registration.md) | Supplier-MCP Discovery + Registration: a Real Endpoint to Probe, Not a Bool |
+| [AD-158](11-integration-skills-plugins-transports/AD-158-sap-integration-s4-shaped-surface-convergence.md) | SAP Integration Converges Both Transports on the S/4-Shaped Surface |
 
 ### 12 · Procurement Domain Logic
 
@@ -236,6 +237,7 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-096](12-procurement-domain-logic/AD-096-node2-kraljic-live-schema-hybrid-shortcircuit.md) | Node 2 Kraljic Live-Schema Hybrid Short-Circuit |
 | [AD-109](12-procurement-domain-logic/AD-109-po-receiving-lifecycle.md) | PO Receiving Lifecycle: RECEIVED Terminal State + Typed Ack/Reject + Trace Chain |
 | [AD-118](12-procurement-domain-logic/AD-118-walk-away-price-ceiling-enforcement.md) | Walk-Away Price Ceiling: Orchestrator Enforces Budget on Agent-Returned Prices |
+| [AD-159](12-procurement-domain-logic/AD-159-sap-catalog-price-grounds-bid-evaluation-baseline.md) | SAP Catalog Price Grounds the Bid-Evaluation Baseline; Budget Cap Stays on the Requisitioner's Ask |
 
 ### 13 · Test Tenant Platform Data
 
