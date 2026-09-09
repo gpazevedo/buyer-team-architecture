@@ -133,10 +133,15 @@ browser can never write, or the authenticated per-tenant machine client), and fe
 tenants get a dedicated IdP whose attribute mapping is fixed at onboarding. Human
 approval authority is enforced at exactly one place — the interrupt-resume API — with
 tenant-configured claims acting as a ceiling that per-request overrides may only narrow.
-Gateway tool access is default-deny Cedar, rolled out log-only before enforcement — five
+Gateway tool access is default-deny Cedar, rolled out log-only before enforcement — six
 policy engines now, having started as one on PO Receiving — and the caller's tenant is
 proven to reach Cedar as a principal tag, so policy can discriminate by tenant, not merely
-by OAuth scope (AD-147). Where the host is an AgentCore Runtime the gate is necessarily
+by OAuth scope (AD-147). The sixth, on the SAP integration's Gateway, arrived by a
+different route than the first five: Cedar there can only see one coarse action on an
+opaque body (the same AgentCore-Runtime ceiling as everywhere else), so the tenant
+boundary that actually matters — which SAP customer's data a call can touch — is carried
+by a purpose-built request interceptor that rewrites the catalog entry a caller is bound
+to, not by Cedar itself (AD-155). Where the host is an AgentCore Runtime the gate is necessarily
 coarse, because only Lambda-hosted targets expose per-tool actions (AD-148). Flipping any
 of these to enforcement has a counter-intuitive precondition: the callers degrade rather
 than fail, so a misconfigured enforce mode denies everything, the caller falls back past
@@ -331,7 +336,16 @@ in-flight; purge leaves a permanent tombstone reserving the identity.
 
 External systems connect through one **Skill** (all logic) exposed by thin **Plugins**
 (pure transport declarations) over four transports with a stated preference order; the
-same skill serves any ERP via per-tenant configuration. PO export is decoupled from
+same skill serves any ERP via per-tenant configuration. The SAP integration is where that
+claim got tested against a real vendor shape: its direct-HTTP and MCP transports started
+on two different bespoke contracts, each needing its own client-side workaround to paper
+over what a real S/4 system's OData surface already does server-side, and converged onto
+one real-shaped contract only once both were migrated — collapsing the workarounds and
+letting both transports finally share one item-building function instead of two (AD-158).
+That contract also exposed SAP's own materials catalog for the first time, now read as an
+independent reference price for bid-evaluation scoring — deliberately kept apart from the
+requisitioner's own figure, which stays the only input to the budget ceiling itself
+(AD-118, AD-159). PO export is decoupled from
 awarding through a durable outbox — the procurement decision never waits on a partner
 system. Tool surfaces use progressive disclosure (catalog → manual → invocation) so
 agents load capability detail only when needed. Outbound supplier communication follows
