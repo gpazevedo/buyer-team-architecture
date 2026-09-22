@@ -345,7 +345,13 @@ letting both transports finally share one item-building function instead of two 
 That contract also exposed SAP's own materials catalog for the first time, now read as an
 independent reference price for bid-evaluation scoring — deliberately kept apart from the
 requisitioner's own figure, which stays the only input to the budget ceiling itself
-(AD-118, AD-159). PO export is decoupled from
+(AD-118, AD-159). A second ERP then tested whether that shape generalised: Oracle
+export turned out to be unreachable rather than unconfigured — the drain hard-rejected
+anything but SAP — so the last hop became a registry keyed on `target_system`, and
+Oracle's MCP transport had to be built and operated outright, since AWS publishes no
+Oracle MCP server the way it does for SAP (AD-97, AD-160). Its tool surface is generated
+from a spec that CI holds as the contract, with the one thing that guard structurally
+cannot catch written down rather than assumed (AD-161). PO export is decoupled from
 awarding through a durable outbox — the procurement decision never waits on a partner
 system. Tool surfaces use progressive disclosure (catalog → manual → invocation) so
 agents load capability detail only when needed. Outbound supplier communication follows
