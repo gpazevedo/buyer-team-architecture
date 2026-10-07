@@ -226,6 +226,8 @@ See [TEMPLATE.md](TEMPLATE.md) for the canonical structure. Key fields:
 | [AD-155](11-integration-skills-plugins-transports/AD-155-sapmcp-tenancy-pins-service-name-not-tenant-id.md) | sapmcp Gateway Tenancy: Pin `service_name`, Not `tenant_id` |
 | [AD-157](11-integration-skills-plugins-transports/AD-157-supplier-mcp-discovery-registration.md) | Supplier-MCP Discovery + Registration: a Real Endpoint to Probe, Not a Bool |
 | [AD-158](11-integration-skills-plugins-transports/AD-158-sap-integration-s4-shaped-surface-convergence.md) | SAP Integration Converges Both Transports on the S/4-Shaped Surface |
+| [AD-160](11-integration-skills-plugins-transports/AD-160-oracle-mcp-server-we-build-transport-posture.md) | Oracle Gets an MCP Transport Only Because We Build the Server; the Flip Is a Separate Decision |
+| [AD-161](11-integration-skills-plugins-transports/AD-161-oracle-spec-is-the-contract-generated-tool-surface.md) | The Oracle Spec Is the Contract; the Tool Surface Is Generated From It and Guarded in CI |
 
 ### 12 · Procurement Domain Logic
 
